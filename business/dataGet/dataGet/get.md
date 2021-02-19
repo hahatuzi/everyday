@@ -56,4 +56,83 @@
             4.存在兼容性问题；
             5.传输的数据量太大，浪费资源，给服务器和网络添加了负担。
         
+## 六：神策埋点sa-sdk-javascript应用,将其作为一个开发插件来提供全局功能：
 
+
+api文件配置
+```js
+// 引入神策sdk
+import sensors from 'sa-sdk-javascript'
+/*
+*Vue的插件暴露一个install方法
+*参数一：Vue实例
+*参数二：options,可选的配置对象
+*/
+export default function install(Vue, options) {
+  // sensors对象本身存在一些属性用于埋点等业务功能
+  // 挂在vue实例下
+  Vue.prototype.$sensors = sensors
+
+  // 注册全局属性，sensors.registerPage()方法需要在初始化sdk之后，开启全埋点之前添加
+  sensors.registerPage({
+    current_url: location.href,
+    referrer: document.referrer
+  })
+
+
+  // 开启全埋点
+  sensors.init({
+    server_url: 'http://test-syg.datasink.sensorsdata.cn/sa?token=xxxxx&project=xxxxxx',
+    is_track_single_page:true, // 单页面配置，默认开启，若页面中有锚点设计，需要将该配置删除，否则触发锚点会多触发 $pageview 事件
+    use_client_time:true, 
+    send_type:'beacon',
+    heatmap: {
+      //是否开启点击图，default 表示开启，自动采集 $WebClick 事件，可以设置 'not_collect' 表示关闭。
+      clickmap:'default',
+      //是否开启触达注意力图，not_collect 表示关闭，不会自动采集 $WebStay 事件，可以设置 'default' 表示开启。
+      scroll_notice_map:'default'
+    } 
+  })
+  sensors.quick('autoTrack')
+
+  /*
+  *sensors.track()方法用于追踪用户行为事件，并添加自定义属性
+  *参数一：自定义行为事件名称
+  *参数二：自定义属性
+  */
+  sensors.track('BuyProduct', {
+    ProductName: "MacBook Pro", 
+    ProductPrice: 123.45, 
+    IsAddedToFav: false,
+  })
+  
+  // 也可以在sensors对象下添加一些方法,注：添加click，visit方法是为了区分埋点来源属于点击事件或者页面访问事件，也可以不区分直接使用track()方法
+  sensors.click = function (data, type = 'BXClick') {
+    const option = Object.assign({}, defaultOption, data)
+    return sensors.track(type, option)
+  }
+  sensors.visit = function (data, type = 'BXClick') {
+    const option = Object.assign({}, defaultOption, data)
+    return sensors.track(type, option)
+  }
+}
+```
+
+main.js文件配置
+```js
+import SaApi from '@/api/sa' // 引入插件所在文件
+Vue.use(SaApi) // 使用插件
+```
+
+
+具体页面使用
+```js
+<template>
+</template>
+<script>
+created () {
+  this.$sensors.visit({'content': 'test埋点内容'})
+  this.$sensors.track({'content': 'test埋点内容'})
+}
+</script>
+```
