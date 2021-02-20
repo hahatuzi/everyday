@@ -105,7 +105,7 @@ export default function install(Vue, options) {
     ProductPrice: 123.45, 
     IsAddedToFav: false,
   })
-  
+
   // 也可以在sensors对象下添加一些方法,注：添加click，visit方法是为了区分埋点来源属于点击事件或者页面访问事件，也可以不区分直接使用track()方法
   sensors.click = function (data, type = 'BXClick') {
     const option = Object.assign({}, defaultOption, data)
@@ -136,3 +136,37 @@ created () {
 }
 </script>
 ```
+
+
+## 七：百度统计事件跟踪应用trackEvent：
+  ##### 1.百度统计事件跟踪适用场景：
+    (1). 页面元素的点击，如表单提交按钮的点击；
+    (2). 播放器的播放/停止操作、web小游戏的开始/暂停操作等；
+    (3). Flash中所有的的事件都可以通过该接口来统计，只要在响应用户操作时，通过Flash调用JS接口就可以了；
+    (4). 文件下载、咨询等重要按钮、事件元素的监控；
+  ##### 2.使用步骤：
+    (1).安装百度统计代码;
+    (2).要跟踪某事件时，在JS中调用事件跟踪代码，如下：
+  ```js
+  <template>
+    <div @click="track('模拟其他位置回传')">模拟百度事件跟踪</div>
+    <div @click="track('模拟表单位置回传')">模拟百度事件跟踪</div>
+    // 监控某个PDF文件有多少人下载，代码参考如下：
+    // 'software'指要监控的目标的类型名称，'download'表示要监控目标链接的点击，'pdf'相当于是一个标签或备注
+    <a id="download" @click="_hmt.push(['_trackEvent', 'software','download', 'pdf']);" href="https://may90.com/.pdf" target="_blank">下载</a>
+  </template>
+  <script>
+  methods:{
+    track (name) {
+      _hmt.push('_trackEvent', 'form', 'click', name)
+    }
+  }
+  </script>
+  // _hmt.push(['_trackEvent', category, action, opt_label, opt_value]);
+  //     名称	       是否必选	  类型	     功能
+  //   category	     必选	   String	  要监控的目标的类型名称
+  //   action	       必选	   String	  用户跟网页进行交互的动作名称
+  //   opt_label  	 可选	   String	  事件的一些额外信息
+  //   opt_value	   可选	   Number	  跟事件相关的数值
+  ```
+    
