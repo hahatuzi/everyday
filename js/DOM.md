@@ -1,0 +1,4 @@
+# document.documentElement和document.body
+document.documentElement为文档对象模型的根节点即html标签
+document.body为body子节点，即body标签
+当存在DTD时，即指定了 DOCTYPE时使用scrollTop时，用document.documentElement.scrollTop 代替 document.body.scrollTop

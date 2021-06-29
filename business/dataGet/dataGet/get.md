@@ -169,4 +169,7 @@ created () {
   //   opt_label  	 可选	   String	  事件的一些额外信息
   //   opt_value	   可选	   Number	  跟事件相关的数值
   ```
-    
+
+# 八：今日头条统计代码转化追踪：
+
+meteor.track("form", {convert_id: "16551284440882347"})
