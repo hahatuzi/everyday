@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+  </head>
+
+  <body>
+    <script>
+      export default class VueRouter {
+        static install = () => { }
+        static version = '';
+
+        app = {};
+        apps = [];
+        ready = boolean;
+        readyCbs = [];
+        options = {};
+        mode = '';
+        history: HashHistory | HTML5History | AbstractHistory;
+        matcher: Matcher;
+        fallback = boolean;
+        beforeHooks = [];
+        resolveHooks = [];
+        afterHooks = Array;
+
+        constructor(options: RouterOptions = {}) {
+          this.app = null
+          this.apps = []
+          this.options = options
+          this.beforeHooks = []
+          this.resolveHooks = []
+          this.afterHooks = []
+          this.matcher = createMatcher(options.routes || [], this)
+
+          let mode = options.mode || 'hash'
+          this.fallback = mode === 'history' && !supportsPushState && options.fallback !== false
+          if (this.fallback) {
+            mode = 'hash'
+          }
+          if (!inBrowser) {
+            mode = 'abstract'
+          }
+          this.mode = mode
+
+          switch (mode) {
+            case 'history':
+              this.history = new HTML5History(this, options.base)
+              break
+            case 'hash':
+              this.history = new HashHistory(this, options.base, this.fallback)
+              break
+            case 'abstract':
+              this.history = new AbstractHistory(this, options.base)
+              break
+            default:
+              if (process.env.NODE_ENV !== 'production') {
+                assert(false, `invalid mode: ${mode}`)
+              }
+          }
+        }
+      }
+      https://juejin.cn/post/6993840419041706014
+    </script>
+  </body>
+
+</html>
