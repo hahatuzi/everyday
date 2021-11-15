@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+  </head>
+
+  <body>
+    <div id="app" v-bind="name">
+      <span>{{name}}</span>
+    </div>
+    <script>
+      // 我们家下来模拟进行模板解析的过程，
+      var vm = new MVVM({
+        el: '#app',
+        data: {
+          name: ' lisa'
+        }
+      })
+      function MVVM(options) {
+        this.$options = options
+        var _this = this
+        console.log(_this)
+        var complie = new Compile(_this)
+        console.log(complie)
+        complie.init()
+      }
+      function Compile(_this) {
+        this.$el = _this.$options.el
+        var node = document.querySelector(this.$el || document.body)
+        console.log(node.nodeType)
+        // if (node.nodeType === 1) {
+
+        // }
+      }
+      Compile.prototype = {
+        init: function () {
+          this.compileElement()
+        },
+        compileElement: function () {
+          console.log('ok')
+        }
+      }
+    </script>
+  </body>
+
+</html>

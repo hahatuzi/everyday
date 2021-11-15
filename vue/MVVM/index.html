@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+  </head>
+
+  <body>
+    <div id="app">12
+      <div class="container" v-on:class="ass" click="sayHi">sayHi</div>
+      <span class="testSpan">
+        {{name}}
+        <!-- <a :href="href" @click="change"> -->
+
+      </span>
+    </div>
+    <script src="js/compile.js"></script>
+    <script src="js/mvvm.js"></script>
+    <script src="js/observer.js"></script>
+    <script src="js/watcher.js"></script>
+    <script>
+      const vmH = new MVVM({
+        el: '#app',
+        data: {
+          name: 'lisa',
+          href: ''
+        },
+        methods: {
+          sayHi: function () {
+            console.log(this)
+            this.name = 'Hi, everybody!';
+          }
+        }
+      })
+      // console.log(vmH.name, vmH, 'o')
+      vmH.name = 'lili'
+      console.log(vmH)
+      // console.log(vmH._data.name)
+      // var app = document.getElementById('app')
+      // console.log(app, app.childNodes, app.nodeType)
+      // function treeMapNode(node) {
+      //   var vmNode = node
+      //   switch (vmNode.nodeType){
+      //     case 1:
+
+      //   }
+      // }
+    </script>
+  </body>
+
+</html>

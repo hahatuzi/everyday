@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+  </head>
+
+  <body>
+    <script>
+      // 微任务队列和任务对列
+      // 宏任务1
+      // setTimeout(() => {
+      //   console.log('setTimeout1')
+      //   Promise.resolve().then(() => {
+      //     console.log('then3')
+      //   })
+      // }, 0)
+      // // 宏任务2
+      // setTimeout(() => {
+      //   console.log('setTimeout2')
+      // }, 0)
+      // // 微任务1
+      // Promise.resolve().then(() => {
+      //   console.log('then1')
+      // })
+      // // 微任务2
+      // Promise.resolve().then(() => {
+      //   console.log('then2')
+      // })
+      //       then1
+      //       then2
+      //       setTimeout1
+      //       then3
+      //       setTimeout2
+      // 任务对列任务区分
+      setTimeout(() => {
+        console.log('setTimeout1')
+      }, 0)
+      const pro1 = new Promise((resolve, reject) => {
+        setTimeout(() => {
+          resolve('promise1')
+        }, 0)
+      })
+      pro1.then((value) => {
+        console.log('promise')
+        console.log(value)
+      })
+      const pro2 = new Promise((resolve, reject) => {
+        setTimeout(() => {
+          resolve('promise2')
+        }, 0)
+      })
+      pro2.then((value) => {
+        console.log('promise')
+        console.log(value)
+      })
+      // 宏任务2
+      setTimeout(() => {
+        console.log('setTimeout2')
+      }, 0)
+    </script>
+  </body>
+
+</html>

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+  </head>
+
+  <body>
+    <div class="app" v-on:class="ass"></div>?
+  </body>
+  <!-- 我们先来模拟mvvm实例的创建过程。 -->
+  <!-- 第一步：创建对象 -->
+  <!-- 第二步：数据代理：使得我们可以直接通过对象.属性名的方式来替代对象.data.属性名的访问方式 -->
+  <script>
+    function MVVM(options) {
+      // 第一步
+      this.$options = options
+      this._data = this.$options.data
+      // 至此我们就实现了一个对象的创建,该对象包含了el,data属性，如下所示。
+      // {
+      //   $options: {
+      //     el: '#app',
+      //       data: {
+      //       name: 'lisa'
+      //     }
+      //   },
+      //   _data: {
+      //     name: 'lisa'
+      //   }
+      // }
+      var data = this._data
+      // 第二步：数据代理
+      Object.keys(data).forEach(key => {
+        this._proxyData(key)
+      })
+    }
+    MVVM.prototype.title = 'tets'
+    // _proxyData函数指向它的调用者
+    MVVM.prototype._proxyData = function (key) {
+      const _this = this
+      console.log(_this)
+      Object.defineProperty(_this, key, {
+        configurable: false,
+        enumerable: true,
+        get() {
+          // 第二步（1）实现obj._data.xxx  -->  obj.xxx
+          return _this._data[key]
+        },
+        set(newVal) {
+          // 第二步（2）实现设置obj.xxx时obj._data.xxx也改变
+          _this._data[key] = newVal
+          // console.log(_this)
+        }
+      })
+    }
+    var vm = new MVVM({
+      el: '#app',
+      data: {
+        name: 'lisa'
+      }
+    })
+    var vm1 = new MVVM({
+      el: '#app',
+      data: {
+        name: 'lili'
+      }
+    })
+    // console.log(vm.name) // 添加数据代理前vm.name = undefined,添加后vm.name = vm._data.name = 'lisa'
+    vm.name = 'lili'
+    vm1.name = 'jack'
+    console.log(vm.name, vm1.name)
+    // console.log(vm1.name, vm1._proxyData())
+    console.log(vm1._proxyData()) //undefined
+  </script>
+
+</html>
