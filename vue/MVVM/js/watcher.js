@@ -1,8 +1,10 @@
+// watcher在初始化页面的指令中的普通指令解析的时候创建
+// 个数和模版中的表达式的个数对应。
 function Watcher(vm, expOrFn, cb) {
-    this.cb = cb;
+    this.cb = cb; //更新界面的回调
     this.vm = vm;
     this.expOrFn = expOrFn;
-    this.depIds = {};
+    this.depIds = {};// 相应的n个Dep的容器对象。
 
     if (typeof expOrFn === 'function') {
         this.getter = expOrFn;
@@ -10,7 +12,7 @@ function Watcher(vm, expOrFn, cb) {
         this.getter = this.parseGetter(expOrFn.trim());
     }
 
-    this.value = this.get();
+    this.value = this.get(); // 得到表达式的初始值保存
 }
 
 Watcher.prototype = {

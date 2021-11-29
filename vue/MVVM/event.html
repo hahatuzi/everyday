@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+  </head>
+
+  <body>
+    <div id="app">
+      <div v-on:click="show">点击{{name}}</div>
+    </div>
+    <script>
+      function MVVM(options) {
+        const _options = options
+        const compile = new Compile(_options)
+        // const dom = document.querySelector(_options.el || document.body)
+        // console.log(dom)
+        // compile(dom)
+        // function compile(node) {
+        //   // console.log([].slice.call(node.childNodes))
+        //   // const childNodes = [].slice.call(node.childNodes)
+        //   // childNodes.forEach(item => {
+        //   //   console.log(item.attributes)
+        //   //   if (item.nodeType === 1) {
+        //   //     compile(item)
+        //   //   } else return
+        //   // })
+        //   if (node.childNodes) {
+        //     const childNodes = [].slice.call(node.childNodes)
+        //     childNodes.forEach(item => {
+        //       if (item.nodeType === 1) {
+        //         compile(item)
+        //       } else return
+        //     })
+        //   } else if (node.nodeType == 1) {
+        //     console.log(node.attributes)
+        //   } else return
+        // }
+      }
+      function Compile(_options) {
+        const dom = document.querySelector(_options.el || document.body)
+        this.domCompile(dom)
+      }
+      Compile.prototype.domCompile = function (dom) {
+        const _this = this
+        Array.from(dom.childNodes).forEach(function (node) {
+          if (node.nodeType === 1) {
+            console.log(node, '元素节点')
+          } else if (node.nodeType === 3) {
+            console.log(node, '文本节点')
+          }
+          if (node.childNodes && node.childNodes.length) {
+            console.log(node.childNodes)
+          }
+        })
+      }
+      // 实现简易版的数据代理
+      MVVM.prototype.proxy = function (_options) {
+        Object.keys(_options.data).forEach(key => {
+          this[key] = _options.data[key]
+        })
+      }
+      var vm = new MVVM({
+        data: {
+          name: 'lisa'
+        },
+        el: '#app'
+      })
+      // vm.name = 'lili'
+      // console.log(vm.name)
+    </script>
+  </body>
+
+</html>

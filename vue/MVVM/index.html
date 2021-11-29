@@ -14,7 +14,7 @@
       <span class="testSpan">
         {{name}}
         <!-- <a :href="href" @click="change"> -->
-
+        <button v-on:click="show">点击alert</button>
       </span>
     </div>
     <script src="js/compile.js"></script>
@@ -32,6 +32,9 @@
           sayHi: function () {
             console.log(this)
             this.name = 'Hi, everybody!';
+          },
+          show() {
+            alert('ok')
           }
         }
       })

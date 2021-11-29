@@ -1,4 +1,5 @@
 function Compile (el, vm) {
+  console.log(el, vm)
   // 保存vm到compile对象
   this.$vm = vm;
   // 如果有el属性，即有绑定元素
@@ -55,10 +56,13 @@ Compile.prototype = {
   },
 
   compile: function (node) {
+    // 获取到所有元素节点
     var nodeAttrs = node.attributes,
       me = this;
     [].slice.call(nodeAttrs).forEach(function (attr) {
+      // 获取属性名
       var attrName = attr.name;
+      // 从属性名中获取到指令名
       if (me.isDirective(attrName)) {
         var exp = attr.value;
         var dir = attrName.substring(2);
@@ -130,8 +134,9 @@ var compileUtil = {
   bind: function (node, vm, exp, dir) {
     var updaterFn = updater[dir + 'Updater'];
     // 调用函数更新节点， 如textUpdater(),htmlUpdater()
+    // 当我们在此获取到属性的值时会嗲用object.get方法,从而
     updaterFn && updaterFn(node, this._getVMVal(vm, exp));
-
+    // 当表达式对应的属性发生变化时执行，如上面中的text中的{{}}，用来更新显示数据
     new Watcher(vm, exp, function (value, oldValue) {
       updaterFn && updaterFn(node, value, oldValue);
     });
@@ -143,6 +148,8 @@ var compileUtil = {
       fn = vm.$options.methods && vm.$options.methods[exp];
 
     if (eventType && fn) {
+      // 目的在于给标签绑定事件监听
+      // bind返回新的函数，且强制绑定新的对象vm,
       node.addEventListener(eventType, fn.bind(vm), false);
     }
   },

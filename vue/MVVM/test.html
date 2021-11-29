@@ -32,16 +32,14 @@
       //   }
       // }
       var data = this._data
-      // 第二步：数据代理
+      // 第二步：数据代理，将data中的属性挂载到刚创建的对象上
       Object.keys(data).forEach(key => {
         this._proxyData(key)
       })
     }
-    MVVM.prototype.title = 'tets'
-    // _proxyData函数指向它的调用者
     MVVM.prototype._proxyData = function (key) {
+      console.log(this.__proto__)
       const _this = this
-      console.log(_this)
       Object.defineProperty(_this, key, {
         configurable: false,
         enumerable: true,
@@ -52,9 +50,11 @@
         set(newVal) {
           // 第二步（2）实现设置obj.xxx时obj._data.xxx也改变
           _this._data[key] = newVal
-          // console.log(_this)
         }
       })
+    }
+    MVVM.prototype.test = function () {
+      console.log('ok')
     }
     var vm = new MVVM({
       el: '#app',
@@ -72,8 +72,6 @@
     vm.name = 'lili'
     vm1.name = 'jack'
     console.log(vm.name, vm1.name)
-    // console.log(vm1.name, vm1._proxyData())
-    console.log(vm1._proxyData()) //undefined
   </script>
 
 </html>

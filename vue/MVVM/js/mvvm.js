@@ -13,6 +13,7 @@ function MVVM (options) {
 
   this._initComputed();
 
+  // 数据劫持从而实现数据绑定
   observe(data, this);
 
   this.$compile = new Compile(options.el || document.body, this)

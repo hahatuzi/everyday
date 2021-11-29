@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 数据绑定：原理：数据劫持使用Object.defineProperty()来监听data中所有属性的变化，一旦变化就更新界面。
+    // new MVVM() --> compile  --> (1)解析指令并初始化视图 --> updater
+    //                         --> (2)订阅数据变化，绑定更新函数 --> Watcher --> updater
+    //            --> observer --> 劫持监听属性通知变化 --> Dep <--> Watcher
+    // ===================================具体实现=======================================
+    
+  </script>
+</body>
+</html>
