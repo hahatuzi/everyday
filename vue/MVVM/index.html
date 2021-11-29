@@ -25,7 +25,9 @@
       const vmH = new MVVM({
         el: '#app',
         data: {
-          name: 'lisa',
+          str: {
+            name: 'lisa',
+          },
           href: ''
         },
         methods: {
@@ -40,7 +42,7 @@
       })
       // console.log(vmH.name, vmH, 'o')
       vmH.name = 'lili'
-      console.log(vmH)
+      // console.log(vmH)
       // console.log(vmH._data.name)
       // var app = document.getElementById('app')
       // console.log(app, app.childNodes, app.nodeType)

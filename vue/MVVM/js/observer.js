@@ -50,6 +50,7 @@ Observer.prototype = {
 * value:vm.data
 */
 function observe (value, vm) {
+  debugger
   // Observe递归结束条件
   if (!value || typeof value !== 'object') {
     return;
@@ -78,7 +79,7 @@ Dep.prototype = {
   addSub: function (sub) {
     this.subs.push(sub);
   },
- // 建立dep和watcher的关系
+  // 建立dep和watcher的关系
   depend: function () {
     Dep.target.addDep(this);
   },
