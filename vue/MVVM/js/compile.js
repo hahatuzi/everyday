@@ -112,6 +112,7 @@ var compileUtil = {
   },
   // 解析v-model
   model: function (node, vm, exp) {
+    // 实现数据的初始化显示和创建对应的watcher
     this.bind(node, vm, exp, 'model');
 
     var me = this,

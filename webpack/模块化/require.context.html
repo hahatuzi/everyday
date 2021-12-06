@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+  </head>
+
+  <body>
+    <script>
+      // https://zhuanlan.zhihu.com/p/59564277
+      // var map = {
+      //   "./A.js": "./src/components/test/components/A.js",
+      //   "./B.js": "./src/components/test/components/B.js",
+      //   "./C.js": "./src/components/test/components/C.js",
+      //   "./D.js": "./src/components/test/components/D.js"
+      // };
+
+
+      // function webpackContext(req) {
+      //   var id = webpackContextResolve(req);
+      //   return __webpack_require__(id);
+      // }
+      // function webpackContextResolve(req) {
+      //   var id = map[req];
+      //   if (!(id + 1)) { // check for number or string
+      //     var e = new Error("Cannot find module '" + req + "'");
+      //     e.code = 'MODULE_NOT_FOUND';
+      //     throw e;
+      //   }
+      //   return id;
+      // }
+      // webpackContext.keys = function webpackContextKeys() {
+      //   return Object.keys(map);
+      // };
+      // webpackContext.resolve = webpackContextResolve;
+      // // module.exports = webpackContext;
+      // webpackContext.id = "./src/components/test/components sync recursive \\.js$";
+      // console.log(webpackContext)
+      const context = require.context('./components/', true, /\.js$/)
+      console.log(context)
+    </script>
+  </body>
+
+</html>

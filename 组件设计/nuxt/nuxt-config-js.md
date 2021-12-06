@@ -1,5 +1,5 @@
 # nuxt.config.js文件解析
-router属性解析
+** router属性解析 **
 ```js
 router:{
   // 中间件
@@ -18,3 +18,14 @@ router:{
 }
 
 ```
+** css属性解析 **
+```js
+
+```
+** header属性解析 **
+```js
+title: '',
+
+```
+** modules属性解析 **
+style-resource引入scss

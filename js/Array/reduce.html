@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+  </head>
+
+  <body>
+    <script>
+      // let arr = ['a', 'b', 'a', 'b', 'c', 'e', 'e', 'c', 'd', 'd', 'd', 'd']
+      // var res = arr.reduce(function (result, item, index) {
+      //   if (result.indexOf(item) === -1) {
+      //     result.push(item)
+      //   }
+      //   return result
+      // }, [])
+      // console.log(res)
+      // ==================
+      var sum = [1, 42, 3, 5].reduce((res, item) => {
+        res += item
+        return res
+      }, 0)
+      console.log(sum)
+      //=============
+      function p1(a) {
+        return new Promise((resolve, reject) => {
+          resolve(a * 5);
+        });
+      }
+
+      // promise function 2
+      function p2(a) {
+        return new Promise((resolve, reject) => {
+          resolve(a * 2);
+        });
+      }
+
+      // function 3  - will be wrapped in a resolved promise by .then()
+      function f3(a) {
+      return a * 3;
+      }
+      const promiseArr = [p1, p2, f3, p4]
+      function Fn(promiseArr){
+        promiseArr.reduce()
+      }
+    </script>
+  </body>
+
+</html>
