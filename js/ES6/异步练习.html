@@ -10,24 +10,65 @@
 
   <body>
     <script>
-      // fn([
-      //   () => { console.log('start') },
-      //   () => sleep(1000),
-      //   () => { console.log('1') },
-      //   () => sleep(2000),
-      //   () => { console.log('2') },
-      //   () => sleep(3000),
-      //   () => { console.log('end') }
-      // ])
+      fn([
+        () => { console.log('start') },
+        () => sleep(1000),
+        () => { console.log('1') },
+        () => sleep(2000),
+        () => { console.log('2') },
+        () => sleep(3000),
+        () => { console.log('end') }
+      ])
+      function sleep(time) {
+        return new Promise((resolve, reject) => {
+          setTimeout(resolve, time)
+        })
+      }
+      async function fn(list) {
+        for (var i = 0; i < list.length; i++) {
+          // 想要产生阻塞关系就必须是同步执行，但是同时又想做到sleep延时的效果，就必须让sleep是异步的。即最终呈现的效果是异步阻塞同步。
+          await list[i]()
+        }
+        // 使用forEach是否可以做到呢
+        // 答案为不能，forEach是在每一次循环的时候将当前循环
+        arr.forEach(
+          async fn => {
+            await fn()
+          })
+      }
       // 想要同步执行，并正常休眠。
       // function fn(fnList) {
 
       // }
-      const data = ajax('http://localhost/getData', {
-        async: false,
-      }, data => {
-        console.log('a')
-      })
+      // ==============案例分析：==========================
+      // const data = ajax('http://localhost/getData', {
+      //   async: false,
+      // }, data => {
+      //   console.log('a')
+      // })
+      // console.log(data)
+      // console.log('1')
+      // // 以上写法会导致一个问题，那就是因为ajax请求是同步执行的，虽然console.log(data)是在ajax请求后执行，但是它会阻塞下面的console.log('1')的执行
+      // // 但是实际上我们想要ajax和console.log('1')是异步关系。即并不想让ajax()的执行影响console.log('1')的执行
+      // // 所以我们才产生了promise和async解决方案。
+      // // 一：promise方案
+      // function test() {
+      //   return new Promise((resolve, reject) => {
+      //     const data = ajax('http://localhost/getData', data => {
+      //       resolve(data)
+      //     })
+      //   })
+      // }
+      // test().then(res => {
+      //   console.log(res)
+      // })
+      // console.log('1')
+      // // 二：async方案
+      // async function fn() {
+      //   const data = await test()
+      //   console.log(data)
+      // }
+      // console.log('1')
     </script>
   </body>
 
