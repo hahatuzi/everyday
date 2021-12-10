@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+  </head>
+
+  <body>
+    <script>
+      // fn([
+      //   () => { console.log('start') },
+      //   () => sleep(1000),
+      //   () => { console.log('1') },
+      //   () => sleep(2000),
+      //   () => { console.log('2') },
+      //   () => sleep(3000),
+      //   () => { console.log('end') }
+      // ])
+      // 想要同步执行，并正常休眠。
+      // function fn(fnList) {
+
+      // }
+      const data = ajax('http://localhost/getData', {
+        async: false,
+      }, data => {
+        console.log('a')
+      })
+    </script>
+  </body>
+
+</html>

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+  </head>
+
+  <body>
+    <script>
+      function shellSort(arr) {
+        // var h = 1
+        // while (h < arr.length / 2) {
+        //   h = 2 * h + 1
+        // }
+        h = Math.floor(arr.length / 2)
+        console.log(h)
+        while (h >= 1) {
+          // 找到待插入的元素
+          for (var i = h; i < arr.length; i++) {
+            // 找到有序队列
+            for (var j = i; j >= h; j -= h) {
+              // 待插入元素和有序元素对比
+              if (arr[j - h] > arr[j]) {
+                var temp = arr[j - h]
+                arr[j - h] = arr[j]
+                arr[j] = temp
+              }
+            }
+          }
+          h = Math.floor(h / 2)
+          console.log(h)
+        }
+        console.log(arr)
+      }
+      var arr = [34, 654, 7, 1, 10, 2, 30, 20, 6]
+      shellSort(arr)
+      // 间隔为4，比较0---0+4---0+4+4，1---1+4---1+4+4
+      // 间隔为2，比较0-0+2,
+      // 间隔为1，比较0-1，1-2，2-3，3-4，4-5
+
+    </script>
+  </body>
+
+</html>

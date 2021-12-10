@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+  </head>
+
+  <body>
+    <script>
+      // 分析：[34, 2, 5, 1, 654, 7]
+      // 假定索引0处为最大
+      // 第一趟：比较1次，比较0和1处，小的放在前面
+      // 第二趟：比较2次，比较1和2，0和2处
+      // 第三趟：比较3次，比较2和3,1和3处,0和3
+      // 第四趟：比较4次，比较3和4，2和4，1和4处，0和4
+      // 第五趟：比较5次，比较4和5，3和5,2和5处，1和5,0和5
+      function insertSort(arr) {
+        // for (var i = 1; i <= arr.length - 1; i++) {
+        //   var j = i
+        //   while (arr[j - 1] > arr[j] && j > 0) {
+        //     var temp = arr[j]
+        //     arr[j] = arr[j - 1]
+        //     arr[j - 1] = temp
+        //     j--
+        //   }
+        // }
+        // console.log(arr)
+        for (var i = 1; i < arr.length; i++) {
+          for (var j = i; j >= 0; j--) {
+            if (arr[j - 1] > arr[j]) {
+              var temp = arr[j - 1]
+              arr[j - 1] = arr[j]
+              arr[j] = temp
+            }
+          }
+        }
+        console.log(arr)
+      }
+      // 比较次数：n-1+(n-2)+(n-3)+(n-4)+1=n^2/2-n/2
+      // 交换次数：n-1+(n-2)+(n-3)+(n-4)+1=n^2/2-n/2
+      // O(n^2)
+      var arr = [34, 2, 5, 1, 654, 7]
+      insertSort(arr)
+    </script>
+  </body>
+
+</html>

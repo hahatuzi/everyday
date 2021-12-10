@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+  </head>
+
+  <body>
+    <script>
+      // 将大于枢纽的元素放在右边，小于的放在左边
+      function change(a, b) {
+        var temp = ''
+        temp = a
+        b = a
+      }
+      function median(left, right) {
+        var center = Math.floor((left + right) / 2)
+        if (this.arr[left] > this.arr[center]) {
+          let temp = ''
+          temp = this.arr[center]
+          this.arr[center] = this.arr[left]
+          this.arr[left] = temp
+        }
+        if (this.arr[center] > this.arr[right]) {
+          let temp = ''
+          temp = this.arr[right]
+          this.arr[right] = this.arr[center]
+          this.arr[center] = temp
+        }
+        if (this.arr[left] > this.arr[right]) {
+          let temp = ''
+          temp = this.arr[left]
+          this.arr[right] = this.arr[left]
+          this.arr[left] = temp
+        }
+        let num = ''
+        temp = this.arr[center]
+        this.arr[center] = this.arr[right - 1]
+        this.arr[right - 1] = temp
+      }
+      function quick(arr) {
+        // var max = arr[length - 1]
+        // var first = arr[0]
+        // var last = arr[length - 2]
+        if (arr[0] > arr[arr.length - 2]) {
+          let num = ''
+          temp = arr[arr.length - 2]
+          arr[arr.length - 2] = arr[0]
+          arr[0] = temp
+        } else {
+
+        }
+        console.log(this.arr)
+        for (var i = 0; i < arr[length - 2]; i++) {
+
+        }
+      }
+      function qui(left, right) {
+        if (left >= right) return
+        var i = left
+        var j = right - 1
+        var pivot = this.test(left, right)
+        while (true) {
+          while (this.arr[++i] < pivot) { }
+          while (this.arr[--j] > pivot) { }
+          if (i < j) {
+            this.swap(i, j)
+          } else {
+            break
+          }
+        }
+        this.swap(i, right - 1)
+        this.qui(left, i - 1)
+        this.qui(right, right)
+      }
+      var arr = [34, 50, 24, 18, 1, 5, 17]
+      this.median(0, this.arr.length - 1)
+      this.quick(arr)
+      function Array(data) {
+        this.arr = data
+      }
+      Array.prototype = {
+        swap: function (left, right) {
+          var temp = this.arr[left]
+          this.arr[left] = this.arr[right]
+          this.arr[right] = temp
+        },
+        median: function (left, right) {
+          var center = Math.floor((left + right) / 2)
+          if (this.arr[left] > this.arr[center]) {
+            let temp = ''
+            temp = this.arr[center]
+            this.arr[center] = this.arr[left]
+            this.arr[left] = temp
+          }
+          if (this.arr[center] > this.arr[right]) {
+            let temp = ''
+            temp = this.arr[right]
+            this.arr[right] = this.arr[center]
+            this.arr[center] = temp
+          }
+          if (this.arr[left] > this.arr[right]) {
+            let temp = ''
+            temp = this.arr[left]
+            this.arr[right] = this.arr[left]
+            this.arr[left] = temp
+          }
+          let num = ''
+          temp = this.arr[center]
+          this.arr[center] = this.arr[right - 1]
+          this.arr[right - 1] = temp
+        },
+        quick: function (left, right) {
+          // 1.结束条件
+          // if (left >= right) return
+          // var pivot = this.median(left, right)
+          var i = left
+          var j = right - 1
+          while (true) {
+            if (i > j) {
+              this.swap(i, j)
+            }
+          }
+        },
+        quickSort: function (arr) {
+          this.quick(0, arr.length - 1)
+        }
+      }
+      var list = new Array([34, 50, 24, 18, 1, 5, 17])
+    </script>
+  </body>
+
+</html>

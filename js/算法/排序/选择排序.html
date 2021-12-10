@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+  </head>
+
+  <body>
+    <script>
+      // n-1 + n-2 + n-3 + n-4 + ...+1 = (n-1+1)*(n-1)/2 = n*(n-1)/2
+      // n*(n-1)/2*(n-1) = n^2/2 + n/2-1
+      // O(n^2)
+      // 分析：[34, 2, 5, 1, 654, 7]
+      // 假定索引0处为最大
+      // 第一趟：比较length-1趟，将654放在最后
+      // 第二趟：比较length-1-（1）趟，将34放在倒数第二位
+      // 第三趟：比较length-1-（1-1）趟，将7放在倒数第三位
+      // 第四趟：比较length-1-（1-1-1）趟，将5放在倒数第四位
+      // 第五趟：比较length-1-（1-1-1-1）趟，将2放在倒数第二位
+      function choiceSort(arr) {
+        for (var i = 0; i < arr.length - 1; i++) {
+          for (var j = i + 1; j <= arr.length - 1; j++) {
+            var min = i
+            if (arr[j] < arr[min]) {
+              var temp = arr[min]
+              arr[min] = arr[j]
+              arr[j] = temp
+            }
+          }
+        }
+        console.log(arr)
+      }
+      var arr1 = [34, 2, 5, 1, 654, 7]
+      choiceSort(arr1)
+    </script>
+  </body>
+
+</html>

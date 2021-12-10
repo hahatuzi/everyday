@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+  </head>
+
+  <body>
+    <script src="./promise.js"></script>
+    <script>
+      const p = new Promise((resolve, reject) => {
+        // setTimeout(() => {
+        //   console.log('setTimeout')
+        // }, 0)
+        // 添加定时器的目的在于先改变状态再执行回调函数，而非直接执行then中的回调函数
+        setTimeout(() => {
+          resolve(1) // resolve属于直接调用，所以women此时需要重新指定resolve的this
+          // reject(2) //通过
+        }, 100)
+      })
+      p.then(
+        value => {
+          console.log(value, 'resolve')
+        },
+        reason => {
+          console.log(reason, 'reject')
+          return new Promise((resolve, reject) => { reject(reason) })
+        }
+      )
+      p.then(
+        value => {
+          console.log(value, 'resolve1')
+        },
+        reason => {
+          console.log(reason, 'reject1')
+        }
+      )
+      console.log('1')
+      // 问题？如何才能让resolve()早于setTimeout执行。
+    </script>
+    <!-- <script>
+      debugger
+      const p = new Promise((resolve, reject) => {
+        setTimeout(() => {
+          console.log('setTimeout')
+        }, 0)
+        resolve(1)
+      })
+      p.then(value => {
+        console.log('ok', value)
+      })
+      console.log('1')
+    </script> -->
+  </body>
+
+</html>

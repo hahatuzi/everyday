@@ -10,14 +10,30 @@
 
   <body>
     <script>
-      function change(a,b){
+      function swap(a, b) {
         var temp = ''
         temp = a
         b = a
       }
-      function bubbleSort() {
-       
+      function bubbleSort(arr) {
+        // 1.第一趟循环找到最大的数值，放置在最后一位,交换次数为n-1
+        // 2.继续下一趟循环找到第二大的数值,交换次数为n-1-1继续下一趟循环，循环总次数为n-1,每次的交换次数为n-趟数
+        for (var i = 0; i < arr.length - 1; i++) {
+          for (var j = 0; j < arr.length - i; j++) {
+            if (arr[j] > arr[j + 1]) {
+              var temp = arr[j]
+              arr[j] = arr[j + 1]
+              arr[j + 1] = temp
+            }
+          }
+        }
+        console.log(arr)
       }
+      // 比较次数：n-1+(n-2)+(n-3)+(n-4)+1=n^2/2-n/2
+      // 交换次数：n-1+(n-2)+(n-3)+(n-4)+1=n^2/2-n/2
+      // O(n^2)
+      var arr1 = [34, 2, 5, 1, 654, 7]
+      bubbleSort(arr1)
     </script>
   </body>
 

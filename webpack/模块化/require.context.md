@@ -53,7 +53,7 @@ const routerList = []
 installRouter () {
   const list = require.context("../routes", true, /\.routes\.js/)
   list.keys().forEach(item=>{
-    routerList.push(routerList(item).default)
+    routerList.push(list(item).default)
   })
 }
 installRouter()
@@ -64,4 +64,19 @@ const router = new VueRouter({
   ...routes
 })
 export default router
+```
+#### 三：store的mutations模块化
+```js
+// https://webpack.js.org/guides/dependency-management/#requirecontext
+const modulesFiles = require.context('./modules', true, /\.js$/)
+
+// you do not need `import app from './modules/app'`
+// it will auto require all vuex module from modules file
+const modules = modulesFiles.keys().reduce((modules, modulePath) => {
+  // set './app.js' => 'app'
+  const moduleName = modulePath.replace(/^\.\/(.*)\.\w+$/, '$1')
+  const value = modulesFiles(modulePath)
+  modules[moduleName] = value.default
+  return modules
+}, {})
 ```
