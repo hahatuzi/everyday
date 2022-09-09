@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 一：forEach的itemd传递基本类型
+    // var arr1 = [1,2]
+    // arr.forEach(item =>{
+    //   item = item*2
+    // })
+    // console.log(arr1)
+    // --------------------------------------------------------
+    // 二：forEach的item传递引用类型
+    // var arr = [{age:12},{age:10}]
+    // arr.forEach(item =>{
+    //   item.age = item.age*2
+    // })
+    // console.log(arr)
+    // --------------------------------------------------------
+    // 三：forEach原理
+    // Array.prototype.myForEach = function (fn,thisValue) {
+    //   // console.log(this)
+    //   // if (!thisValue) thisValue = undefined
+    //   for(var i = 0;  i<this.length;i++){
+    //     //此处的this[I]就是我们用来判断myForEach是否发生改变的依据
+    //     fn(this[i])
+    //   }
+    // }
+    // var arr2 = [1,4,2]
+    // arr2.myForEach(item=>{item = item*2})
+    // console.log(arr2)
+    // var arr2 = [{age:12},{age:10}]
+    // arr2.myForEach(item=>{item.age = item.age*2})
+    // console.log(arr2)
+    // --------------------------------------------------------
+    var arr1 = [1,2]
+    var arr = [{age:12},{age:10}]
+    // arr1 = arr1.map(item=>{ return item = item*2})
+    // arr = arr.map(item=>{ return item.age = item.age*2})
+    // console.log(arr1,arr)
+    Array.prototype.myMap = function (fn,thisValue) {
+      var list = []
+      for(var i = 0;i <this.length;i++){
+        list.push(fn(this[i]))
+      }
+      return list
+    }
+    let a1, a2 = []
+    a1 = arr1.myMap(item=>{return item = item*2})
+    a2 = arr.myMap(item=>{
+      item.age = item.age*2
+      return item
+    })
+    console.log(arr1 , '>>', a1)
+    console.log(arr , '>>' , a2)
+  </script>
+</body>
+</html>

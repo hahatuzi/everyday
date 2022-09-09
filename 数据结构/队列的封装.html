@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    function Queue() {
+      this.items = []
+      Queue.prototype.enqueue = function (element) {
+        this.items.push(element)
+      }
+      Queue.prototype.dequeue = function () {
+        return this.items.shift()
+      }
+      Queue.prototype.front = function () {
+        return this.items[0]
+      }
+      Queue.prototype.isEmpty = function () {
+        return this.items.length === 0
+      }
+      Queue.prototype.size = function () {
+        return this.items.length
+      }
+      Queue.prototype.toString = function () {
+        return this.items.toString()
+      }
+    }
+    // var q1 = new Queue()
+    // q1.enqueue(1)
+    // q1.enqueue(2)
+    // q1.enqueue(3)
+    // console.log(q1)
+    // console.log(q1.dequeue())
+    // console.log(q1.front())
+    // console.log(q1.isEmpty())
+    // console.log(q1.size())
+    // console.log(q1.toString())
+    // =========================================================================
+    // 击鼓传花
+    // 先让所有元素排好队
+    // 将喊到的数字与当前元素比较，不匹配的话重新排到队尾，匹配的话将它从队列中删除
+    // 结果，最后剩下的人
+    var nameList = ['lisa','rose','jisoo', 'jane', 'lili']
+    
+    function passGame (arr, flag) {
+      var q2 = new Queue()
+      for (let i = 0; i < arr.length; i++) {
+        q2.enqueue(arr[i])
+      }
+      while (q2.size() > 1) {
+        for (let num = 0; num < flag - 1; num++ ) {
+          q2.enqueue(q2.dequeue())
+        }
+        q2.dequeue()
+      }
+      console.log(q2.size())
+      return q2.front()
+    }
+    console.log(passGame(nameList, 3))
+  </script>
+</body>
+</html>

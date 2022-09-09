@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    function PriorityQueue () {
+      this.items = []
+      // 封装一个新的构造函数，用来保存
+      function QueueElement(el,priority) {
+        this.element  = el
+        this.priority = priority
+      }
+      PriorityQueue.prototype.equeue = function (element,priority) {
+        // 创建QueueElement对象
+        let queueElement = new QueueElement(element,priority)
+        if (this.items.length == 0 ) {
+          this.items.push(queueElement)
+        } else {
+          let added= false
+          for (let i = 0; i< this.items.length; i++) {
+            if(queueElement.priority < this.items[i].priority) {
+              this.items.splice(i, 0, queueElement)
+              added = true
+              break
+            }
+          }
+          if (!added) {
+            this.items.push(queueElement)
+          }
+        }
+      }
+    }
+    var p1 = new PriorityQueue()
+    p1.equeue('lisa',1)
+    console.log(p1.items)
+    p1.equeue('rose',3)
+    p1.equeue('jisoo',2)
+  </script>
+</body>
+</html>

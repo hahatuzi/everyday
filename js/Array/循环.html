@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    
+    // 下面是代码实现
+    function test() {
+      var arr = [{
+        name:'lisa',
+        age:12
+      },{
+        name:'lili',
+        age:13
+      }]
+      let data = {
+        name:'li',
+        age:18
+      }
+      for (let i = 0; i < arr.length; i += 1) {
+        if (arr[i].name === data.name) {
+          arr[i].age = data.age
+          console.log(arr)
+          return
+        }
+      }
+      arr.push(data)
+      console.log(arr)
+    }
+    test()
+  </script>
+</body>
+</html>

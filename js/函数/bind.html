@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    //bind的实现，bind是方法原型上的一个方法，该方法的返回值为一个函数，函数的this指向bind方法的形参
+    // 实现第一步：绑定this
+    Function.prototype.my_bind = function (context) {
+      var _this = this
+      return function () {
+        _this.apply(context, arguments)
+      }
+    }
+    // 测试结果
+    function fn1 () {
+      console.log(this.name)
+    }
+    var obj = {name: 'lisa'}
+    fn1.bind(obj)()
+    fn1.my_bind(obj)()
+    // 实现第二步：传参
+    Function.prototype._bind = function (context) {
+      var args = Array.prototype.slice.call(arguments,1)
+      var _this = this
+      return function () {
+        var innerArgs = Array.prototype.slice.call(arguments)
+        console.log(innerArgs)
+        var finalArgs = [...args,  ...innerArgs]
+        _this.apply(context,finalArgs)
+      }
+    }
+    function fn2 (num) {
+      console.log(this.name + num)
+    }
+    var obj = {name: 'lisa'}
+    // fn2._bind(obj,10)()
+    // fn2._bind(obj,10)()
+    // 实现第三步:bind的返回函数作为构造函数，绑定的this就需要被忽略
+    Function.prototype.bind = Function.prototype.bind || function (context) {
+      if(typeof this !== 'function') {
+        throw new TypeError('function.prototype.bind - what is trying to be bound is not call')
+      }
+      var args = Array.prototype.slice.call(arguments,1)
+      var _this = this
+      var F = function () {}
+      F.prototype = this/prototype
+      var bound = function () {
+        var innerArgs = Array.prototype.slice.call(arguments)
+        var finalArgs = args.concat(innerArgs)
+        return self.apply(this instanceof F ? this : context || this.finalArgs)
+      }
+      bound.prototype = new F()
+      return bound
+    }
+  </script>
+</body>
+</html>

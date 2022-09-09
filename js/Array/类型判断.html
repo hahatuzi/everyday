@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 1、Array.isArray() 
+    /*
+    * return Boolean
+    */
+
+   // 2.instanceof a instanceof Array
+    /*
+    * instanceof 运算符用于检验构造函数的prototype上是否出现在对象的原型链上的任意位置，
+    * return Boolean
+    * 注意：因为prototype属性是可以修改的，所以当存在多个全局环境时，每个环境都会拥有自己的Array.prototype属性
+    */
+   // 比如：
+   var ifm = document.createElement('iframe')
+   document.body.appendChild(ifm)
+   ifmArray = window.frames[0].Array
+   var arr = new ifmArray(1,2,3)
+   console.log(arr instanceof Array)
+   // 3.constructor  a.condtructor === Array
+   /*
+   *  return Boolean
+   * 和prototype一样，当存在多个全局环境时，不同环境下的属性不同
+   */
+  // 4.Object.prototype.toString.call()
+  /*
+  *获取到对象的不同类型
+  */
+  let a = [1,2,3]
+  console.log(Object.prototype.toString.call(a) === '[object Array]')
+  </script>
+</body>
+</html>

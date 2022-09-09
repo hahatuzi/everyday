@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>单向链表</title>
+</head>
+<body>
+  <script>
+    function LinkedList () {
+      // 包含一个head默认指向第一个元素
+      this.head = null
+      this.length = 0
+      // 每一个节点都包含两个属性，其中next用来指向下一个元素
+      function Node (data) {
+        this.data = data
+        this.next = null
+      }
+      LinkedList.prototype.append = function (data) {
+        let node = new Node(data)
+        console.log(this.head,node)
+        if (this.length == 0) {
+          this.head = node
+        } else {
+          let curNode = this.head
+          while (curNode.next) {
+            curNode.next = curNode.next
+          }
+          curNode.next = node
+        }
+        this.length+=1
+      }
+      LinkedList.prototype.insert = function (data, position) {
+        // 越界判断
+        if (position < 0 || position > this.length) return false
+        let newNode = new Node(data)
+        if (position == 0) {
+          newNode.next = this.head.next
+          this.head.next = newNode
+        } else {
+          let index = 0
+          let curNode = this.head
+          let preNode = null
+          while (index < position) {
+            preNode = curNode
+            curNode = curNode.next
+            index ++
+          }
+          preNode.next = newNode
+          newNode.next = curNode
+        }
+        this.length += 1
+        return true
+      }
+    }
+    let link = new LinkedList()
+    link.append('lisa')
+    link.append('jisoo')
+    link.append('rose')
+    console.log(link)
+    link.insert('jenni', 2)
+    console.log(link)
+  </script>
+</body>
+</html>

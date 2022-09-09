@@ -11,29 +11,126 @@
   <body>
     <script>
 
-      let ratings = [5, 4, 5];
+//       let ratings = [5, 4, 5];
 
-      let sum = 0;
+//       let sum = 0;
 
-      let sumFunction = function (a, b) {
-        console.log(a)
-        return a + b;
-      }
-      // debugger
+//       let sumFunction = function (a, b) {
+//         console.log(a)
+//         return a + b;
+//       }
+//       // debugger
 
-      // ratings.forEach(async function (rating) {
-      //   sum = await sumFunction(sum, rating);
-      // })
-      ratings.forEach(function (rating) {
-        sum = sumFunction(sum, rating);
-      })
+//       // ratings.forEach(async function (rating) {
+//       //   sum = await sumFunction(sum, rating);
+//       // })
+//       ratings.forEach(function (rating) {
+//         sum = sumFunction(sum, rating);
+//       })
 
-      console.log(sum);
-// Expected output: 14
-// Actual output: 0
-    Array.prototype.myForEach = function (){
+//       console.log(sum);
+// // Expected output: 14
+// // Actual output: 0
+//     Array.prototype.myForEach = function (){
       
+//     }
+    var arr = [1,2,3,4,5]
+    var obj = {
+      name: 'lisa'
     }
+    // arr.forEach(function(item,index,array){
+    //   console.log(this)
+    //   console.log(item,index,array)
+    // },obj)
+    // forEach重写
+    /*
+    * @param {function} cb
+    * @param
+    * @return
+    */
+    Array.prototype.myForEach = function (cb,) {
+      var _arr = this
+      var _len = _arr.length
+      var _arg2 = arguments[1] || window
+      for (let i = 0; i < _len; i++) {
+        // 若没有传递arguments[1],cb函数的调用者就是window
+        // 若传递了arguments[1],cb函数的调用者就要指向argument[1]
+        cb.apply(_arg2, [_arr[i], i, _arr])
+      }
+    }
+    // arr.myForEach(function(item,index,array){
+    //   console.log(this)
+    //   console.log(item,index,array)
+    // },obj)
+    
+    // map重写
+    /*
+    * @param {function} cb
+    * @param
+    * @return {Array} newArr
+    */
+   /*
+   *  cb的参数
+   * params item,index,array
+   * return item
+   */
+    // var newArr = arr.map(function (item,index,array) {
+    //   // console.log(this)
+    //   // console.log(item,index,array)
+    //   item = item*2
+    //   return item
+    // },obj)
+    // console.log(newArr, arr)
+    Array.prototype.myMap = function (cb,) {
+      console.log(this)
+      var _arr = this
+      var _len = arr.length
+      var _arg2 = arguments[1] || window
+      var newArr = []
+
+      for (let i = 0; i < _len; i++) {
+        newArr.push(cb.apply(_arg2, [_arr[i], i, _arr]))
+      }
+      return newArr
+    }
+    // var newArr2 = arr.myMap(function (item,index,array) {
+    //   item = item*2
+    //   return item
+    // },obj)
+
+    // filter重写
+    /*
+    * @param {function} cb
+    * @param
+    * @return {Array} newArr
+    */
+   /*
+   *  cb的参数
+   * params item,index,array
+   * return Boolean
+   */
+   var newArr = arr.filter(function(item,index,array){
+     return item%2 == 0
+   })
+   console.log(newArr)
+   Array.prototype.myFilter = function(cb,){
+     var _arr = this
+     var _len = _arr.length
+     var _arg2 = arguments[1] || window
+     var flag
+     var newArr = []
+     for (let i = 0; i < _len; i++) {
+       flag = cb.apply(_arg2, [_arr[i], i, _arr])
+       if(flag) {
+         newArr.push(_arr[i])
+       }
+     }
+     return newArr
+   }
+   const newArr3 = arr.myFilter(function(item){
+     return item%2 == 0
+   })
+   console.log(newArr3)
     </script>
   </body>
 

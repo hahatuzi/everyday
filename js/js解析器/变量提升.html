@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // // 将函数的声明提前到此处：fn
+    // test()
+    // function test() {
+    //   obj = {name: 'lisa'}
+    //   console.log('函数声明了')
+    //   function fn(){
+    //     obj1 = {name: 'lili'}
+    //   }
+    // }
+    // test()
+    // console.log(obj)
+    // console.log(obj1)
+    // // console.log(arr) // is not defined
+    // 测试案例二：函数声明和变量声明的先后顺序
+     test() //1
+    function test(){
+      console.log('1')
+    }
+    var test = function () {
+      console.log('2')
+    }
+    test() //2
+    // 上述代码其实相当于
+    // function test () {}
+    // test()
+    // var test = function (){}
+    // test()
+    
+  </script>
+</body>
+</html>

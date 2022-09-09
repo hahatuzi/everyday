@@ -1,11 +1,14 @@
 # 本文讲述浏览器的底层运行机制：
 **1.js的运行环境：**
 V8引擎以前采取的是两个编译器一起工作来实现将js代码转化为机器码的原理，后来，，忘记了
+https://juejin.cn/post/6844903906900869127
 **2.ECS(executioin context stack)执行环境栈**
 ### ECS
 内存中分配出来的一块内存，遵守先进后出的原则，
 作用：用来存储执行代码期间创建的所有EC(执行上下文)
+
 **3.EC(executioin context)执行上下文(语法作用域)**
+
 ### EC
 // 执行上下文和堆栈无关，堆栈中存储的只是变量。而上下文其**本质是作用域**。
 执行上下文包括两种类型：
@@ -34,9 +37,14 @@ V8引擎以前采取的是两个编译器一起工作来实现将js代码转化�
    而VO(G)又区分为var创建和let,const创建的两种类型：
    var创建的类型：会映射给GO一份作为其属性
 （2）AO私有变量对象：
-    而在【函数执行上下文EC(XX)中】，因为【私有变量对象 AO(xx)】 是要保存当前私有上下文中所有的变量，而一个函数内的变量包括：形参变量、局部变量、自身函数对象引用变量、arguments、this。 为了保存这些变量，所以特意创建了一个对象，称它为【活动对象(私有变量对象)AO(xx)】，函数内所需的变量就都保存在 【私有变量对象AO(xx)】 中，所以在函数执行上下文中，变量对象 VO 的具体表现也就是【私有变量对象AO(xx)】
+    而在【函数执行上下文EC(XX)中】，因为【私有变量对象 AO(xx)】 是要保存当前私有上下文中所有的变量，而一个函数内的变量包括：形参变量、局部变量、自身函数对象引用变量、arguments、this。 为了保存这些变量，所以特意创建了一个对象，称它为【活动对象(私有变量对象)AO(xx)】，函数内所需的变量就都保存在 【私有变量对象AO(xx)】 中，所以在函数执行上下文中，变量对象 VO 的具体表现也就是【私有变量对象AO(xx)】。需要注意的是如果EC(XX)内的变量没有用var 声明的话它会变成全局作用域下的变量
 引用原文链接：https://juejin.cn/post/6874592740395450376
-
+# 变量的创建与执行
+  定义阶段：
+    **确定作用域：即确定当前代码块内“资源”的可见性。**
+  执行阶段：
+    **确定执行上下文：作用域链、VO/AO、this的值**
+https://blog.csdn.net/qq_28955395/article/details/99131936?spm=1001.2101.3001.6650.1&utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromBaidu%7Edefault-1-99131936-null-52597094.pc_relevant_downloadblacklistv1&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromBaidu%7Edefault-1-99131936-null-52597094.pc_relevant_downloadblacklistv1&utm_relevant_index=2
 **6.垃圾回收机制**
 代码回收规则如下：
 1.全局变量不会被回收。

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // [2,7,11,15], target = 9
+    // 2+7=9  return [0,1]
+    var arr = [3,3]
+    var num = 9
+    var map1 = new Map()
+    var twoSum = function (source, target) {
+      for (let index = 0; index < source.length; index++) {
+        const data = target - source[index]
+        if (map1.has(data)) {
+          return [map1.get(data), index]
+        } else {
+          map1.set(source[index], index)
+        }
+      }
+    }
+    console.log(twoSum(arr, num))
+    // 常规思维，暴力枚举法：我们会遍历数组，取每一项差值，再遍历数组是否存在与差值相同的值，这样就是双层循环
+    // 本题思维，哈希表，同样先遍历数组获取差值，遍历的同时记录一些信息，省去一层循环，以空间换取时间，需要记录已经遍历的元素的值和下标
+  </script>
+</body>
+</html>

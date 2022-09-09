@@ -1,0 +1,1 @@
+# 微信小程序的token应该怎么存取，wx.setwx.setStorageSync??localhostStorage??app/global

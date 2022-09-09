@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    function Foo(){
+      getName = function () {
+        console.log('1')
+      }
+      return this
+    }
+    Foo.getName = function () {
+      console.log('2')
+    }
+    Foo.prototype.getName = function () {
+      console.log('3')
+    }
+    // 函数定义的方式一
+    // 先声明一个变量getName再赋值为一个匿名函数
+    // getName() // 5
+   
+    // 定义函数的方式二
+    // 函数声明
+    console.log(getName)// 在声明的时候函数优先
+    getName()
+    var getName = function () {
+      console.log('4')
+    }
+    function getName () {
+      console.log('5')
+    }
+    
+    // Foo.getName() //2,调用函数对象的getName属性
+    // 当此处涉及到函数的预解析和预编译
+    // getName() //4，疑问为什么先后经过变量提升和函数提升后的值为4而非5，明明先进行的变量声明后进行的函数声明
+    // Foo().getName()
+    // console.log(Foo().getName)
+    getName() // 5-->4
+    // new Foo.getName()
+    // new Foo().getName()
+    // new new Foo().getName()
+  </script>
+</body>
+</html>

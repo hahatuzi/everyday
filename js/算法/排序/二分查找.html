@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 注意要点：
+    // 1.确定左边界l，右边界r
+    // 2.确定循环的条件：l<=r
+    // 3.确定当前位置：guess = Math.floor((l+r)/2)
+    // 复杂度 T(n) = log2^n +1
+    function search (arr,data){
+      let l = 0
+      let r = arr.length-1
+      let guess
+      while(l <= r){
+        guess = Math.floor((l+r)/2)
+        if(arr[guess] == data){
+          return guess
+        } else if (arr[guess] < data){
+          l = guess + 1
+        } else {
+          r= guess - 1
+        }
+      }
+      return -1
+    }
+    console.log(search([3,5,6,7,8,10,24,35],3))
+  </script>
+</body>
+</html>
