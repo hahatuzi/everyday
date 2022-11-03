@@ -8,17 +8,8 @@
 </head>
 <body>
   <script>
-    var search = function(nums, target) {
-      debugger
-  for (let i = 0; i< nums.length;i++){
-      if(nums[i] === target) {
-        return i
-      } else {
-          return -1
-      }
-  }
-}
-search([1,2,3,4,5,6,7],4)
+    const diffDays = (date, otherDate) => Math.ceil((date - otherDate) / (1000 * 60 * 60 * 24));
+    console.log(diffDays(new Date('2022/11/2'),new Date('2022/11/3')))
   </script>
 </body>
 </html>
