@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // let map1 = new Map([['lisa',1],['jisoo',2],['rose',3],['jinne',4]])
+    // for (const item of map1) {
+    //   console.log(item)
+    // }
+    // ==================================================================
+    // let arr = [{
+    //   type:'类型一'
+    // },{
+    //   type:'类型二'
+    // },{
+    //   type:'类型三'
+    // },{
+    //   type:'类型一'
+    // }]
+    // let map2 = new Map()
+    // arr.forEach((item,index) => {
+    //   if (!map2.has(item.type)) {
+    //     map2.set(item.type, index)
+    //   }
+    // })
+    // console.log(map2)
+    // // 再将它转化为数组
+    // console.log([...map2.keys()])
+    // ===========================map转对象=======================================
+    let map1 = new Map()
+    map1.set('yes',true)
+    map1.set('no',false)
+    function mapToObj (map) {
+      let obj = Object.create(null)
+      for(let [key, value] of map) {
+        obj[key] = value
+      }
+      return obj
+    }
+    console.log(mapToObj(map1))
+    // ===========================对象转map=======================================
+    let obj = {'yes':true, 'no':false}
+    console.log(new Map(Object.entries(obj)))
+  </script>
+</body>
+</html>

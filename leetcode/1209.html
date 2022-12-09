@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 已知数组arr = [[1,2,3],[3,4,5],[2,4,5,1]],请将它扁平化处理，并返回升序不重复的数组
+    let arr = [[1,2,3],[3,4,5],[2,4,[6,7,[9,10],8],5,1]]
+    let arr1 = Array.from(new Set(arr.flat(Infinity)))
+    console.log(arr1.sort((a,b) => {return a - b}))
+  </script>
+</body>
+</html>
