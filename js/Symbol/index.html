@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    let foo = Symbol('foo')
+    let boo = Symbol('boo')
+    let num = Symbol('1')
+    // console.log(foo, boo, foo == boo)
+    console.log(foo.toString())
+    console.log(foo.valueOf())
+    let s1 = Symbol.for('sym')
+    let s2 = Symbol.for('sym')
+    console.log(s1 === s2)
+    Symbol.keyFor(s1)
+    Symbol.keyFor(s2)
+    let  obj = {
+      [Symbol.toPrimitive](hint){
+        switch (hint) {
+          case 'number':
+            return 1
+            break;
+          case 'string':
+            return '1'
+            break
+          case 'default':
+            return 'default'
+            break
+          default:
+            throw new Error()
+        }
+      }
+    }
+    // console.log(2* obj)
+    // console.log(2 + obj)
+    // console.log(obj === 'default')
+
+    let a = {
+      i:1,
+      [Symbol.toPrimitive]() {
+        return this.i++
+        // console.log('aa', hint)
+        // switch (hint) {
+        //   case 'number':
+        //     console.log(hint)
+        //     return 1
+        //     break;
+        //   case 'string':
+        //     console.log(hint)
+        //     return '1'
+        //     break;
+        //   case 'default':
+        //     return 'default'
+        //     break
+        //   default:
+        //     break;
+        // }
+      }
+    }
+    if (a == 1 && a == 2 && a== 3) {
+      console.log('ok')
+    }
+  </script>
+</body>
+</html>
