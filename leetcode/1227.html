@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 要求去除数组参数中的重复数字项，并返回该数组
+    const _deleteRepeat = array => {
+      return Array.from(new Set(array))
+    }
+    var arr = [-1,1,2,2]
+    console.log(_deleteRepeat(arr))
+    // 或者判断数组中是否有重复项时也可以使用new Set
+  </script>
+</body>
+</html>

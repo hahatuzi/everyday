@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 浅拷贝
+    var obj = {
+      name: 'lisa',
+      func:{
+        skill1: 'dancing',
+        skill2:'kpop'
+      }
+    }
+    // var obj1 = Object.assign({},obj)
+    // obj1.func.skill1 = 'sining'
+    // obj1.name = 'jisoo'
+    // console.log(obj, obj1)
+    // =================================
+    // 深拷贝
+    function deepClone (origin, target) {
+      let tar = target || {}
+      // 判断类型
+      // 仅剩下对象，数组
+      for(let key in origin) {
+        // 再次判断，确定该属性不在对象原型上即可
+        if (origin.hasOwnProperty(key)){
+
+          if (typeof origin[key] == 'object' && origin[key] !== null){
+            tar[key] = Object.prototype.toString.call(origin[key]) === '[object Array]' ? [] : {}
+            deepClone(origin[key], tar[key])
+          } else {
+            console.log(origin[key])
+            tar[key] = origin[key]
+          }
+        }
+      }
+      return tar
+    }
+    let obj1 = deepClone(obj, {})
+    obj1.name = 'jisoo'
+    console.log(obj1, obj)
+
+  </script>
+</body>
+</html>

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // vnode --> 真实dom  'react_text',function
+    // 处理children数组
+    React.createElement("h1", { className: "title", style: { color: 'red' }}, "Hello World");
+    function createElement(type, config, children) {
+      let props = {...config}
+      return {
+        $$typeof,
+        key,
+        props,
+      }
+    }
+    function changeChildren (children, dom) {
+      let type = Object.prototype.toString.call(children)
+      if (type == '[object Object]') {
+         render()
+      } else if (type === '[object Array]') {
+
+      }
+    }
+    function mountedFunctionComponent (vdom) {
+      let {type, props} = vdom
+      let functionVdom = type(props)
+    }
+  </script>
+</body>
+</html>

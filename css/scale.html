@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    .outer{
+      width:100vw;
+      height: 100vh;
+      border: 1px solid #000;
+    }
+    .inner{
+      border: 1px solid #000;
+      text-align: center;
+      width: 100%;
+      height: 100%;
+      /* margin: 100px auto; */
+      transform-origin: 0 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="outer">
+    <div class="inner" id="inner">inner</div>
+  </div>
+  <script>
+    function setScale() {
+    let w = 1920
+    let h = 1080
+      let app = document.getElementById('inner')
+      let H = window.innerHeight
+      let W = window.innerWidth
+      let scale = {}
+      let baseProportion = w / h // 3,1
+      // 当前宽高比
+      let currentRate = W / H
+     if (currentRate > baseProportion) {
+          // 表示更宽
+           scale.width = ( (H * baseProportion) / w ).toFixed(5);
+           scale.height = (H / h).toFixed(5);
+          app.style.transform = `scale(${ scale.width}, ${ scale.height})`;
+        } else {
+          // 表示更高
+          scale.height = (W / baseProportion / h ).toFixed(5);
+           scale.width = (W / w).toFixed(5);
+          console.log( scale)
+          // app.style.backgroundColor = '#000'
+          app.style.transform = `scale(${ scale.width}, ${ scale.height})`;
+        }
+    }
+    setScale()
+  </script>
+</body>
+</html>
