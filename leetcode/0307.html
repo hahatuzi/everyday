@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    var data = [
+      {id: 1, name: '实时事件',pid: 0},
+      {id: 2, name: '管理力量',pid: 0},
+      {id: 3, name: '重大节日',pid: 0},
+      {id: 6, name: '热线工单',pid: 1},
+      {id: 7, name: '物联告警',pid: 1},
+      {id: 8, name: 'AI告警',pid: 1},
+      {id: 9, name: '管理力量一张图',pid: 2},
+      {id: 10, name: '备勤力量',pid: 2},
+      {id: 11, name: '城管通',pid: 2},
+      {id: 12, name: '大型活动',pid: 3},
+      {id: 13, name: '春运',pid: 3},
+      {id: 14, name: '香讯',pid: 3},
+      {id: 15, name: '环保',pid: 6},
+      {id: 16, name: '水务',pid: 6},
+      {id: 17, name: '市政',pid: 6},
+      {id: 18, name: '备勤力量',pid: 9},
+      {id: 19, name: '居村微平台人员',pid: 9},
+      {id: 20, name: '城管通',pid: 9},
+      {id: 21, name: '市政绿化',pid: 17},
+    ]
+    // 数组 --> 树
+    function treeData(data){   
+        let cloneData = JSON.parse(JSON.stringify(data))
+        return cloneData.filter(parent=>{
+          // 将所有的子节点都放在其相对应的父节点下，然后返回最外层的节点即可
+            let branchArr = cloneData.filter(child => parent['id'] == child['pid']);
+            // branchArr.length > 0 ? parent['children'] = branchArr : '';
+            parent['children'] = branchArr
+            return parent['pid'] == 0 ;
+        })
+    }
+    let res =  treeData(data)
+    console.log(res)
+    // 问题二，如何从树中找到id为19的元素
+    // 方式一，深度优先，深度遍历，从顶点开始，当前节点有子节点则遍历当前节点的子节点（递归）。
+    // function deepQuery (arr, id) {
+    //   for(let i =0; i < arr.length; i++){
+    //     if (arr[i].id == id){
+    //       return arr[i]
+    //     } else {
+    //       deepQuery(arr[i], id)
+    //     }
+    //   }
+    // }
+    // console.log(deepQuery(data, 19))
+    // 方式二：广度优先,遍历根节点的所有子节点，再从第一个子节点开始依次遍历。
+    // let list = []
+    // function breadthQuery(tree, id) {
+    //   let stark = [];
+    //   stark = stark.concat(tree);
+    //   while(stark.length) {
+    //     let temp = stark.shift();
+    //     if(temp.children) {
+    //         stark = stark.concat(temp.children);
+    //     }
+    //     if(temp.id === id) {
+    //         return temp;
+    //     }
+    //   console.log(stark)
+    //   }
+    // }
+    // console.log(breadthQuery(res, 19))
+    // ===================================================================================
+    // 树 --> 数组
+    // 方式一
+    // let arr = []
+    // function treeToArray (data) {
+    //   data.forEach(item => {
+    //     arr.push(item)
+    //     if (item.children){
+    //       treeToArray(item.children)
+    //     }
+    //   })
+    //   return arr
+    // }
+    // console.log(treeToArray(res))
+    // 方式二
+    function treeToArray(params) {
+      return params.reduce((prev,cur) => {
+        // prev.push(cur)
+        prev.concat([cur], treeToArray(cur.children))
+        return prev
+      },[])
+    }
+    console.log(treeToArray(res))
+    // ===============================================
+    // const arrayToTree = (arr, pid = null) => {
+    //   return arr.reduce((prev, cur) => {
+    //     if (cur.pid == pid) {
+    //       const children = arrayToTree(arr, cur.pid)
+    //       if (children.length) {
+    //         cur.children = children
+    //       }
+    //       prev.push(cur)
+    //     }
+    //     return prev
+    //   },[])
+    // }
+    // let res = arrayToTree(data,0)
+    // console.log(res)
+  </script>
+  <!-- 获取具有相同属性的对象数组中 -->
+  <!-- 树形结构的转化 -->
+  <!-- 函数的默认传参 -->
+</body>
+</html>

@@ -1,0 +1,95 @@
+ 
+<!doctype html>
+<html dir="ltr" lang="zh-CN">
+    <head>
+        <meta charset="utf-8"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=8">
+        <style type="text/css">
+            .drag {width:100px;height:100px;z-index:200;}
+            #drag6 {background:#66c;}
+            #parent {width:300px;height:300px;background:blue;position: absolute;right: 0;}
+        </style>
+        <script type="text/javascript">
+            // var getCoords = function(el){
+            //     var box = el.getBoundingClientRect(),
+            //     doc = el.ownerDocument,
+            //     body = doc.body,
+            //     html = doc.documentElement,
+            //     clientTop = html.clientTop || body.clientTop || 0,
+            //     clientLeft = html.clientLeft || body.clientLeft || 0,
+            //     top  = box.top  + (self.pageYOffset || html.scrollTop  ||  body.scrollTop ) - clientTop,
+            //     left = box.left + (self.pageXOffset || html.scrollLeft ||  body.scrollLeft) - clientLeft
+            //     return { 'top': top, 'left': left };
+            // };
+            var Drag = function(id){
+                var el = document.getElementById(id),
+                options  = arguments[1] || {},
+                container = options.container || document.documentElement,
+                limit = false || options.limit;
+                el.style.position = "absolute";
+                var drag = function(e) {
+                    e = e || window.event;
+                    el.style.cursor = "pointer";
+                        !+"\v1"? document.selection.empty() : window.getSelection().removeAllRanges();
+                    var _left = e.clientX - el.offset_x,
+                    _top = e.clientY - el.offset_y;
+                    // if(limit){
+                    //     var _right = _left + el.offsetWidth,
+                    //     _bottom = _top + el.offsetHeight,
+                    //     _cCoords = getCoords(container),
+                    //     _cLeft = _cCoords.left,
+                    //     _cTop = _cCoords.top,
+                    //     _cRight = _cLeft + container.clientWidth,
+                    //     _cBottom = _cTop + container.clientHeight;
+                    //     if(_left < _cLeft){
+                    //         _left = _cLeft
+                    //     }
+                    //     if(_top < _cTop){
+                    //         _top = _cTop
+                    //     }
+                    //     if(_right > _cRight){
+                    //         _left = _cRight - el.offsetWidth;
+                    //     }
+                    //     if(_bottom > _cBottom){
+                    //         _top = _cBottom - el.offsetHeight;
+                    //     }
+                    // }
+                    el.style.left = _left  + "px";
+                    el.style.top = _top  + "px";
+                    el.innerHTML = parseInt(el.style.left,10)+ " x "+parseInt(el.style.top,10);
+                }
+
+                var dragend = function(){
+                    document.onmouseup = null;
+                    document.onmousemove = null;
+                }
+
+                var dragstart = function(e){
+                    e = e || window.event;
+                    el.offset_x = e.clientX - el.offsetLeft;
+                    el.offset_y = e.clientY - el.offsetTop;
+                    document.onmouseup = dragend;
+                    document.onmousemove = drag;
+                    el.style.zIndex = ++Drag.z;
+                    return false;
+                }
+                Drag.z = 999;
+                el.onmousedown = dragstart;
+            }
+
+            window.onload = function(){
+                var p = document.getElementById("parent");
+                new Drag("drag6",{container:p,limit:true});
+            };
+        </script>
+        <title>拖动</title>
+    </head>
+    <body id="body">
+       
+        <div id="parent">
+            <p>拖动时可能被选中的文本……………………</p>
+            <div id="drag6" class="drag"></div>
+        </div>
+
+    </body>
+</html>

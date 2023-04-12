@@ -23,7 +23,7 @@ show:组件所在的页面被展示
 hide:组件所在的页面被隐藏
 resize:组件所在页面尺寸改变
 #### 对比：
-当一个页面中含有多个wx:if,wx:else的组件时，第一次仅会展示wx:if=“true”的组件，即仅会经历它的生命周期(created,attached,ready)
+当一个页面中含有多个wx:if,wx:else的组件时，第一次仅会展示wx:if=“true”的组件，即**仅会经历它的生命周期(created,attached,ready)**
 当多个组件之间用hidden来切换时，第一次进入页面就会经历所有组件的所有生命周期(created,attached,ready)，且切换时不再触发生命周期
 wx:if(created,attached,ready)
 # <wxs>标签的解析
