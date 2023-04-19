@@ -6,3 +6,15 @@
         age: 18
     };
 })();
+var p3;
+var obj = {
+    name: 'lisa',
+    phone: '181'
+};
+// let cc: CC = {
+//   fn(value: number | string) {
+//    return ''
+//   }
+// }
+var cc;
+// cc.fn(1)
