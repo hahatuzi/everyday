@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    .father{
+      display: flex;
+      width: 400px;
+      color: #fff;
+    }
+    .item1{
+      height: 30px;
+      flex: 1;
+      background-color: red;
+    }
+    .item2{
+      height: 30px;
+      flex: auto;
+      background-color: blue;
+    }
+    .split{
+      height: 10px;
+    }
+    .item1_half{
+      width: 100px;
+      height: 30px;
+      background-color: green;
+    }
+    .half{
+      width: 150px;
+      height: 30px;
+      background-color: yellow;
+    }
+  </style>
+</head>
+<body>
+  <div class="father">
+    <div class="item1"></div>
+    <div class="item2"></div>
+  </div>
+  <div class="split"></div>
+  <div class="father">
+    <div class="item1">
+      <div class="item1_half"></div>
+    </div>
+    <div class="item2">
+      <div class="half"></div>
+    </div>
+  </div>
+</body>
+</html>

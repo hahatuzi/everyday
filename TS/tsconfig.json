@@ -5,6 +5,7 @@
   "compilerOptions": {
     "allowJs": false, // 是否对js进行编译
     "checkJs": false, // 检查js语法是否符合规范
+    "skipLibCheck": false, // 是否跳过声明文件的类型检查
     "removeComments": false, // 是否移除注释
     "noEmitOnError": true, // 当发生错误时不允许生成编译文件
     "strict": true, // 所有严格检查的总开关

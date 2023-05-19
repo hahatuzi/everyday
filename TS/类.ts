@@ -12,3 +12,9 @@ class person {
 const per = new person('lisa', 18)
 console.log(per.name)
 console.log(per.age)
+
+class C{
+  constructor(public name:string, public age:number){
+
+  }
+}

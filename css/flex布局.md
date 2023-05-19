@@ -3,9 +3,9 @@
 // flex-grow:项目的放大比例：默认为0，即如果存在剩余区域，该项目不会放大。
 // flex-shrink:项目的缩小比例：默认为1，即如果可分配空间不足，会适当缩小项目。
 // flex-basis:在分配空间之前，项目的主轴空间，相当于我们设置的width
-flex:none: // flex: 0 0 auto;
+flex:none: // flex: 0 0 auto;表示项目不会伸缩，保持原始大小
 flex:1:  // flex: 1 1 0%;
-flex:auto: // flex: 1 1 auto;
+flex:auto: // flex: 1 1 auto;表示项目会根据自身大小和剩余空间进行缩放
 // 如果width和flex-basis同时设置，非auto的flex-basis权重更大
 <div class="flex-box">
     <div class="item1">短文本</div>

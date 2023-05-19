@@ -8,7 +8,41 @@
 </head>
 <body>
     <script>
-        
+        let obj = {a:1}
+        // let obj1 = {}
+        // 使用Object.defineProcy时会阻塞线程
+        // Object.defineProperty(obj, 'name',{
+        //     get () { return 'lisa'}
+        // })
+        // Object.defineProperty(obj, 'name',{
+        //     get () { return 'jisoo'}
+        // })
+        const data = Reflect.defineProperty(obj, 'name',{
+            get () { return 'lisa'}
+        })
+        console.log(data)
+        Reflect.defineProperty(obj, 'name',{
+            get () { return 'jisoo'}
+        })
+        // 模拟vue3中的响应式实现
+        // let person = {
+        //     name:'lisa',
+        //     age:18
+        // }
+        // const p = new Proxy(person,{
+        //     // get表示读取
+        //     get (target,prop) {
+        //         console.log(target,prop)
+        //         return target[prop]
+        //     },
+        //     // set既可以表示新增也可以表示修改
+        //     set(target,prop){
+        //         console.log(target,prop)
+        //     },
+        //     deleteProperty (target,prop) {
+        //        return delete target[prop]
+        //     }
+        // })
     </script>
 </body>
 </html>
