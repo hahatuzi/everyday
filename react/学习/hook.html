@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // let prev = ['lisa']
+    // function useEffect (callback, depsAry) {
+    //   if (Object.prototype.toString.call(callback) != '[object Function]') throw new Error('in not Function')
+    //   if (typeof depsAry == 'undefined') {
+    //     callback()
+    //   } else {
+    //     if (Object.prototype.toString.call(depsAry) != '[object Array]') throw new Error(' is not Array')
+    //     // 将当前依赖项的值和上一次的依赖值做比较，如果不同，调用callback
+    //     let hasChanged = depsAry.every((item, index) => item == prev[index])
+    //     if (!hasChanged) {
+    //       prev = depsAry
+    //       callback()
+    //     }
+    //   }
+    // }
+    // useEffect(() => {
+    //   console.log(prev)
+    // },['rose'])
+    // useState
+    let state = 0
+    function set (val) {
+      state = val
+    }
+    set(state + 1)
+    set(state + 1)
+    set(state + 1)
+    console.log(state)
+  </script>
+</body>
+</html>

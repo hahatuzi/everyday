@@ -52,3 +52,91 @@ websocket断开的情形：
                       --> 连接成功 -->  添加心跳  -->  发送ping -->  服务器是否响应  -->  是 -->   连接正常  -->  清除上一个心跳的饿定时器记录，并重新添加心跳
                                                                                      -->  否 -->   连接失败  -->  reconnect
 添加心跳解释：（一段时间后发送ping给服务器，同时做好服务器已经断开连接的准备：添加尝试重新连接的定时器）
+
+
+
+```js
+let timeoutObj = ''
+let serverTimeoutObj = ''
+// 开始心跳
+function reset() {
+  clearTimeout(this.timeoutObj)
+  clearTimeout(this.serverTimeoutObj)
+}
+function start() {
+  var num = 10
+  this.timeoutObj = setTimeout(() => {
+    console.log('发送心跳')
+    wx.sendSocketMessage({
+      data: msg,
+      success: (res) => {
+          console.log('心跳发送成功') // 表示能正常连接，并能成功发送消息
+      },
+      fail: (error) => {
+          console.log(error)
+          wx.showToast({
+              title: '消息发送异常',
+              icon: "none",
+              duration: 2000
+          })
+      }
+  });
+  }, 5 * 1000)
+}
+function connect(user, toUserId, func) {
+  wx.connectSocket({
+    url: 'localhost:8080',
+    header: {'content-type': 'application/json'},
+    success: function () {
+      console.log('websocket连接成功~')// 可以理解为此时开始建立webSocket连接，但未开始检验url和header参数的正确性！！
+      wx.onSocketOpen(function (res) {
+        console.log(res, '连接建立成功,url,header等参数也无任何错误')
+        //接受服务器消息
+        wx.onSocketMessage(res => {
+          if (res.type == 'pong') {
+            this.reset()
+            this.start()
+          } else {
+            func()
+          }
+        });//func回调可以拿到服务器返回的数据
+      });
+      wx.onSocketError(function (res) {
+        console.log(res, '连接出现错误，比如url拼接错误')
+        console.log(res)
+        wx.showToast({
+            title: '111',
+            icon: "none",
+            duration: 2000
+        })
+      })
+      // 当SocketError时会触发SocketClose
+      wx.onSocketClose((result) => {
+        console.log('websocket关闭')
+      })
+    },
+    // 经过实践发现只有当url或者header缺失时会触发fail，如果url路径拼接错误并不会触发fail
+    fail: function (res) {
+      console.log('websocket连接失败~')
+    }
+  })
+}
+
+//发送消息
+function send(msg) {
+  wx.sendSocketMessage({
+      data: msg,
+      success: (res) => {
+          console.log(res)
+      },
+      fail: (error) => {
+          console.log(error)
+          wx.showToast({
+              title: '消息发送异常',
+              icon: "none",
+              duration: 2000
+          })
+      }
+  });
+}
+```

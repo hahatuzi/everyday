@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    try {
+      new Promise((resolve, reject) =>{
+        reject(Error('异步任务promsie出错了'))
+      }).catch(error =>{
+        console.log('promisecatch捕获的',error)
+      })
+      //以上异步任务产生的错误无法被try catch捕获
+      setTimeout(() => {
+        throw Error('异步任务timeout出错了')
+      }, 0);
+      //以上异步任务产生的错误无法被try catch捕获
+      throw Error('同步任务出错了')
+      //以上同步任务产生的错误可以被try catch捕获
+    } catch (error) {
+      console.log('trycatch捕获的',error)
+    }
+  </script>
+</body>
+</html>

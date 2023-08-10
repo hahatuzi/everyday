@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    function createState (initState, stateIndex) {
+      return states[stateIndex] !== undefined ? states[stateIndex] : initState
+    }
+    function createStateSetter (stateIndex) {
+      return function (newState) {
+        if (typeof newState === 'function') {
+          states[stateIndex] = newState(states[stateIndex])
+        } else {
+          states[stateIndex] = newState
+        }
+
+        render()
+      }
+    }
+    function useState(initState) {
+      states[stateIndex]  = createState(initState, stateIndex)
+      if (!stateSetters[stateIndex]) {
+        stateSetters.push(createStateSetter(stateIndex))
+      }
+      const _state = states[stateIndex]
+      const _setState = stateSetters[stateIndex]
+      stateIndex++
+      return [_state, _setState]
+    }
+  </script>
+</body>
+</html>

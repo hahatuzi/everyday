@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    let arr = [{row: 56, col: 21},
+{row: 19, col: 348},
+{row: 39, col: 173},
+{row: 117, col: 264},
+{row: 61, col: 63},
+{row: 190, col: 38},
+{row: 101, col: 201}]
+let row = Math.floor(Math.random() * 200)
+      let col = Math.floor(Math.random() * 380)
+      let index = arr.findIndex(el => {
+        console.log(Math.abs(el.row- row) < 40)
+        return Math.abs(el.row- row) < 40
+      })
+      console.log(index)
+  </script>
+</body>
+</html>

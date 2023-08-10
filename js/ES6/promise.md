@@ -31,6 +31,9 @@ SyntaxError：语法错误
 TypeError: 类型错误
 (1)try..catch // 捕获错误
 (2)throw // 抛出一个用户自定义的异常
+(3)try catch和promise.catch的区别
+##### 1.try..catch语法捕获同步任务产生的错误
+##### 2.promise.catch()捕获异步任务产生的错误
 #### 4.对promise的理解
 (1)高层次来看：promise是一种新的用来执行异步编程的解决方式。旧的是回调函数方式。
 (2)语法来看：promise是一个构造函数，用来封装异步操作并获取其结果。
