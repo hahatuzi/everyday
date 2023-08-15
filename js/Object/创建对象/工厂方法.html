@@ -8,15 +8,29 @@
 </head>
 <body>
   <script>
-    function createPerson (name) {
-      var obj = new Object()
+    function createPerson (name) { //    等价为 var createPerson = function () {}
+      var obj = new Object()       //           createPerson.checkName = funtion () {}
       obj.name = name
+      obj.checkName = function () {
+        console.log('name',this.name)
+        return this
+      }
+      obj.checkAge = function () {
+        console.log('age',this)
+        return this
+      }
       return obj
     }
-    var a = createPerson('lisa')
+    var a = createPerson('lisa') // 
     var b = createPerson('lili')
-    console.log(a === b)
-    console.log(typeof a)
+    a.checkName().checkAge()
+    b.checkName().checkAge()
+    // a.checkName()
+    // a.checkAge()
+    // b.checkName()
+    // b.checkAge()
+    // console.log(a === b) // false 
+    // console.log(typeof a)  // object
   </script>
 </body>
 </html>

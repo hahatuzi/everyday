@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 创建对象的方法
+    // 一：new Object
+    // 二：工厂模式
+    // 三：自定义构造函数加this, 挂载在this上和prototype上的区别，挂载在this上的话，每次新创建的对象都会对类的this上的属性进行复制从而形成自己的方法，造成内存资源浪费
+    // 四：自定义构造函数加prototype ★★★★★★★
+    // var checkObj = {
+    //   checkName:function () {
+    //     console.log(this)
+    //   },
+    //   cehckPassword:function ()  {
+    //     console.log(this)
+    //   }
+    // }
+    // 对象的另一种形式,var checkObj = function () {},这种形式可以通过new的方式创建实例对象
+    // var CheckObj = function () {}
+    // CheckObj.checkName = function (value) {
+    //   console.log(CheckObj)
+    // },
+    // CheckObj.cehckPassword=function ()  {
+    //   console.log(CheckObj)
+    // }
+    // CheckObj.checkName('jisoo')
+    // CheckObj.checkName('rose')
+    // CheckObj.cehckPassword()
+    var CheckObj = function () {
+      this.name = 'lisa'
+      // 挂载在this上和prototype上的区别，挂载在this上的话，每次新创建的对象都会对类的this上的属性进行复制从而形成自己的方法，造成内存资源浪费
+      this.checkName = function () {
+        // this.name = value
+        console.log(this)
+      }
+      // this.cehckPassword = function () {}
+    }
+    CheckObj.prototype.checkPassword = function () {}
+    var a = new CheckObj()
+    var b = new CheckObj()
+    console.log(a.checkName == b.checkName) // false
+    console.log(a.checkPassword == b.checkPassword) // true
+    // 或者这样写
+    var CheckObj1 = function () {}
+    CheckObj1.prototype = {
+      checkName:function(){},
+      checkPassword:function(){}
+    }
+    // 链式调用
+    var CheckObj2 = function () {}
+    CheckObj2.prototype = {
+      checkName:function(){
+        console.log('checkName调用了')
+        return this
+      },
+      checkPassword:function(){
+        console.log('checkPassword调用了')
+        return this
+      }
+    }
+    var obj2 = new CheckObj2()
+    // obj2.checkName().checkPassword()
+    // 实现链式添加方法
+    CheckObj2.prototype.addMethod = function (methodName, fn) {
+      this[methodName] = fn
+      return this
+    }
+    obj2.addMethod('checkID',function () {
+      console.log('checkID添加成功')
+      return this
+    }).addMethod('checkSex',function () {
+      console.log('checkSex添加成功')
+      return this
+    })
+    obj2.checkID().checkSex()
+  </script>
+</body>
+</html>
