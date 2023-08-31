@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 在第三章的内容中我们学习的**简单工厂模式**是由一个工厂对象创建某一种产品对象类的实例，它的目的是用来**创建同一类产品**
+    // 工厂方法模式：通过对产品类的抽象，使其创建业务主要负责用于**创建多类产品**的实例。这就是和简单工厂模式的不同之处
+    var JAVA = function (content) {
+      this.content = content
+      (function (content) {
+        var div = document.createElement('div')
+        div.innerHTML = content
+        div.style.color = 'yellow'
+      })(content)
+    }
+    var PHP = function (content) {
+      this.content = content
+      (function (content) {
+        var div = document.createElement('div')
+        div.innerHTML = content
+        div.style.color = 'red'
+      })(content)
+    }
+    function JobFactory(type, content){
+      switch (type) {
+        case 'java':
+          return new JAVA(content)
+          break;
+        case 'php':
+          return new PHP(content)
+          break;
+        default:
+          break;
+      }
+    }
+  </script>
+</body>
+</html>

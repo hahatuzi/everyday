@@ -20,3 +20,4 @@ function handleClick(){
 ```
 **注意**
 1.dispatch函数式为**下一次渲染**而更新state，所以再dispatch函数后读取state**并不会拿到更新后的值**
+2.为了避免reducer会重复创建，通常reducer会定义在组件的外部

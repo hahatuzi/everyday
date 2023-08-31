@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    var LoginAlert = function (text) {
+      this.content = text
+    }
+    LoginAlert.prototype.show = function () {
+      alert(this.content)
+    }
+    var nameAlert = new LoginAlert('用户名不能多于16个字母或数字')
+    nameAlert.show()
+    var passwordAlert = new LoginAlert('输入的密码不正确')
+    passwordAlert.show()
+
+    var RegisterAlert = function (text) {
+      this.content = text
+    }
+    RegisterAlert.prototype.show = function () {
+      alert(this.content)
+    }
+    // 创建了三个对象，
+    // 尝试将对象封装在函数中,这样的话,通过函数我们就可以创建这三个对象,该函数被称为工厂函数,该模式叫简单工厂模式。
+    var Basketball = function () {
+      this.intro = '篮球'
+    }
+    Basketball.prototype = {
+      getNumber:function () {
+        console.log('篮球-5名')
+      },
+      getBallSize:function () {
+        console.log('篮球-7号')
+      }
+    }
+    var Football = function () {
+      this.intro = '足球'
+    }
+    Football.prototype = {
+      getNumber:function () {
+        console.log('足球-11名')
+      },
+      getBallSize:function () {
+        console.log('足球-7号')
+      }
+    }
+    var SportFactory = function (name) {
+      switch (name) {
+        case 'NBA':
+          return new Basketball()
+          break;
+        case 'worldCup':
+          return new Football()
+          break;
+        default:
+          break;
+      }
+    }
+    var football = SportFactory('worldCup')
+    football.getNumber()
+    football.getBallSize()
+    // 继续深入，简单工厂模式的理念就是创建对象，包括创建相似的对象，而我们以上操作只是对不同的类实例化。
+    // 当你想创建多个对象，而这些对象有相同点又有不同点的时候，我们有两种方案：
+    // 方案一：像上面一样通过**类实例化**来创建对象，
+    // 方案二：通过创建一个新对象然后包装增强其属性和功能实现。
+
+
+    // 简单工厂模式的缺点：使用场景有限，通常限制在创建单一对象！！
+  </script>
+</body>
+</html>
