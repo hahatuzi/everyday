@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    function test (title,callback){
+      var _title = title + '前面为标题'
+      callback(_title)
+    }
+    test('光明会', function (title) {
+      console.log(title)
+    })
+  </script>
+</body>
+</html>

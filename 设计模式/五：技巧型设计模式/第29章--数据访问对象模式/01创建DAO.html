@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    var BaseLocalStorage = function (preId, timeSign) {
+      this.preId = preId // 定义本地存储数据库前缀
+      this.timeSign = timeSign || '|-|' // 定义时间戳与存储数据之间的拼接符
+    }
+    BaseLocalStorage.prototype = {
+      status:{
+        SUCCESS:0, // 成功
+        FAIL:1, // 失败
+        OVERFLOW:2, // 溢出
+        TIMEOUT:3,// 过期
+      },
+      storage:localStorage || window.localStorage,
+      getKey:function (key) {
+        return this.preId + key
+      },
+      // 添加数据
+      /*
+       * key:数据字段标识
+       */
+      set: function (key, value, callback, time) {
+        var status = this.status.SUCCESS
+        key = this.getKey(key)
+        try {
+          time = new Date(time).getTime() || time.getTIme()
+        } catch (error) {
+          time = new Date().getTime() + 1000 * 60 * 60 * 24 * 31
+        }
+        try {
+          this.storage.setItem(key, time + this.timeSign + value)
+        } catch (error) {
+          status = this.OVERFLOW
+        }
+        callback && callback.call(this, status, key, value)
+      },
+      // 获取数据
+      get:function (key, callback) {}
+    }
+    // 增加数据
+
+  </script>
+</body>
+</html>

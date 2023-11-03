@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    li{
+      display: inline-block;
+      width: 30px;
+      height: 30px;
+      line-height: 30px;
+
+      text-align: center;
+      border: 1px solid #ccc;
+    }
+    .header li{
+      cursor: pointer;
+    }
+    .active{
+      background-color: red;
+    }
+  </style>
+</head>
+<body>
+  <div class="container1">
+    <div class="header">
+      <ul>
+        <li>1</li>
+        <li class="active">2</li>
+        <li>3</li>
+        <li>4</li>
+      </ul>
+    </div>
+
+    <div class="box">
+      <ul>
+        <li class="active">1</li>
+        <li>2</li>
+        <li>3</li>
+        <li>4</li>
+      </ul>
+    </div>
+  </div>
+  <script>
+    function Tabs (dom, eventType) {
+      this.dom = document.querySelector(dom)
+      this.eventType = eventType
+      this.headerItems = this.dom.querySelectorAll('.header li')
+      this.boxItems = this.dom.querySelectorAll('.box li')
+      this.change()
+    }
+    Tabs.prototype.change = function () {
+      for(let i = 0; i<this.headerItems.length; i++){
+        this.headerItems[i].addEventListener( this.eventType, () => {
+          this.headerItems.forEach(item => {  item.classList.remove('active')})
+          this.boxItems.forEach(item => {  item.classList.remove('active')})
+          this.headerItems[i].classList.add('active')
+          this.boxItems[i].classList.add('active')
+        })
+      }
+    }
+    new Tabs('.container1')
+    // ================ES6写法===========================================================
+    class Tabs{
+      constructor( dom, eventType){
+        this.dom = document.querySelector(dom)
+        this.eventType = eventType
+        this.headerItems = this.dom.querySelectorAll('.header li')
+        this.boxItems = this.dom.querySelectorAll('.box li')
+      }
+      change () {
+        for(let i = 0; i<this.headerItems.length; i++){
+          this.headerItems[i].addEventListener( this.eventType, () => {
+            this.headerItems.forEach(item => {  item.classList.remove('active')})
+            this.boxItems.forEach(item => {  item.classList.remove('active')})
+            this.headerItems[i].classList.add('active')
+            this.boxItems[i].classList.add('active')
+          })
+        }
+      }
+    }
+    var c1 = new Tabs('.container1', 'click')
+    c1.change()
+  </script>
+</body>
+</html>

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    var Observer = (function () {
+      var _message = {}
+      return {
+        // 用于将**订阅者注册**的消息推入消息队列中
+        // type:消息类型，fn:消息的处理动作
+        register:function (type,fn) {
+          if (typeof _message[type] === 'undefined'){
+            _message[type] = [fn]
+          } else {
+            _message[type].push(fn)
+          }
+        },
+
+        // 发布消息，当**观察者**发布一个消息时将所有订阅者订阅的消息一次执行
+        fire:function (type, args) {
+          if (!_message[type]) return  
+          var events = {
+            type,
+            args:args || {} // 消息携带数据
+          }
+          i = 0
+          len = _message[type].length
+          for(; i <len ; i++){
+            _message[type][i].call(this,events)
+          }
+        }, 
+        // 注销方法：将**订阅者**注销的消息从消息队列中清除
+        remove:function () {
+          if (_message[type] instanceof Array){
+            var i = _message[type].length - 1
+            for(;i >= 0; i--){
+              _message[type][i]=== fn && _message[type].splice(i, 1)
+            }
+          }
+        },
+      }
+    })()
+    var Student = function (name) {
+      var that = this
+      that.name = name
+      that.say = function (data) {
+        let {question,answer} = data
+        console.log(name + '回答' + question +'该问题的答案是：' + answer)
+      }
+    }
+    Student.prototype.answer = function (question, answer) {
+      Observer.register(question, this.say({question,answer}))
+    }
+    var Teacher = function (name) {
+      var that = this
+      that.name = name
+      that.question = function (data) {
+        console.log(name + '提问，问题是：' + data)
+        Observer.fire(data)// 提问后马上将学生的答案公布出来
+      }
+    }
+    var s1 = new Student('学生1')
+    var s2 = new Student('学生2')
+    var t1 = new Teacher('老师1')
+    t1.question('什么是观察者模式？')
+    t1.question('什么是策略模式？')
+    s1.answer('什么是观察者模式？','观察者模式是解耦两个相互依赖的对象的重要手段')
+  </script>
+</body>
+</html>

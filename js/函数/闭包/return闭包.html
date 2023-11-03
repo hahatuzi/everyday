@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <ul>
+    <button class="btn">1</button>
+    <button class="btn">2</button>
+    <button class="btn">3</button>
+    <button class="btn">4</button>
+  </ul>
+  <script>
+    const btns = document.getElementsByClassName('btn')
+    // for (var i = 0; i < btns.length; i++) {
+    //   btns[i].onclick = function () {
+    //     console.log(i)
+    //     btns[i].style.backgroundColor = 'red'
+    //   }
+    // }
+    // 为什么循环的时候onclick函数获取不到循环每一项的值呢？因为i此时是个全局变量。
+
+    // ==============================================================
+    // for (var i = 0; i < btns.length; i++) {
+    //   console.log(i)
+    //   btns[i].onclick = function () {
+    //     console.log(i)
+    //   }
+    // }
+    // 为什么循环的时候onclick函数获取不到循环每一项的值呢？因为i此时是个全局变量。所以我们可以通过将它重新赋值给一个变量，或者作为形参传递给闭包
+    // ======================方式一=========================
+    // for (let i = 0; i < btns.length; i++) {
+    //   btns[i].onclick = function () {
+    //     console.log(i)
+    //     btns[i].style.backgroundColor = 'red'
+    //   }
+    // }
+    // ======================方式一=========================
+    // for (var i = 0; i < btns.length; i++) {
+    //   let num = i
+    //   btns[i].onclick = function () {
+    //     btns[num].style.backgroundColor = 'red'
+    //   }
+    // }
+    // ======================方式二=========================
+    for (var i = 0; i < btns.length; i++) {
+      btns[i].onclick = function (num) {
+        return function () {
+          btns[num].style.backgroundColor = 'red'
+        }
+      }(i)
+    }
+  </script>
+</body>
+</html>

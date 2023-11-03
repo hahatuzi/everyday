@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 装饰器模式：是在不改变现有对象解构的基础上增加功能，
+    Function.prototype.before = function (beforeFn) {
+      var _this = this
+        beforeFn()
+        _this.apply(this, arguments)
+      // return function () {
+      //   // 先执行前置函数
+      //   beforeFn.apply(this, arguments)
+      //   //，再执行原有函数
+      //   return _this.apply(this, arguments)
+      // }
+      return function () {
+
+      }
+    }
+    Function.prototype.after = function (afterFn) {
+      // console.log(this)
+      var _this = this
+      afterFn()
+      // return function () {
+      //   let res = _this.apply(this, arguments)
+      //   afterFn.apply(this, arguments)
+      //   return res
+      // }
+      return function () {
+
+}
+    }
+    function test(){
+      console.log('1')
+    }
+    var t1 = test.before(() => {
+      console.log('0')
+    }).after(()=> {
+      console.log('2')
+    })
+    t1()
+  </script>
+</body>
+</html>

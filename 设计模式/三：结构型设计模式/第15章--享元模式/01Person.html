@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 享元模式就是将共有的方法抽离出来，提高页面效率
+    // 特点：1.相同的数据共享使用，将数据和方法分为内部数据，方法和外部数据，方法
+    // 内部状态保存在对象内部，通常不会改变，可以共享
+    // 外部状态，通常随场景改变，不能共享
+    function Person(name, age){
+      this.name = name
+      this.age = age
+    }
+    Person.prototype.getName = function () {
+      return this.name
+    }
+    Person.prototype.getAge = function () {
+      return this.age
+    }
+    let p1 = new Person('lisa',18)
+    let p2 = new Person('rose',18)
+  </script>
+</body>
+</html>

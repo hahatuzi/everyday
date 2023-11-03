@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <!--  -->
+  <script>
+  var VehicleFactory = function (subType, superType) {
+    if (typeof VehicleFactory[superType] === 'function') {
+      function F(){} // 缓存类
+      F.prototype = new VehicleFactory[superType]() // 继承父类的方法和属性
+      subType.constructor = subType // 将子类的constructor指向子类
+      subType.prototype = new F() // 将子类的原型指向父类，实现继承
+    } else {
+      throw new Error('未创建改抽象类')
+    }
+  }
+  VehicleFactory.Car = function () {
+    this.type = 'car'
+  }
+  VehicleFactory.Car.prototype = {
+    getPrice: function () {
+      return new Error('抽象方法不能调用')
+    }
+  }
+  VehicleFactory.Bus = function () {
+    this.type = 'bus'
+  }
+  VehicleFactory.Bus.prototype = {
+    getPrice: function () {
+      return new Error('抽象方法不能调用')
+    }
+  }
+  var BMW = function (price) {
+    this.price = price
+  }
+  BMW.prototype.getPrice = function () {
+    console.log(this.price)
+  }
+  VehicleFactory(BMW, 'Car')
+  let b1 = new BMW(1000)
+  b1.getPrice()
+  </script>
+</body>
+</html>

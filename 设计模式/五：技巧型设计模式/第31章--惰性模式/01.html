@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <div id="demo">demo</div>
+  <button id="btn">button</button>
+  <script>
+  var A = {}
+  // 每次为元素添加事件时，都会跑一边能力检测的代码，所以我们采用惰性模式来减少重复性分支判断
+  // A.on = function (dom,type, fn) {
+  //   console.log(dom)
+  //   if(dom.addEventListener){
+  //     dom.addEventListener(type, fn, false)
+  //   } else {
+  //     dom['on' + type] = fn
+  //   }
+  // }
+  // // ========================================================================================
+  // A.on = function (dom, type, fn){
+  //   console.log(dom)
+  //   if (document.addEventListener){
+  //     return function (dom, type, fn) {
+  //       dom.addEventListener(type, fn, false)
+  //     }
+  //   } else {
+  //     return function (dom, type, fn) {
+  //       dom['on' + type] = fn
+  //     }
+  //   }
+  // }() //加载即执行
+  // // ========================================================================================
+    // 惰性执行
+  A.on = function (dom, type, fn){
+    if (dom.addEventListener){
+      A.on = function (dom, type, fn) {
+        dom.addEventListener(type ,fn ,false)
+      }
+    } else {
+      A.on = function (dom, type, fn) {
+        dom['on' + type] = fn
+      }
+    }
+    A.on(dom, type, fn) // 等到某一个元素绑定事件时，A.on才会被重新定义,重新定义以后就无需再次定义
+  }
+  var demo = document.getElementById('demo')
+  var btn = document.getElementById('btn')
+  // console.log(A.on)
+  A.on(demo, 'click', () => {
+    console.log('添加click方法')
+  })
+  A.on(btn, 'click', () => {
+    console.log('添加click方法')
+  })
+  </script>
+</body>
+</html>

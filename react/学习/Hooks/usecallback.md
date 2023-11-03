@@ -1,3 +1,4 @@
+# useCallback：缓存函数，使得组件重新渲染时得到相同的函数实例
 // useCallback创建的回调函数不会总在组件重新渲染的时候重新创建
 ```js
 const clickHandler = useCallback(() => {

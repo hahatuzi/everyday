@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 柯里化的是对参数分割，按照参数的不同，产生不同的状态，只不过函数柯里化处理的是函数，借助柯里化伪造产生其他函数
+    function curry(fn){
+      var Slice = [].slice
+      var args = Slice.call(arguments, 1)
+      return function () {
+        var addArgs = Slice.call(arguments)
+        allArgs = args.concat(addArgs)
+        return fn.apply(allArgs)
+      }
+    }
+    function add(num1, num2){
+      return num1 + num2
+    }
+    function add5(num){
+      return 5 + num
+    }
+    var add5 = curry(add, 5)
+  </script>
+</body>
+</html>

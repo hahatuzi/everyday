@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <button id="btn"></button>
+  <script>
+    btn.onclick = function () {
+      getData()
+    }
+    let data = {} // 当前页面的显示内容
+    function getData(){
+      $.post(url,{page:2},res => {
+        console.log(res)
+        data = res.data
+      })
+    }
+    // 缓存数据，
+    var Page = function () {
+      var cache = {}
+      return function (page, fn) {
+        if (cache[page]) {
+          data = cache[page]
+        } else {
+          $.post(url,{page:2},res => {
+            console.log(res)
+            data = res.data
+          })
+        }
+      }
+    }
+    // 备忘录的使用前提在于页面的缓存数据不会改变
+  </script>
+</body>
+</html>

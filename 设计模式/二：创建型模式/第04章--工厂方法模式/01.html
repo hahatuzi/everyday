@@ -9,6 +9,7 @@
   <script>
     // 在第三章的内容中我们学习的**简单工厂模式**是由一个工厂对象创建某一种产品对象类的实例，它的目的是用来**创建同一类产品**
     // 工厂方法模式：通过对产品类的抽象，使其创建业务主要负责用于**创建多类产品**的实例。这就是和简单工厂模式的不同之处
+    // ==================================================简单工厂模式========================================================
     var JAVA = function (content) {
       this.content = content
       (function (content) {
@@ -37,6 +38,27 @@
           break;
       }
     }
+    // 按照以上写法的话，如果新增了多个类，就需要修改两处地方，而工厂方法模式使得我们只需要添加这个类就行。
+    // 为了防止出现以下情形：我们在工厂方法模式下采用安全模式类。
+    // 工厂方法模式和抽象工厂模式的出现契机在于**不直接像上述所示直接返回某个类的实例对象**，**而是返回该类**，然后对于返回哪个类，则再写一个方法来管理
+    var ErrDemo = function () {}
+    ErrDemo.prototype = {
+      show :function () {
+        console.log('成功创建实例对象')
+      }
+    }
+    var e1 = new ErrDemo()
+    e1.show()
+    var e2 = ErrDemo()
+    e2.show() // connot read property 'show' of undefined
+    // 安全模式类是为了避免不恰当使用new 关键字创建对象的情况发生！！
+    var Demo = function () {
+      if (!(this instanceof Demo)) {
+        return new Demo()
+      }
+    }
+    var d1 = new Demo()
+    d1.show()
   </script>
 </body>
 </html>

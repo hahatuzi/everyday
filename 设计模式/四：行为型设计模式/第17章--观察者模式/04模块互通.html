@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <input id="user_input">
+  <button id="submit">submit</button>
+  <div id="msg_num"></div>
+  <script>
+    // 观察者模式的缺点：观察者模式虽然实现了对象间依赖关系的低耦合，但是却不能对事件通知进行细分管控，比如筛选通知
+    // 观察者对象：容器 + 订阅消息的方法，取消订阅的方法，发送订阅的消息方法
+    var Observer = (function () {
+      var _message = {}
+      return {
+
+        // 用于将**订阅者注册**的消息推入消息队列中
+        // type:消息类型，fn:消息的处理动作
+        register:function (type,fn) {
+          if (typeof _message[type] === 'undefined'){
+            _message[type] = [fn]
+          } else {
+            _message[type].push(fn)
+          }
+        },
+
+        // 发布消息，当**观察者**发布一个消息时将所有订阅者订阅的消息一次执行
+        fire:function (type, args) {
+          if (!_message[type]) return  
+          var events = {
+            type,
+            args:args || {} // 消息携带数据
+          }
+          i = 0
+          len = _message[type].length
+          for(; i <len ; i++){
+            _message[type][i].call(this,events)
+          }
+        }, 
+        // 注销方法：将**订阅者**注销的消息从消息队列中清除
+        remove:function () {
+          if (_message[type] instanceof Array){
+            var i = _message[type].length - 1
+            for(;i >= 0; i--){
+              _message[type][i]=== fn && _message[type].splice(i, 1)
+            }
+          }
+        },
+      }
+    })()
+    Observer.register('test', function (e) {
+      console.log(e.type, e.args.msg)
+    })
+    Observer.fire('test',{msg:'参数'})
+    // 不同的功能代码写在不同的闭包模块中，导致无法相互调用
+    //
+    function $(id) {
+      return document.getElementById(id)
+    }
+    (function () {
+      function changeMsgNum(e) {
+        let {text, num} = e.args
+        console.log($('msg_num').innerHTML)
+        $('msg_num').innerHTML = $('msg_num').innerHTML + text + '--' + num
+      }
+      Observer.register('addNum', changeMsgNum)
+    })()
+    // (function () {
+      $('submit').onclick = function () {
+        var text = $('user_input')
+        console.log(text)
+        Observer.fire('addNum',{text: text.value, num:10})
+      }
+    // })()
+  </script>
+</body>
+</html>

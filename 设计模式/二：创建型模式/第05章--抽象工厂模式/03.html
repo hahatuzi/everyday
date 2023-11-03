@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+     class User {
+      constructor(name, role, menuList) {
+        this.name = name
+        this.role = role
+        this.menuList = menuList
+      }
+      welcome(){
+        console.log('欢迎回来', this.name)
+      }
+      dataShow () {
+        // 防止通过像简单工厂模式创建对象的方式一样直接使用new User()来创建某个类，而是通过继承的方式来返回某个类
+        throw new Error('抽象方法需要被实现')
+      }
+    }
+    class SuperAdmin extends User{
+      constructor(name){
+        super(name, 'super-admin',  ['home', 'rightManage', 'userManage', 'newsManage'])
+      }
+      dataShow () {
+        // 防止通过像简单工厂模式创建对象的方式一样直接使用new User()来创建某个类，而是通过继承的方式来返回某个类
+        throw new Error('抽象方法需要被实现')
+      }
+      addRight () {
+        console.log('添加用户权限')
+      }
+      userManage () {
+        console.log('用户管理权限')
+      }
+      newsManage () {
+        console.log('消息管理权限')
+      }
+    }
+    class Admin extends User{
+      constructor(name){
+        super(name, 'admin',  ['home', 'userManage', 'newsManage'])
+      }
+      dataShow () {
+        // 防止通过像简单工厂模式创建对象的方式一样直接使用new User()来创建某个类，而是通过继承的方式来返回某个类
+        throw new Error('抽象方法需要被实现')
+      }
+      userManage () {
+        console.log('用户管理权限')
+      }
+      newsManage () {
+        console.log('消息管理权限')
+      }
+    }
+    class Editor extends User{
+      constructor(name){
+        super(name, 'editor',  ['home', 'newsManage'])
+      }
+      dataShow () {
+        // 防止通过像简单工厂模式创建对象的方式一样直接使用new User()来创建某个类，而是通过继承的方式来返回某个类
+        throw new Error('抽象方法需要被实现')
+      }
+      newsManage () {
+        console.log('消息管理权限')
+      }
+    }
+    function getAbstractUserFactory(role){
+      switch (role) {
+          case 'super-admin':
+            return SuperAdmin
+            break;
+          case 'admin':
+            return Admin
+          case 'editor':
+            return Editor
+          default:
+            throw new Error('参数错误')
+            break;
+        }
+    }
+    let userClass = getAbstractUserFactory('admin')
+    let user = new userClass('lisa')
+    user.welcome()
+    user.userManage()
+    user.newsManage()
+    // user.dataShow()
+    // user.addRight()
+    let user2 = new User('jisoo')
+    console.log(user2.name)
+    user2.addRight()
+  </script>
+</body>
+</html>

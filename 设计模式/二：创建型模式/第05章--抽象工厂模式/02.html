@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    var Car = function () {}
+    Car.prototype = {
+    getPrice: function () {
+      return new Error('抽象方法不能调用')
+    }
+  }
+  let c1 = new Car()
+  console.log(c1.getPrice())
+  console.log(Car().getPrice())
+  </script>
+</body>
+</html>

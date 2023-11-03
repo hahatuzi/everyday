@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // obj----name, title, age, color, size, prize
+    function doSomeThing(obj){
+      var _adapter = {
+        name:'',
+        title:'',
+        age:'',
+        color:'',
+        size:'',
+        prize:''
+      }
+      for (const i in _adapter) {
+        if (Object.hasOwnProperty.call(obj, i)) {
+          const element = obj[i];
+          _adapter[i] = element || _adapter[i]
+        }
+      }
+    }
+    // 此场景常见于插件参数配置
+  </script>
+</body>
+</html>

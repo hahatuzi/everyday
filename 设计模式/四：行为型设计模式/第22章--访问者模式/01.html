@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    var Visitor =(function () {
+      return {
+        splice:function () {
+          var args = Array.prototype.splice.call(arguments, 1)
+          return Array.prototype.splice.apply(arguments[0], args)
+        }
+      }
+    })()
+  </script>
+</body>
+</html>

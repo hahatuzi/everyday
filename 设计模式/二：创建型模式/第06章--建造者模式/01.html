@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 建造者模式：将一个复杂独享的构建层和表现层相互分离，同样的构建过程可以采用不同的表示
+    // 建造者模式和工厂模式的区别，工厂模式和建造者虽然都是为了创建对象，但是建造者模式创建对象时候要更复杂，更关心创建对象的过程，比如这个对象有多个方法时，
+    // 比如创建一个人的对象时候，我们要注意人的身高体重，肤色，性别等多个特点
+    var Human = function (params) {
+      this.skill = params && params.skill
+      this.hobby = params && params.hobby
+    }
+
+    var Name = function (name) {
+      console.log(this)
+      var that = this
+      (function (name, that){
+        console.log(that)
+        that.wholeName = name
+        if (name.indexOf(' ' > -1)) {
+          that.firstName = name.slice(0, name.indexOf(' '))
+          that.secondName = name.slice(name.indexOf(' '))
+        }
+      })(name, that)
+    }
+
+    var Work = function () {
+      (
+        function (work, that) {
+          switch (work) {
+            case 'UI':
+              that.work = '设计师'
+              break;
+            case 'code':
+              that.work = '程序员'
+              break;
+            default:
+              break;
+          }
+        }
+      )(work, that)
+    }
+    Work.prototype.changeWork = function (work) {this.work = work}
+
+    //在抽象出了三个类人，工作，工作描述后，我们开始创建实例
+    var Person = function (name, work){
+      var person = new Human()
+      person.name = new Name(name)
+      person.work = new Work(work)
+      return person
+    }
+    let p1 = new Person('lisa', 'code')
+    console.log(p1.skill)
+    console.log(p1.firstName)
+    console.log(p1.work)
+  </script>
+</body>
+</html>

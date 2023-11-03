@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    function g(id){
+      return document.getElementById(id)
+    }
+    // 单例模式--
+    // 命名空间--为了避免变量或者方法名重复，提供了不同的命名空间，那么使用方法的时候就会变成：xiaoli.getName()----xiaozhang.getName()
+    // 应用一：创建代码库:
+    var A = {
+      Util:{
+        util_method1:function () {},
+        util_method2:function () {},
+      },
+      Tool:{
+        tool_method1:function () {},
+        tool_method2:function () {},
+      }
+    }
+    A.Util.util_method1()
+    A.Util.util_method2()
+    // 应用二：管理静态变量:
+    var Conf = (function () {
+      var conf  = {
+        max_num:100,
+        min_num:10,
+      }
+      return {
+        get:function (name) {
+          return conf[name] ? conf[name] : null
+        }
+      }
+    })()
+    Conf.get('max_num')
+    // 惰性单例
+    var LazySingle = (function () {
+      let instance
+      function Single (name) {
+        return {
+          name: name,
+          getName:function (){ return this.name}
+        }
+      }
+      return function (name) {
+       if (!instance) {
+         instance = Single(name)
+       }
+       return instance
+      }
+    })()
+    console.log(LazySingle('lisa').getName())
+    // 单例模式的应用
+    // https://blog.csdn.net/weixin_43930421/article/details/126628917
+    // 登录弹窗
+    import LoginDialog from './LoginDialog.vue'
+    const LoginConstructor = vue.extend(LoginDialog)
+    function Login(){
+      let instance
+      if (!instance) {
+         instance = new LoginConstructor()
+       }
+       return instance
+    }
+    vue.prototype.$Login = Login
+  </script>
+</body>
+</html>

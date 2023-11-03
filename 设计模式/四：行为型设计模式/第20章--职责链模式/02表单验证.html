@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <input type="text" id="input">
+  <button id="btn">注册</button>
+  <script>
+    btn.onclick = function () {
+      if(input.value.length == 0) {
+        alert('input不能为空')
+      } else if (Number.isNaN(+input.value)){
+        alert('input内容必须是数字')
+      } else {
+        if(input.value.length <= 6){
+          alert('input内容必须大于6')
+        }
+      }
+    }
+    // 以上代码当继续无限扩展的话，它会变得非常臃肿，所以我们要采用职责链来改造
+    function checkEmpty () {
+      if (input.value.length === 0) {
+        alert('input不能为空')
+      }
+    }
+    function checkNumber () {
+      if (Number.isNaN(+input.value)) {
+        alert('input内容必须是数字')
+      }
+      return 'next'
+    }
+    class Chain{
+      constructor(fn){
+        this.checkRule = fn
+        this.nextRule = ''
+      }
+      addRule(nextRule){
+        this.nextRule = new Chain(nextRule)
+        return this.nextRule
+      }
+      check(){
+        this.checkRule() === 'next' ? this.nextRule.check() : null
+      }
+    }
+    const checks = new Chain(checkEmpty)
+    checks.addRule(checkNumber).addRule(() => 'end')
+  </script>
+</body>
+</html>

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    export function install (_Vue) {
+      // 判断处内的Vue实例对虾干是否已经被install过Vuex插件，
+      if (Vue && _Vue === Vue) {
+        if(process.env.NODE_ENV !== 'production'){
+          console.error('Vuex already installed,Vue.use(Vuex) should be called only once')
+        }
+        return
+      }
+      Vue = _Vue
+      applyMixin(Vue)
+    }
+  </script>
+</body>
+</html>

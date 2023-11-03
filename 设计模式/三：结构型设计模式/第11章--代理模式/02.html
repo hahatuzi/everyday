@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // let star = {
+    //   name:'lisa',
+    //   workprice:10000
+    // }
+    // let proxy = new Proxy(star,{
+    //   get(target, key){
+    //     return target[key]
+    //   },
+    //   set(target, key,value){
+    //     console.log(key)
+    //      if (key == 'workprice'){
+    //       if (value > 10000) {
+    //         console.log('合适')
+    //       } else {
+    //         console.log('不合适')
+    //       }
+    //      }
+    //   }
+    // })
+    // proxy.workprice = 99
+    let obj = {name:'lisa',list:['kpop','dance']}
+    let proxy = new Proxy(obj, {
+      get (target, key) {
+        return target[key]
+      },
+      set (target, key, value) {
+        console.log(value)
+        target[key] = value
+      }
+    })
+    proxy.list = ['kpop', 'vace']
+    console.log(proxy.list)
+  </script>
+</body>
+</html>

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <div id="root"></div>
+  <button onclick="goNext()">下一页</button>
+  <script>
+    var article = []
+    for (let i = 0; i <= 20; i++) {
+      this.article.push('新闻' + i)
+    }
+    size= 5,
+    num = 0
+    // let root = document.getElementById('root')
+    for (let i = 0; i < article.length; i++) {
+      let li = document.createElement('li')  // 创建了20个li
+      li.innerHTML = article[i]
+      if (i > size) {
+        li.style.display = 'none'
+      }
+      root.appendChild(li)
+    }
+    function goNext() {
+      num++
+      let start = (num - 1) * size
+      let list = document.getElementsByTagName('li')
+      for (let i = 0; i < list.length; i++) {
+        let li = list[i]
+        if (i >= start && i < start + size) {
+          li.style.display = 'block'
+        } else {
+          li.style.display = 'none'
+        }
+      }
+    }
+    // 享元模式就是，我们将公共使用分页数据当作共享数据，相当于只创建5个li,然后将要插入的5个元素的创建方法再抽离出来一个方法。
+    let getLi = function () {
+      let lis = []
+      return function () {
+        let element
+        if (lis.length < 5) {
+          element = document.createElement('li')
+          lis.push(element)
+        } else {
+          element = lis.unshift()
+          lis.push(element)
+        }
+      }
+    }
+    let num = 0
+    let size = 5
+    let root = document.getElementById('root')
+    function goNext() {
+      num++
+      let start = (num - 1) * size
+      for (let i = 0; i < 5; i++) {
+        let li = getLi()
+        li.innerHTML = list[start + i]
+      }
+    }
+  </script>
+</body>
+</html>

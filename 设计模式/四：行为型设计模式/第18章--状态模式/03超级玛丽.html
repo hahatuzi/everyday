@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    var MarryState = function (){
+      var States= {
+        'jump:':function () {},
+        'move:':function () {},
+        'squat:':function () {},
+        'shoot:':function () {}
+      }
+      var actions = {
+        changeState:function () {
+          var arg = arguments
+          States = {}
+          if (arg.length) {
+            for (let i = 0; i < arg.length; i++) {
+              const element = arg[i];
+              States[arg[i]] = true
+            }
+          }
+          return this
+        },
+        goes:function () {
+          for(let i in States) {
+            States[i] && States[i]()
+          }
+          return this
+        }
+      }
+    }
+    MarryState.changeState('jump','shoot').goes().goes()
+  </script>
+</body>
+</html>

@@ -1,4 +1,13 @@
 # useMemo用来缓存函数的执行结果,当函数不需要组件每次更新的时候都执行的情况下适用。
+类似于vue的computed,根据某个值的变化来计算新值
+```js
+function App(){
+  const [count, setCount] = useState(0)
+  const result = useMemo(() => {
+    return count * 2
+  },[count])
+}
+```
 ```js
 function sum(a,b){
   const begin = Date.now()
@@ -26,4 +35,15 @@ const compA = () => {
 const result = useMemo(() => {
   return sum(11, 22)
 },[])
+```
+# 二：memo方法
+使用memo方法进行性能优化，如果本组件中的数据没有发生变化，组织组件更新，类似于类组件中的PureComponent和shouldComponentUpdate
+```js
+import React, {memo} from 'react'
+function Counter () {
+  return (
+    <div></div>
+  )
+}
+export default memo(Counter)
 ```

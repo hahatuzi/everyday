@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <div id="root"></div>
+  <script>
+    // 组合模式是在对象间形成树性结构,无需关心对象有多少层，调用时只需要在根部进行调用
+    // 
+    const Folder = function (folder) {
+      this.folder = folder
+      this.list = []
+    }
+    Folder.prototype.add = function (res) {
+      this.list.push(res)
+    }
+    Folder.prototype.scan = function ( ul ){
+      if (this.folder === 'root') {
+        console.log('不创建节点')
+      } else {
+        let ul = document.createElement('ul')
+        let li = document.createElement('li')
+        li.innerHTML = this.folder
+        ul.appendChild(li)
+        root.appendChild(ul)
+      }
+      for (let i = 0; i < this.list.length; i++) {
+        this.list[i].scan(ul)
+        
+      }
+    }
+    const File = function (file){
+      this.file = file
+    }
+    File.prototype.scan = function (arr){
+      let li = document.createElement('li')
+      li.innerHTML = this.file
+      arr.appendChild(li)
+    }
+    let root = new Folder('root')
+    let htmlFolder = new Folder('用户管理')
+    let cssFolder = new Folder('权限管理')
+    root.add(htmlFolder)
+    root.add(cssFolder)
+  </script>
+</body>
+</html>

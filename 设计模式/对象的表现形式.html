@@ -51,7 +51,7 @@
       checkName:function(){},
       checkPassword:function(){}
     }
-    // 链式调用
+    // 链式调用，在对象每个方法执行完毕后都返回this，方便后面的函数继续执行
     var CheckObj2 = function () {}
     CheckObj2.prototype = {
       checkName:function(){

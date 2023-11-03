@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 原型式继承
+    var A = function () { }
+    A.prototype = {
+      length: 2,
+      size: function () {
+        return this.length
+      }
+    }
+    // console.log(A.size())
+    // 原型上的方法的访问方式是通过new 关键字创建新对象来访问
+    const a = new A()
+    console.log(A.size())//error,因为size是绑定在A的原型上，而不是A自己身上
+    console.log(A().size())//因为A函数对象执行的结果是没有return任何东西的。
+    var A = function () {
+      return B
+    }
+    var B = A.prototype = {
+      length:3,
+      size:function () {
+        return this.length
+      }
+    }
+    console.log(A().size())
+  </script>
+</body>
+</html>

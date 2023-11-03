@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    class Star{
+      play () {
+        console.log('演习')
+      }
+    }
+    class StarProxy{
+      constructor(){
+        this.superStar = new Star()
+      }
+      talk(price){
+        if(price >= 10000) {
+          this.superStar.play()
+        } else {
+          throw new Error('价格偏低')
+        }
+      }
+    }
+    let p1 = new StarProxy()
+    p1.talk(99)
+  </script>
+</body>
+</html>

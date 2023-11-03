@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    var Dialog = function (data) {
+      if (!data) return 
+      this.content = data.content
+      this.panel = document.createElement('div')
+      this.contentNode = document.createElement('p')
+      this.confirmBtn = document.createElement('span')
+      this.closeBtn = document.createElement('b')
+
+      this.panel.className = 'dialog'
+      this.confirmBtn.className = 'confirm_btn'
+      this.closeBtn.className = 'close_btn'
+      
+      this.confirmBtn.innerHTML = data.confirm || '确认'
+      this.contentNode.innerHTML = data.content
+      this.success = data.success || function () {}
+      this.fail = data.fail || function () {}
+    }
+  </script>
+</body>
+</html>

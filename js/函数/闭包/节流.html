@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <input id="textInput">
+  <script>
+    const input = document.getElementById('textInput')
+    input.addEventListener('input',throttle(handler, 800), false)
+    function handler (){
+      console.log(this.value)
+    }
+    function throttle (handler, delay){
+      var delay = delay || 1000
+      var startTime = new Date().getTime()
+      return function (args){
+        var _this = this
+        let currentTime = new Date().getTime()
+        if(currentTime - startTime > delay) {
+          handler.call(_this, args) //将handler函数的this指向input,以获取input输入框的值
+          startTime = currentTime
+        }
+      }
+    }
+    //
+  </script>
+</body>
+</html>

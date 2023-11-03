@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 假定我们现在有几种游戏人物角色:刺客，法师，每种角色都有运动这个动作。那么我们就可以创建一个通用的享元类让它实现这个运动
+    var Move ={
+      moveX:function (x){
+        this.x = x
+      },
+      moveY:function (y){
+        this.y = y
+      },
+    }
+    // 刺客类
+    var Assassin = function (x,y) {
+      this.x = x
+      this.y = y
+      Assassin.prototype = Move
+    }
+    // 法师类
+    var Master = function (x,y) {
+      this.x = x
+      this.y = y
+      Master.prototype = Move
+    }
+    var a1 = new Assassin(100, 100)
+    a1.moveX = 300
+    a1.moveY = 300
+    var m1 = new Assassin(200, 200)
+    m1.moveX = 800
+    m1.moveY = 300
+  </script>
+</body>
+</html>

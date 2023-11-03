@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    var Nav = function (data) {
+      this.html = ''
+      this.item = '<a href="{#href#}" title="{#title#}">{#name#}</a>'
+      for (let i = 0; i< data.length; i++) {
+        this.html += item
+      }
+      return this.html
+    }
+    var NumNav = function (data) {
+      var t1 = '<b>{#num#}</b>'
+      for(var i = data.length - 1; i >= 0; i--){
+        data[i].name += (data[i].name + data[i].num)
+      }
+      return Nav.call(this,data)
+    }
+    var nav = document.getElementById('content')
+    nav.innerHTML = NumNav({
+      href:'https://www.baidu.com',
+      title:'百度',
+      name:'百度',
+      num:10
+    })
+    // 模板方法的核心在于对方法的虫蛹，它将核心方法封装在基类中，让子类继承基类的方法，实现基类方法的共享，达到方法公用。
+  </script>
+</body>
+</html>

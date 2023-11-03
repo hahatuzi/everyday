@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 撒点
+    // this.mapObj[cur.title](cur.visiable, cur.mapType)
+    // // 初始化七大类的map对象
+    // initMapObj () {
+    //   this.mapObj = {
+    //     '总面积': this.openFeatureLayerByName,
+    //     '总人口': this.peopleMap,
+    //     '村居':this.openFeatureLayerByName,
+    //     '道路':this.openFeatureLayerByName,
+    //     '沿街商铺':this.openFeatureLayerByName,
+    //     '河道':this.openFeatureLayerByName,
+    //     '在建工地':this.openFeatureLayerByName,
+    //   }
+    // },
+    // ========================改造版=======================
+    var handleMap = function () {
+      var States = {
+        '总面积': this.openFeatureLayerByName,
+        '总人口': this.peopleMap,
+        '村居':this.openFeatureLayerByName,
+        '道路':this.openFeatureLayerByName,
+        '沿街商铺':this.openFeatureLayerByName,
+        '河道':this.openFeatureLayerByName,
+        '在建工地':this.openFeatureLayerByName,
+      }
+      function show (data) {
+        let {title, visiable, mapType} = data
+        States[type] && States[type](visiable, mapType)
+      }
+      return show
+    }
+    // handleMap.show('总面积')// 
+    // 地图
+    function openFeatureLayerByName (visiable,mapType) {
+      // 显隐table
+      if (mapType != '村居委会边界')this.changeTable(visiable)
+      // 5--地图是否聚焦
+      this.$bus.$emit('addLayer', {method:'openFeatureLayerByName', data:['专业数据',mapType, visiable, '1=1', false]})
+    }
+    // 人口-地图
+    function peopleMap (visiable,mapType) {
+      // 切换人口地图弹窗
+      this.legendDialog.title = mapType
+      this.legendDialog.show = true
+      this.legendList = [
+        { value:1,color:'#14D911',label:'0-1000人', visiable:true},
+        { value:2,color:'#6AF207',label:'1000-2000人', visiable:true},
+        { value:3,color:'#F4EE66',label:'2000-3000人', visiable:true},
+        { value:4,color:'#FEAB11',label:'3000-4000人', visiable:true},
+        { value:5,color:'#feab0f',label:'4000-5000人', visiable:true},
+        { value:6,color:'#ff6833',label:'5000-9000人', visiable:true},
+        { value:7,color:'#d61726',label:'9000人以上', visiable:true},
+      ]
+      this.$bus.$emit('addLayer', {method:'populationChromatic', data:[visiable, [1,2,3,4,5,6,7]]})
+    }
+  </script>
+</body>
+</html>

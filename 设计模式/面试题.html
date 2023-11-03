@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    function User(name, age){
+      this.name = name
+      this.age = age
+    }
+    const u1 = new User('lisa',20)
+    const u2 = new User('lili',18)
+    console.log(u1 == u2) // false
+    var CreateSingle = (function (name,age){
+      var instance = ''
+      console.log(instance)
+      return function (name,age) {
+        if (!instance){
+          instance = new User(name,age)
+        }
+        return instance
+      }
+    })()
+    const u3 = new CreateSingle('jisoo',19)
+    const u4 = new CreateSingle('rose',21)
+    console.log(u3)
+    console.log(u4)
+    console.log(u3 === u4)
+  </script>
+</body>
+</html>

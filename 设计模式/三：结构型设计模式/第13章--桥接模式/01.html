@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <div></div>
+  <script>
+    // 将抽象部分和它的实现部分分离，使得它们能够独立变化，场景：一个类存在两部分或者多部分需要独立变化的维度，
+    const Animates = {
+      bounce:{
+        show(el){
+          console.log('bounce',el)
+        },
+        hide(){
+          console.log('bounce',el)
+        }
+      },
+      slide:{
+        show(el){
+          console.log('slide',el)
+        },
+        hide(){
+          console.log('slide',el)
+        }
+      }
+    }
+    function Toast(el, animate){
+      this.el = el
+      this.animate = animate
+    }
+    Toast.prototype.show = function () {
+      this.animate.show()
+    }
+    Toast.prototype.hide = function () {
+      this.animate.hide()
+    }
+    let t1 = new Toast('div', Animates.slide)
+  </script>
+</body>
+</html>

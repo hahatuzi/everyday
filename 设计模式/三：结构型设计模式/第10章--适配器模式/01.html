@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 适配器模式，将一个类的接口或者方法或者属性转化为另外一个接口，满足不兼容的需求
+    A(function () {
+      A('button').on('click', function () {
+
+      })
+    })
+    // 适配器写法
+    var A = A || {}
+    A.g = function (id) {
+      return document.getElementById(id)
+    }
+    A.on = function (id, type ,fn) {
+      var dom = typeof id === 'string' ? $('#' + id) : $(id)
+      dom.on(type, fn)
+      // ==================================================
+      var dom = typeof id === 'string' ? $('#' + id) : $(id)
+      if (dom.addEventListener) {
+        dom.addEventListener(type, fn ,false)
+      } else if(dom.attachEvent){
+        dom.attachEvent('on' + type , fn)
+      } else {
+        dom['on' + type] = fn
+      }
+    }
+    // 应用
+    A.on(window, 'load', function () {
+      A.on('mybutton', 'click', function () {
+        
+      })
+    })
+  </script>
+</body>
+</html>

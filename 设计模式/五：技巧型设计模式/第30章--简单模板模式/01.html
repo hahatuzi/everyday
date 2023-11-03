@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    var A = A|| {}
+    A.root = document.getElementById('container')
+    A.strategy = {
+      'listPart':function (data) {
+        var s = document.createElement('div')
+        ul = ''
+        lidata = data.data.li
+        tp1 = ['<h2>{#h2#}</h2><p>{#p#}</p>'].join('')
+        // ...
+
+        s.innerHTML = A.formateString(tp1)
+        A.root.appendChild(s)
+      },
+      'onlyTitle':function () {},
+    }
+    // 创建视图入口
+    A.init = function (data) {
+      this.strategy[data.type](data)
+    }
+    // '{'demo':'this is a demo'}' --->  '<a>{#demo#}</a>' ---> <a>this is a demo</a>
+    A.formateString = function (str, data) {
+      return str.replace(/\{#(\w+)#\}/g, function(match, key){
+        return typeof data[key] === undefined ? '' : data[key]
+      })
+    }
+  </script>
+</body>
+</html>

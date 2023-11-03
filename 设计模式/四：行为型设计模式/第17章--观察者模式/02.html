@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <div class="left">
+    <li>用户管理</li>
+    <li>权限管理</li>
+    <li>新闻管理</li>
+  </div>
+  <div class="bread"></div>
+  <script>
+    // 观察者对象：容器 + 订阅消息的方法，取消订阅的方法，发送订阅的消息方法
+    class Subject{
+      constructor(name){
+        this.observers = []
+      }
+      add(observer){
+        this.observers.push(observer)
+      }
+      remove(observer){
+        this.observers = this.observers.filter(item => item !== observer)
+      }
+      notify () {
+        this.observers.forEach(item => {
+          item.update()
+        })
+      }
+    }
+    class Observer{
+      constructor(name){
+        this.el = document.querySelector(name)
+      }
+      update(data){
+        console.log(this.name)
+        this.el.innerHTML = data
+      }
+    }
+    const sub = new Subject()
+    const observer = new Observer('.bread')
+    sub.add(observer)
+    let oli = document.querySelectorAll('.left li')
+    for(let i=0; i<oli.lenght; i++){
+      oli[i].onclick = function () {
+        sub.notify(this.innerHTML)
+      }
+    }
+  </script>
+</body>
+</html>

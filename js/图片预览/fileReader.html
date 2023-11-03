@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <input type="file" id="pic">
+  <img src="" width="40px">
+  <script>
+    var file = document.querySelector('#pic')
+    var img = document.querySelector('img')
+    file.onchange = function () {
+      // 方式一
+      // var fr = new FileReader()
+      // fr.readAsDataURL(file.files[0])
+      // fr.onload = function () {
+      //   img.src = fr.result
+      // }
+      // 方式二
+      var blob = window.URL.createObjectURL(file.files[0])
+      console.log(blob)
+      img.src = blob
+    }
+  </script>
+</body>
+</html>

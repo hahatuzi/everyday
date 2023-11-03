@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    class Subject{
+      constructor(name){
+        this.observers = []
+      }
+      add(observer){
+        this.observers.push(observer)
+      }
+      // 每次执行notifys时就要去触发观察者的update方法
+      notify () {
+        this.observers.forEach(item => {
+          console.log(item)
+          item.update()
+        })
+      }
+    }
+    class Observer{
+      update (){
+        console.log('update')
+      }
+    }
+    const sub = new Subject()
+    const observer1 = new Observer()
+    const observer2 = new Observer()
+    sub.add(observer1)
+    sub.add(observer2)
+    console.log(sub) // Subject:{ Observer: [observer1, observer2] }
+    sub.notify()
+    // ======================================================================
+    var Observer = (function () {
+      var _message = {};
+      return {
+        register
+      }
+    })()
+  </script>
+</body>
+</html>

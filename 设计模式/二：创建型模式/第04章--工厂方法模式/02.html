@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <div id="container"></div>
+  <script>
+    // 工厂方法模式和抽象工厂模式的出现契机在于**不直接像上述所示直接返回某个类的实例对象**，**而是返回该类**，然后对于返回哪个类，则再写一个方法来管理，如下所示
+    var Factory = function (type, content) {
+      if (this instanceof Factory) {
+        // 说明是通过new Factory()创建的
+        var s = new this[type](content)
+        return s
+      } else {
+        console.log(this) // this指向window
+        return new Factory(type, content)
+      }
+    }
+
+    Factory.prototype = {
+        Java : function(content) {
+            this.content = content ;
+            (function() {
+                var _div = document.createElement('div') ;
+                _div.innerHTML = content ;
+                _div.style.color = 'green' ;
+                document.getElementById('container').appendChild(_div) ;
+            })(content) ;
+        },
+        Php : function(content) {
+            this.content = content ;
+            (function() {
+                var _div = document.createElement('div') ;
+                _div.innerHTML = content ;
+                _div.style.color = 'yellow' ;
+                _div.style.background = 'red' ;
+                document.getElementById('container').appendChild(_div) ;
+            })(content) ;
+        },
+        JS : function(content) {
+            this.content = content ;
+            (function() {
+                var _div = document.createElement('div') ;
+                _div.innerHTML = content ;
+                _div.style.color = 'blue' ;
+                document.getElementById('container').appendChild(_div) ;
+            })(content) ;
+        },
+    } ;
+
+
+    var data = [
+        {type : 'Java', content : '这是Java的广告'},
+        {type : 'Php', content : '这是Php的广告'}
+    ] ;
+
+
+    for(var i = 0; i < data.length; i++) {
+          Factory(data[i].type, data[i].content) ;
+    }
+    let f1 = new Factory('JS', '这是JS')
+    // 工厂方法模式的特点在于我们只需要添加指定的对象即可，不需要在switch...case中添加调度方法。
+  </script>
+</body>
+</html>

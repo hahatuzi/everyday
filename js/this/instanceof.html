@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // instanceOf的使用说明：
+    // 应用场景包括两种:
+    // 第一种：用来判断一个实例是否属于某种类型：
+    function Foo()
+    var foo = new Foo()
+    console.log(foo instanceof Foo)
+    // 第二种，在继承关系中用来判断一个实例是否属于它的父类型
+    function Aoo(){}
+    function Foo(){}
+    Foo.prototype = new Aoo()
+    var foo = new Foo(); 
+    console.log(foo instanceof Foo)  // true 
+    console.log(foo instanceof Aoo)  // true
+    // ================================================================================================
+    // instanceOf原理
+    function instance_of(L, R) {  // L 表示左表达式，R 表示右表达式
+      var O = R.prototype;	// 取 R 的显示原型
+      L = L.__proto__;		// 取 L 的隐式原型
+      while (true) { 
+        if (L === null) 
+          return false; 
+        if (O === L)	// 这里重点：当 O 严格等于 L 时，返回 true 
+          return true; 
+        L = L.__proto__; 
+      } 
+    }
+    // 从代码中我们可以看到，instanceof 是比较左侧的 __proto__ (隐式原型)和右侧的 prototype (显示原型)是否相等，如果不相等，取左侧 __proto__ 的 __proto__ ，依次循环比较，直到取到 Object.prototype.__proto__ 即 null 为止。
+    // ================================================================================================
+    // this instanceOf Factory的实现：
+    // 可以分解为两部：this.__proto__和Factory.prototype
+    // 情形一：如果Factory的实例对象是通过new Factory创建的，那么this.__prototype__ = Factory.prototype
+    // 情形二：如果Factory的实例对象是通过Factory()创建的，那么this指向window,所以这也是我们在设计模式中讲到的安全模式类的由来
+     var Factory = function (type, content) {
+      if (this instanceof Factory) {
+        var s = new this[type][content]
+      } else {
+        return new Factory(type, content)
+      }
+    }
+    
+  </script>
+</body>
+</html>

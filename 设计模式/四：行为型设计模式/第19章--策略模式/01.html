@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    let list = [
+      {name:'lisa',type:'1'},
+      {name:'jisoo',type:'2'},
+      {name:'rose',type:'3'},
+    ]
+    let status = {
+      1:{title:"未审核"},
+      2:{title:"审核中"},
+      3:{title:"已审核"},
+    }
+    document.body.innerHTML = list.map(item => 
+      item.name + '---' + status[item.type]['title']
+    )
+  </script>
+</body>
+</html>

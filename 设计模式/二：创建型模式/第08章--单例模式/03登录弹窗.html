@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    .modal{
+      position: fixed;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      width: 200px;
+      height: 200px;
+      line-height: 200px;
+      text-align: center;
+      background-color: yellow;
+    }
+  </style>
+</head>
+<body>
+  <!-- <div class="modal">登录弹窗</div> -->
+  <button id="open">打开</button>
+  <button id="close">关闭</button>
+  <script>
+    const Modal = (function () {
+      let instance
+      return function () {
+        if (!instance) {
+          instance = document.createElement('div')
+          instance.innerHTML = '登录弹窗'
+          instance.className = 'modal'
+          instance.style.display = 'none'
+          document.body.appendChild(instance)
+        }
+        return instance
+      }
+    })()
+    document.getElementById('open').onclick = function () {
+      // 创建弹窗的单例模式
+      const modal = Modal()
+      modal.style.display = 'block'
+    }
+    document.getElementById('close').onclick = function () {
+      // 创建弹窗的单例模式
+      const modal = Modal()
+      modal.style.display = 'none'
+    }
+  </script>
+</body>
+</html>

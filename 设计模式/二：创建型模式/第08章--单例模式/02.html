@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+      function User(name, age) {
+        this.name = name
+        this.age = age
+      }
+    var Singleton = (function () {
+      var instance
+      return function (name,age) {
+        if (!instance) {
+          instance = new User(name,age)
+        } else {
+          return instance
+        }
+      }
+    })()
+    console.log(Singleton() === Singleton()) // false
+  </script>
+</body>
+</html>
