@@ -47,7 +47,9 @@ react router可以将url地址和组件进行映射
     function App() {
       const outlet = useRoutes(router)
       return (
-        <div className='App'>{outlet}</div>
+        <div className='App'>
+          {outlet}
+        </div>
       )
     }
 

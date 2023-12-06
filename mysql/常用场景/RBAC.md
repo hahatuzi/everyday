@@ -11,19 +11,19 @@
 然后再和 菜单对应，比如商品列表内可能有多个权限资源（商品添加，商品删除等），权限资源表存在的目的就是为了实现对菜单中功能点的控制
 **res_key：自动定义好的权限标识**
 **parent_id：权限表的层次结构为2层**
-用户(管理员)   | 角色权限             | 用户角色中间表  | 权限(资源)                 |  菜单 |  角色权限中间表|  权限菜单中间表
-------------  | -------------------- | --------------| --------------------------| --------｜
-id(int)()key  | id角色id(int)key     | admin_id(主键) | id(int)(资源id)key        |     id   |
-name(varchar) | name角色名称(varchar）| role_id(主键) | res_key(资源key)varchar    |     name   |
-password      |                      |               | res_name(资源名称)varchar  |     url  |
-status        |                      |               | parent_id(上级资源id)int   |     parent_id |
+用户(管理员)  | 角色权限             | 用户角色中间表  | 权限(资源)                 |   菜单    |  角色权限中间表|  权限菜单中间表
+------------  | -------------------- | ----------------| ---------------------------| ---------｜
+id(int)()key  | id角色id(int)key     | admin_id(主键)  | id(int)(资源id)key         |     id    |
+name(varchar) | name角色名称(varchar)|  role_id(主键)  | res_key(资源key)varchar    |    name   |
+password      |                      |                 | res_name(资源名称)varchar  |      url  |
+status        |                      |                 | parent_id(上级资源id)int   | parent_id |
 举例：
 权限(资源)表 
-id     |   res_key     | res_name     | parent_id  |
-----   | ------------- | -------------| -----------|
-1      | goods         |   商品       |       0    |
-2      | orders        |   订单       |      0     |
-3      | config        |   设置       |      0     |
+id     |   res_key     | res_name     | parent_id   |
+----   | ------------- | -------------| ------------|
+1      | goods         |   商品       |       0     |
+2      | orders        |   订单       |      0      |
+3      | config        |   设置       |      0      |
 4      | goods_add     |   商品添加   |      1      |
 5      | goods_edit    |   商品修改   |      1      |
 6      | goods_delete  |   商品删除   |      1      |

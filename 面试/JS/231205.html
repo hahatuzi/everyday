@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 自定义实现bind
+    let obj = {name:'lisa'}
+    function createPerson (...args) {
+      console.log(this.name, ...args)
+    }
+    let fn = createPerson.bind(obj, '1', '2')
+    // fn('3', '4', '5') // lisa, 1,2,3,4,5
+    let obj1 = {name:'rose'}
+    let fn1 = fn.bind(obj1, '5', '6')
+    fn1('7', '8') // lisa ,1,2,5,6,7,8
+
+    // 依照上述实际自定义实现bind
+    Function.prototype.bind_self = function (obj, ...args){
+      let fn = this // 获取调用bind_self的函数，这里指createPerson
+      // 返回值为函数
+      return function (...params) {
+        console.log(obj, args, params)
+        // 将函数挂在新对象上
+        fn.call(obj,...args, ...params) // 修改函数中this的指向
+      }
+    }
+    let fn2 = createPerson.bind_self(obj, 'a', 'b')
+    // fn2( 'c', 'd', 'e')
+    let fn3 = fn2.bind(obj1,  'c', 'd', 'e')
+    fn3('f', 'g')
+  </script>
+</body>
+</html>
