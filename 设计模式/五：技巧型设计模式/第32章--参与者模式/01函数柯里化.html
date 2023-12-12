@@ -7,6 +7,61 @@
 </head>
 <body>
   <script>
+    // 将接收多个参数的函数变成接收单个参数的函数，并且返回接收剩余参数并返回结果的新函数
+    // 例如==================
+    function sum (a,b){
+      return a + b
+    }
+    sum(1,2) // 3
+    // 改写成  sum(1)(2)
+    // 改写代码
+    function sum (a){
+      return function(b){
+        return a+b
+      }
+    }
+    // 改写成sum(1)(2)(3)
+    function sum(a){
+      return function (b){
+        return function (c){
+          return a + b + c
+        }
+      }
+    }
+    function mysum(...args){
+      let data = []
+      data.push(...args)
+      if (data.length > 4) {
+        let res = data.reduce((result, item) => {
+          result += item
+          return result
+        }, 0)
+        return res
+      } else {
+        return mysum
+      }
+    }
+    // console.log(mysum(1,2,3, 4))
+    function currySum(...arg1){
+      let args = []
+      args.push(...arg1)
+      function mysum1(...arg2){
+        let allArgs = []
+        args.push(...arg2)
+        console.log(args)
+        if (args.length > 4) {
+          let res = args.reduce((result, item) => {
+            result += item
+            return result
+          }, 0)
+          return res
+        } else {
+          return mysum1
+        }
+      }
+      return mysum1
+    }
+    console.log(currySum(1,2)(3,4)(5))
     // 柯里化的是对参数分割，按照参数的不同，产生不同的状态，只不过函数柯里化处理的是函数，借助柯里化伪造产生其他函数
     function curry(fn){
       var Slice = [].slice

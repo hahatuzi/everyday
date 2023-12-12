@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    function myTypeof (type) {
+      return function (params) {
+        return type === params
+      }
+    }
+    const isString = myTypeof('string')
+    const isUndefined = myTypeof('undefined')
+    console.log(isString('2'))
+    console.log(isUndefined('lisa'))
+  </script>
+</body>
+</html>
