@@ -15,12 +15,20 @@ react router可以将url地址和组件进行映射
     import {Navigate} from 'react-router-dom'
     import  {lazy, Suspense} from 'react'
 
+    // =============================
     const Test1 = lazy(() => import('@/components/test1/test1'))
 
     const withLoadingComponent = (comp:JSX.Element) => {
       return <Suspense fallback={<div>loading...</div>}>{comp}</Suspense>
     }
-
+    // ===============上下两者等价==============
+    const lazyLoad = (comp:React.LazyExotiComponent<() => JSX.Element) => {
+      return (
+        <Suspense fallback={<div>loading...</div>}>{comp}</Suspense>
+      )
+    }
+    element:lazyLoad(React.lazy(() => import('@/components/test1/test1') ))
+    // =============================
     const routes = [
       {path:"/",element:<Navigate to="/"></Navigate>}, // 重定向路由
       {path:"/test1",element:withLoadingComponent(<Test1></Test1>)},

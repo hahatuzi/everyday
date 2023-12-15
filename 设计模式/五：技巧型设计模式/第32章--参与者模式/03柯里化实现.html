@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    function add(x,y,z){
+      return x + y + z
+    }
+    // 可以改写成一下三种方式
+    function add1(x){
+      return function (y,z){
+        return x + y + z
+      }
+    }
+    function add2(x, y){
+      return function (z){
+        return x + y + z
+      }
+    }
+    function add3(x){
+      return function ( y, z){
+        return x + y + z
+      }
+    }
+    // 接收多个参数的函数变成接收单个参数的函数，并且返回接收剩余参数并返回结果的新函数
+    // 故，此方法可以不太直观
+    function add4(x){
+      return function (y){
+        return function (z){
+          return x + y + z
+        }
+      }
+    }
+    // 自定义实现
+    function curry(){
+      console.log(arguments)
+      return function (arg) {
+        console.log(arg)
+      }
+    }
+    console.log(curry(1))
+    console.log(curry(1)(2))
+    console.log(curry(1, 2)(3))
+  </script>
+</body>
+</html>

@@ -16,6 +16,28 @@
     const isUndefined = myTypeof('undefined')
     console.log(isString('2'))
     console.log(isUndefined('lisa'))
+    // 柯里化的作用：让函数变得更加灵活，让函数的职责变得单一,对参数的逻辑进行复用，因为通过闭包对变量进行了复用！！
+    // 例如
+    function foo(name, msg){
+      let str = name + '小朋友'
+      console.log('foo')     // 执行3次
+      return `想对${str}说，${msg}！！！`
+    }
+    console.log(foo('dingd','你今天真好看'))
+    console.log(foo('dingd','生日快乐'))
+    console.log(foo('dingd','你是最棒的'))
+    // 柯里化的优化,实现了对参数的逻辑复用，即name的闭包存储
+    function foo1 (name) {
+      let str = name + '小朋友'
+      console.log('foo1')// 执行1次，
+      return function (msg) {
+        return `相对${str}说，${msg}！！！`
+      }
+    }
+    let getName = foo1('钉钉')
+    console.log(getName('你今天真好看'))
+    console.log(getName('生日快乐'))
+    console.log(getName('你是最棒的'))
   </script>
 </body>
 </html>

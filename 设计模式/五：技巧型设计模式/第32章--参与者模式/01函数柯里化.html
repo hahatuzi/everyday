@@ -69,16 +69,19 @@
       return function () {
         var addArgs = Slice.call(arguments)
         allArgs = args.concat(addArgs)
+        console.log(allArgs)
         return fn.apply(allArgs)
       }
     }
     function add(num1, num2){
+      console.log(num1, num2)
       return num1 + num2
     }
     function add5(num){
       return 5 + num
     }
     var add5 = curry(add, 5)
+    console.log(add5())
   </script>
 </body>
 </html>
