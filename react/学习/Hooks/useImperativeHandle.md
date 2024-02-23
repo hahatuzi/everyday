@@ -1,47 +1,72 @@
+# 父组件通过ref获取子元素的DOM和方法
+### 1.获取元素,通过useRef,// 此种方式有可能导致父组件修改了ref的值后，子组件的值仍然是旧的！！！所以出现了useImperativeHandle()
 ```js
-const inputRef = useRef()
-const click = () => {
-  console.log(inputRef.current.value)
-}
-<div>
-<input ref="inputRef"></div>
-<button onClick={() => click}></button>
-</div>
-// 当需要再父组件中获取ref的话怎么办呢，ref获取的是原生DOM对象，无法在自定义组件上使用比如<compA ref="compARef"></compA>
-```
-```js
-const compA = React.forwardRef((props, ref) => {
-  const inputRef = useRef()
+// 子元素
+const FocusInput = forwardRef(function (props, ref) {
   return (
-    <div>
-      <h2 ref={ref}></h2>
-      <input ref="inputRef"></div>
-      <button onClick={() => click}></button>
-    </div>
+    <div><input type='text' ref={ref}></input></div>
   )
 })
-// 此种方式有可能导致父组件修改了ref的值后，子组件的值仍然是旧的！！！所以出现了useImperativeHandle()
+// 父元素
+const App = function () {
+  const sonRef = useRef(null)
+  const showRef = () => {
+    console.log(sonRef)
+    sonRef.current.focus()
+  }
+  return (
+    <div>
+      <FocusInput ref={sonRef}></FocusInput><button onClick={showRef}>focus</button>
+    </div>
+  )
+}
+export default App
 ```
+### 2.获取子元素的方法,通过useRef和useImperativeHandle的结合
 ```js
-const compA = React.forwardRef((props, ref) => {
-  const inputRef = useRef()
-  useImperativeHandle(ref, () => {
+const FocusInput1 = forwardRef(function (props, ref) {
+  const sonRef1 = useRef(null)
+  const focusHandler = () => {
+    console.log(sonRef1)
+    sonRef1.current.focus()
+  }
+  useImperativeHandle(ref, () =>{
     return {
-      changeValue (val) {
-        inpurRef.current.value = val
-      }
-      // 通常返回一个操作DOM的方法，而不是直接返回DOM
+      focusHandler
     }
   })
   return (
-    <div>
-      <h2 ref={ref}></h2>
-      <input ref="inputRef"></div>
-      <button onClick={() => click}></button>
-    </div>
+    <div><input type='text' ref={sonRef1}></input></div>
   )
 })
-// 父组件
-compA.current.changeValue(count)
-<compA ref="compARef"></compA>
+// 父元素
+const App = function () {
+  const sonRef1 = useRef(null)
+  const showRef = () => {
+    console.log(sonRef1)
+    sonRef1.current.focusHandler()
+  }
+  return (
+    <div>
+      <FocusInput1 ref={sonRef1}></FocusInput1><button onClick={showRef}>focus</button>
+    </div>
+  )
+}
+export default App
+```
+
+# useRef还可以作为稳定的定时器
+```js
+function App () {
+  const timerRef = useRef<number | undefined>(undefined)
+  useEffect(() => {
+    timerRef.current = setInterval(() => {
+      console.log('1')
+    })
+    return () => {clearInterval(timerRef.current)}
+  }, 1000)
+  return (
+    <div>App</div>
+  )
+}
 ```
