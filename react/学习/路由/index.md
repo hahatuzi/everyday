@@ -9,7 +9,7 @@ react router可以将url地址和组件进行映射
 
 # 二：router改写
 ```js
-    // ========================新的写法：使用useRoutes()===============================
+    // ========================新的写法：使用useRoutes()或者RouterProvider===============================
     // https://blog.csdn.net/qq_30769437/article/details/128149273
     // 第一步：将路由配置表写成懒加载模式
     import {Navigate} from 'react-router-dom'

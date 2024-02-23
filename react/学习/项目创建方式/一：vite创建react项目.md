@@ -35,6 +35,8 @@
   ```
   (4)第四步：全局css样式管理,组件化module.scss的样式管理,全局样式变量管理
   ```js
+  // =================标准样式添加normalize.css
+  // npm i normalize.css
   // ==================一：全局css样式管理==================
   // (1)npm i sass --save-dev
   // (2)创建并在main.tsx中引用src/styles/global.scss文件
