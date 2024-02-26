@@ -121,7 +121,92 @@
   ```
 
 # 11.react的降级处理错误边界
+
 # 12.代码分割
 webpack rollup  :import和react.lazy
+
 # 13.Fragments
 <Fragment> 通常使用 <>...</> 代替，它们都允许你在不添加额外节点的情况下将子元素组合。
+
+# 14.useEffect和useLayoutEffect的区别
+useEffect:组件更新挂载完成后 VDOM -->  DOM更新 --> useEffect  :造成页面闪动
+useLayoutEffect:组件更新挂载完成后 VDOM --> useLayoutEffect -->  DOM更新 : 造成页面卡顿
+useLayoutEffect **内部的代码和所有计划的状态更新阻塞了浏览器重新绘制屏幕**。如果过度使用，这会使你的应用程序变慢。如果可能的话，尽量选择 useEffect。
+
+# 15.useMemo和useCallback的区别
+useMemo 返回callback的运行结果
+useCallback返回的callback的函数
+```js
+const Demo = () => {
+  cosnt [number, setNumber] = useState(0)
+  const getResult = useMemo(() => {
+    const log = () => {
+      console.log(number)
+    }
+  },[number])
+  return <div>
+    <div onClick={() => {getResult()}}>获取最新值</div>
+    {/* 使用useMemo获取到了最新值 */}
+    <span onClick={() => setNumber(number + 1)}>+1</span>
+  </div>
+}
+```
+
+# 16.fiber
+
+# 17.state和props数据的区别
+state状态是类组件内部定义的数据，可读可写
+props数据是父组件传递给子组件的数据，对子组件来说是只读数据，不能在子组件内修改
+  ```js
+    class ParentComponent extends React.Component {
+      constructor(props) {
+        super(props);
+        this.state = {
+          childData: 0,
+        };
+      }
+      // 更新子元素的状态
+      updateChildData = (data) => {
+        this.setState({
+          childData: data,
+        });
+      };
+      render() {
+        return (
+          <div>
+            <ChildComponent childData={this.state.childData} updateChildData={this.updateChildData} />
+          </div>
+        );
+      }
+    }
+    class ChildComponent extends React.Component {
+      constructor(props) {
+        super(props);
+        this.state = {
+          count: this.props.childData,
+        };
+      }
+      // 点击按钮时调用父元素传递过来的回调函数
+      handleClick = () => {
+        this.props.updateChildData(this.state.count + 1);
+      };
+      render() {
+        return (
+          <div>
+            <h2>Child Component</h2>
+            <p>Child data: {this.state.count}</p>
+            <button onClick={this.handleClick}>Update child data</button>
+          </div>
+        );
+      }
+    }
+  ```
+# 18.React中的this指向问题
+```js
+update3=() => {
+  // 使用箭头函数改变this指向
+}
+<div onClick={() => this.update1()}></div>
+<div onClick={this.update2.bind(this)}></div>
+<div onClick={this.update3}></div>
+```
