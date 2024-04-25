@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+    <!-- vue2中使用的为object.defineProperty -->
+    <script>
+      // var obj = {a:1,b:2}
+      // 获取原型
+      // var proto = Object.getPrototypeOf(obj)
+      // console.log(proto)
+      // console.log(obj.__proto__)
+      // console.log(Object.prototype)
+      // Object.seal(obj)
+      // 设置原型
+      // Object.setPrototypeOf(obj,{c:3,d:4})
+      // // console.log(obj) 
+      // // obj的原型上会包括{c:3,d:4}这两个属性
+      // // obj自身身上并不包括这两个属性
+      // // console.log(Object.getOwnPropertyNames(obj))
+      // Object.freeze(obj)
+      // obj.c= 3
+      // // Object.freeze冻结obj以后，obj就无法添加属性了。
+      // // console.log(obj)
+      // for (const key in obj) {
+      //   if (Object.hasOwnProperty.call(obj, key)) {
+      //     const element = obj[key];
+      //     console.log(key,element)
+      //   }
+      // }
+      
+      function defineProperty () {
+        let _obj = {}
+        Object.defineProperties(_obj,{
+          a:{
+            value:1,
+            writable:false,
+            enumerable:true,
+            configurable:true
+          },
+          b:{
+            value:2
+          },
+          c:{
+            value:[1,2,3]
+          },
+          d:{
+            value:{
+              name:'lisa',
+              children:[1,2,3]
+            }
+          }
+        })
+        return _obj
+      }
+      let obj1 = defineProperty()
+      obj1.a = 5 // 如果a.wriatable = false,那么obj1.a无法重新赋值
+      console.log(obj1)
+      obj1.c = [1,2,3,4] // object.defineProperty无法实现监听属性为数组时的整个替换
+      console.log(obj1.c) // [1,2,3]
+      obj1.c.push(5)
+      console.log(obj1.c) // [1,2,3,5]
+      obj1.d.name = 'jisoo'
+      obj1.d.children = [1,2,3,4]
+      console.log(obj1.d)
+      for (const key in obj1) {
+        if (Object.hasOwnProperty.call(obj1, key)) {
+         console.log(key + '=' + obj1[key])
+        }
+      }
+
+  </script>
+</body>
+</html>

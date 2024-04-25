@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <!-- vue2中使用的为object.defineProperty -->
+    <!-- <script>
+        var obj = {a:1,b:2}
+        var proto = Object.getPrototypeOf(obj)
+        console.log(proto)
+    </script> -->
+    <!-- vue3--Proxy -->
+    <script>
+        const person = {
+            name:'lisa',
+            age:18,
+            child:[1,2,,3]
+        }
+        const proxy_person = new Proxy(person,{
+            deleteProperty(target, prop){
+            console.log('delete')
+            delete target[prop]
+            }
+        })
+        delete proxy_person.age
+        proxy_person.child = [1,2,3,4] // 与object.defineProperty不同的是proxy可以监听到属性为数组时的重新赋值
+        console.log(proxy_person)
+        console.log(person)
+        // =======================================
+        // 数组类型
+        // let arr = [{name:'雄安命', age:18}]
+        // let newArr = new Proxy(arr,{
+        //     get(arr,prop){
+        //         return arr[prop]
+        //     },
+        //     set(arr,prop,value){
+        //       arr[prop] = value
+        //     },
+        //     has(target,prop){
+        //         console.log(target[prop])
+        //     }
+        // })
+        // let  newArr1 = new Proxy(arr,{
+        //     get(arr,prop){
+        //         return arr[prop]
+        //     },
+        //     set(arr,prop,value){
+        //       arr[prop] = value
+        //     },
+        //     has(target,prop){
+        //         console.log(target[prop])
+        //     }
+        // })
+        // newArr[1] = {name:'lisa',age:18}
+        // newArr1[1] = {name:'jisoo',age:18}
+        // newArr = [{name:'jisoo'}]
+        // console.log(newArr)
+        // newArr.a = '1'
+        // console.log(arr)
+        // console.log(newArr)
+        // console.log(newArr1)
+        // console.log('a' in arr)
+        // console.log(newArr.Target)
+        // =======================================
+        // 函数类型
+    //     let fn = function () {
+    //         console.log('fn')
+    //     }
+    //   let newFn = new Proxy(fn,{
+    //     get(fn,prop){
+    //         console.log(prop)
+    //         return fn[prop]
+    //     }
+    //   })
+    //   console.log(fn)
+    //   console.log(newFn) //newFn.target = fn
+    //   let obj = reactive({
+    //     name:'lisa',
+    //     children:[
+    //         {name:'rora'}
+    //     ]
+    //   })
+    //   obj --> proxy -->target  --> obj
+    </script>
+</body>
+</html>

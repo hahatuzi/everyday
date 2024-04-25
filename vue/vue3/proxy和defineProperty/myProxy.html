@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+
+    function MyProxy(target,handler) {
+      // 第一步：实现对象属性的全部深层次代理，即深拷贝
+      let _target = deepClone(target)
+      // 第二步：实现对深拷贝对象属性的一些handler操作绑定
+      Object.keys(_target).forEach(key => {
+        Object.defineProperty(_target,key,{
+          get(){
+            console.log(handler.get(target, key))
+            return handler.get && handler.get(target, key)
+          },
+          set(newVal){
+            handler.set && handler.set(target,key,newVal)
+          }
+        })
+      })
+      return _target
+    }
+    function deepClone (origin, target) {
+      let _target = target || {}
+      for (const key in origin) {
+        if (Object.hasOwnProperty.call(origin, key)) {
+          if (typeof origin[key] === 'object' && origin[key] !== null) {
+            if(Object.prototype.toString.call(origin[key]) === '[object Array]') {
+              _target[key] = []
+            } else {
+              _target[key] = {}
+            }
+            deepClone(origin[key],_target[key])
+          } else {
+            _target[key] = origin[key]
+          }
+        }
+      }
+      return _target
+    }
+
+    let obj = {
+      a:1,
+      b:2,
+      c:[{name:'lisa'}],
+      d:{name:'rose'}
+    }
+    let _proxy = new MyProxy(obj,{
+      get(target, prop){
+        return target[prop]
+      },
+      set(target, prop, value){
+        target[prop] = value
+      }
+    })
+    // console.log(_proxy.c)
+    // _proxy通过代理obj对象，可以通过修改_proxy的值实现修改obj的属性的值
+    _proxy.e = 'jennie'
+    console.log(_proxy.a)
+  </script>
+</body>
+</html>
