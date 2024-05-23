@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+//     let a = '0a1'
+//     let b = '0a1'
+//     console.log(parseInt(a))
+//     console.log(Number(b))
+    
+// var str = "000123";
+// var num = str.replace(/^0+/, '0'); // 使用位运算符确保得到0
+// console.log(num);
+function count (data) {
+  const match = data.match(/^0*/);
+  console.log(match)
+  return match ? match[0].length : 0;
+}
+console.log(count('0000123'))
+  </script>
+</body>
+</html>
