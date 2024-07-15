@@ -19,3 +19,5 @@ gitlab比起jenkins有天然的优势。
 ### 6.插件管理
 （1）gitlab是开放式的，任何人都可以直接向代码库做贡献
 （2）jenkins是通过插件完成扩展功能的，
+
+https://blog.csdn.net/qq_34998786/article/details/122227957?spm=1001.2014.3001.5502

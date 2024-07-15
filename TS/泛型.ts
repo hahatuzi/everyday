@@ -22,4 +22,27 @@ type  Props = {a:number; b:string; c:boolean}
 type type3 = Props['a']
 type type4 = Props['a' | 'b']
 type type5 = Props[keyof Props]
-import _ from 'lodash'
+// import _ from 'lodash'
+
+
+interface Data1 {
+  name:string,
+  age:number
+}
+interface Data2 {
+  type:string,
+  id:number
+}
+interface Res<T> {
+  code:number,
+  msg:string,
+  data:T
+}
+let res1:Res<Data1> = {
+  code:200,
+  msg:'接口调用成功',
+  data:{
+    name:'lisa',
+    age:18
+  }
+}

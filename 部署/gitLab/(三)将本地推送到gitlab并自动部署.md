@@ -118,3 +118,5 @@ node HelloWorld.js
 4 打开浏览器，在地址范围输入http://<ECS公网地址>:8080，例如http://127.0.0.0:8080。
 
 如果返回如下界面，则表示成功。
+
+[!使用Docker Compose、Nginx、SSH和Github Actions实现前端自动化部署测试机]https://blog.csdn.net/qq_34998786/article/details/122227957?spm=1001.2014.3001.5502

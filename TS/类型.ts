@@ -27,3 +27,14 @@ let age = '18'
 //     this.age = age
 //   }
 // }
+enum Day {
+  SUNDAY,
+  MONDAY,
+  TUESDAY,
+  WEDNESDAY,
+  THUESDAY,
+  FRIDAY,
+  SATURDAY
+}
+console.log(Day.MONDAY)
+// TS会为它们分配默认编号，从0开始
