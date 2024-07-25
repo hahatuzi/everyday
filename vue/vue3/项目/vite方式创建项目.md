@@ -6,6 +6,7 @@ npm create vite
 
 ```
 # 二：项目eslint插件添加
+eslint9.0版本使用https://blog.csdn.net/qq_52845451/article/details/140160247
 ```js
   （1）npm i eslint  -D
   // 生成配置文件.eslint.cjs

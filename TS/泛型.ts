@@ -4,6 +4,8 @@ function fn<T>(value:T):T{
 }
 console.log(fn(2))
 console.log(fn<string>('lisa')) // <string>可以省略
+
+// 泛型定义：
 interface ILength {
   length: number
 }
