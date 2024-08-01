@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    window.addEventListener('domContentLoaded', () => {
+      let s = 0
+      for (let i = 0; i < 100000; i++) {
+        s += i
+      }
+      console.log(s)
+    })
+    setTimeout(() => {
+      const {
+        fetchStart, // 开始访问
+        requestStart,
+        responseStart,
+        responseEnd,
+        domInteractive,
+        domContentLoadedEventEnd,
+        loadEventStart
+      } = performance.timing
+
+      let TTFB = responseStart - requestStart
+      let TTI = domInteractive - fetchStart // 整个可交互的时长
+      let DCL = domContentLoadedEventEnd - fetchStart // DOM整个加载完毕
+      let L = loadEventStart - fetchStart // 所有资源加载完毕所用的时长
+      
+      let paint = performance.getEntriesByType('piant')
+      console.log(paint[0].startTime) // FP
+      console.log(paint[1].startTime) // FCP
+    }, 4000);
+    
+    // mutationObserver
+    new PerformanceObserver((entryList, observer) => {
+      console.log(entryList.getEntries()[0])
+      observer.disconnect()
+    }).observe({entryTypes:['element']})
+    
+
+    // LCP
+    new PerformanceObserver((entryList, observer) => {
+      entryList = entryList.getEntries()
+      console.log(entryList[entryList.length - 1], entryList)
+      observer.disconnect()
+    }).observe({entryTypes:['largest-contentful-paint']})
+
+
+    // FID
+    new PerformanceObserver((entryList, observer) => {
+      firstInput = entryList.getEntries()[0]
+      if (!firstInput) return
+
+      FID = firstInput.processingStart - firstInput.startTime
+      console.log(FID)
+
+      observer.disconnect()
+    }).observe({ type:['first-input'], buffered:true})
+  </script>
+</body>
+</html>

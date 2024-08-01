@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" href="./render.css">
+</head>
+<body>
+  <!-- <div class="box1">one</div> -->
+  <!-- <script>
+    // 阻塞了box2的解析，consolejs执行
+    alert('js执行')
+    console.log('ok,被弹窗阻塞了')
+  </script> -->
+  <div class="box2">two</div>
+  <script>
+    var box1 = document.querySelector('.box2')
+    // box1.style.width = '200px'
+    setTimeout(() => {
+      // box1.style.background = 'green'
+      // box1.style.transform = 'translateX(100px)'
+      box1.style.opacity = '.5'
+    }, 1000);
+  </script>
+</body>
+</html>
