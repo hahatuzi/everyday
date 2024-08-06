@@ -15,13 +15,15 @@
   </script> -->
   <div class="box2">two</div>
   <script>
-    var box1 = document.querySelector('.box2')
-    // box1.style.width = '200px'
-    setTimeout(() => {
-      // box1.style.background = 'green'
-      // box1.style.transform = 'translateX(100px)'
-      box1.style.opacity = '.5'
-    }, 1000);
+    // var box1 = document.querySelector('.box2')
+    // // box1.style.width = '200px'
+    // setTimeout(() => {
+    //   // box1.style.background = 'green'
+    //   // box1.style.transform = 'translateX(100px)'
+    //   box1.style.opacity = '.5'
+    // }, 1000);
+    let res = {"code":200,"result":{"city":{"Country":"中国","Province":"上海","City":"","Carrier":"电信","UserIp":"116.227.101.148"},"condition":{"day_weather":"多云","day_weather_short":"多云","day_wind_direction":"西风","day_wind_power":"1","max_degree":"33","min_degree":"25","night_weather":"多云","night_weather_short":"多云","night_wind_direction":"西南风","night_wind_power":"1","aqi":{"aqi":22,"aqi_level":1,"aqi_name":"优","co":"5","no2":"7","o3":"22","pm10":"21","pm2.5":"16","so2":"1","update_time":"202407312300"}},"forecast":[]},"msg":"success"}
+    console.log(res.result.condition)
   </script>
 </body>
 </html>
