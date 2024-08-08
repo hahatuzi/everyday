@@ -36,32 +36,56 @@
       //       then3
       //       setTimeout2
       // 任务对列任务区分
+      // setTimeout(() => {
+      //   console.log('setTimeout1')
+      // }, 0)
+      // const pro1 = new Promise((resolve, reject) => {
+      //   setTimeout(() => {
+      //     resolve('promise1')
+      //   }, 0)
+      // })
+      // pro1.then((value) => {
+      //   console.log('promise')
+      //   console.log(value)
+      // })
+      // const pro2 = new Promise((resolve, reject) => {
+      //   setTimeout(() => {
+      //     resolve('promise2')
+      //   }, 0)
+      // })
+      // pro2.then((value) => {
+      //   console.log('promise')
+      //   console.log(value)
+      // })
+      // // 宏任务2
+      // setTimeout(() => {
+      //   console.log('setTimeout2')
+      // }, 0)
+      console.log('1')
       setTimeout(() => {
-        console.log('setTimeout1')
-      }, 0)
-      const pro1 = new Promise((resolve, reject) => {
+        console.log('5')
+      }, 0);
+      new Promise((resolve, reject) => {
+        console.log('2')
+        // =========4,5,6=============
         setTimeout(() => {
-          resolve('promise1')
-        }, 0)
+          console.log('6')
+        }, 0);
+        resolve()
+        // =========5,6,4=============
+        // setTimeout(() => {
+        //   console.log('6')
+        //   resolve()
+        // }, 0);
+      }).then(() => {
+        console.log('4')
       })
-      pro1.then((value) => {
-        console.log('promise')
-        console.log(value)
-      })
-      const pro2 = new Promise((resolve, reject) => {
-        setTimeout(() => {
-          resolve('promise2')
-        }, 0)
-      })
-      pro2.then((value) => {
-        console.log('promise')
-        console.log(value)
-      })
-      // 宏任务2
       setTimeout(() => {
-        console.log('setTimeout2')
-      }, 0)
-    </script>
+        console.log('7')
+      }, 0);
+      console.log('3')
+      // 按照1,2,3,4,5,6,7的顺序执行
+      </script>
   </body>
 
 </html>

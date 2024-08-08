@@ -1,0 +1,2 @@
+# arguments对象
+函数的所有事迹参数会被保存在arguments对象中，arguments是一个类似数组的对象

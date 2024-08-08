@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+  </head>
+
+  <body>
+    <script>
+      console.log('script start')
+      async function fn1 () {
+        console.log('fn1 start')
+        await fn2() // 进入微任务队列
+        console.log('fn1 end') // 等待fn2执行后再执行
+      }
+
+      async function fn2 () {
+        console.log('fn2')
+      }
+
+    setTimeout(() => {
+      console.log('setTimeout');
+    }, 0);
+
+     fn1()
+
+     new Promise((resolve) => {
+      console.log('promise1')
+      resolve()
+     }).then(() => {
+      console.log('then1')
+     })
+
+      console.log('script end')
+      // script start
+      // fn1 start
+      // fn2
+      // promise1
+      // script end
+      // fn1 end
+      // then1
+      // setTimeout
+      </script>
+  </body>
+
+</html>

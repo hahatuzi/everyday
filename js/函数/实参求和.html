@@ -15,6 +15,19 @@
       console.log(arguments,c,arguments[2])
     }
     test(1,2,3)
+
+    let person = {
+      name:'lisa'
+    }
+    // 函数形参为对象时，形参指向引用地址
+    function change (obj) {
+      console.log(obj.name)
+      obj.name = 'lili'
+      console.log(obj.name)
+      console.log(obj)
+    }
+    change(person)
+    console.log(person) // {name:'lili'}
   </script>
 </body>
 </html>
