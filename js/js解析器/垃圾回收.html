@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // let p1
+    // function Person() {
+
+    // }
+    // function fn () {
+    //   p1 = new Person()
+    //   this.p2 = new Person()
+    // }
+    // fn()
+    // // weekSet和weekMap引用的对象也会被垃圾回收
+    // var obj = {name:'lisa'}
+    // let s1 = new Set([obj])
+    // let s2 = new WeakSet([obj])
+    // let m1 = new Map([obj,'test'])
+    // let m2 = new WeakMap([obj,'test'])
+      function Name() {
+        return 'lisa'
+      }
+      function fn () {
+        let n1 = new Name()
+        // console.log(n1) // console.log引用的Name构造函数不会被清除空间
+      }
+    fn()
+  </script>
+</body>
+</html>

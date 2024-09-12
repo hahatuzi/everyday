@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    const cache = new WeakMap()
+    let i = 0
+    function getData(obj){
+      console.log('第' + (++i) + '次被执行')
+      return obj.name + '-----' + obj.age
+    }
+    function process (obj) {
+      if(!cache.has(obj)) {
+        let res = getData(obj)
+        console.log(res)
+        cache.set(obj, res)
+      }
+      return cache.get(obj)
+    }
+    let obj = {name:'lisa',age:18}
+    let firstResult = process(obj)
+    let secondResult = process(obj)
+    obj = null  // 触发WeakMap清除内存
+    obj = {name:'jisoo', age:19}
+    let thirdResult = process(obj)
+    console.log(firstResult, secondResult,thirdResult) // lisa-----18 lisa-----18 jisoo-----19
+  </script>
+</body>
+</html>

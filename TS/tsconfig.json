@@ -1,6 +1,6 @@
 {
   "exclude": [
-    "./app.ts"
+    "练习/app.ts"
   ],
   "compilerOptions": {
     "allowJs": false, // 是否对js进行编译

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    const weakset = new WeakSet()
+    // weakset.add(10) // weakset只能存放对象类型
+    weakset.add({name:'lisa'})
+
+    let obj = {name:'lisa'}
+    let ws1 = new WeakSet()
+    weakset.add(obj)
+    obj = null // obj指向null后{name:'lisa'}创建的内存会被清理
+    console.log(ws1)
+
+    const personSet = new WeakSet()
+    class Person{
+      constructor(){
+        personSet.add(this)
+      }
+      running(){
+        if (!personSet.has(this)){
+          throw new Error("不能通过非构造方法创建的对象调用running方法");
+          
+        }
+        console.log('running', this)
+      }
+    }
+    let p = new Person()
+    p.running()
+    p.running.call({name:'lisa'})
+    p = null
+  </script>
+</body>
+</html>

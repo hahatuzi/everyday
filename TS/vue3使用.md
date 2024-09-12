@@ -68,9 +68,11 @@
       console.log(aRef.value?.href)
     })
     {/* // ======================== */}
+    const compRef = ref<HTMLDivElement | null>(null)
     const aRef = ref<HTMLAnchorElement | null>(null)
     <a href="baidu.com" ref="aRef"></a>
     <input type="text" @change="inputChange" ref="inputRef">
+    <div ref="compRef"></div>
   ```
 # 6.给自定义组件添加类型约束:instanceType<typeof 组件名>
   ```js

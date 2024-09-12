@@ -10,8 +10,9 @@
   <script>
     let arr = [{name:'lisa',age:18},{name:'jisoo',age:18} ,{name:'lisa',age:10},{name:'lisa',age:18}]
     let arr1 = [10,20,30,20]
-    console.log(Array.from(new Set(arr)))
-    console.log(Array.from(new Set(arr1)))
+    console.log(Array.from(new Set(arr))) // [{name:'lisa',age:18},{name:'jisoo',age:18} ,{name:'lisa',age:10},{name:'lisa',age:18}]
+    console.log(Array.from(new Set(arr1))) // [10,20,30]
+    console.log([...new Set(arr1)]) // [10,20,30]
   </script>
 </body>
 </html>
