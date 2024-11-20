@@ -21,6 +21,14 @@
   ### 2：shallowReactive的作用和shallowRef类似：
   仅会使对象的**最外层属性**变成响应式，不会对深层次的属性做任何处理，**避免了对每一个内部属性做响应式所带来的性能成本**。
 
+  ### 3.triggerRef
+  ```js
+  import {triggerRef} from 'vue'
+  let man = shallowRef({name:'lisa',props:{}})
+  function change () {
+    triggerRef(man)
+  }
+  ```
 # 二：readonly和shallowReadonly
   ### 1：readonly
   **readonly**会让对象的**所有嵌套属性都变成只读的**。而**shallowReadonly**仅会使**最外层变成只读的**,内部深层次的还是可以改变的。

@@ -91,6 +91,17 @@
     inputRef!.value
   ```
 # 8.给defineProps添加类型注解和默认值
+  - 针对类型的props声明
+  ```js
+    type PropsType = {
+      options:{
+        label: string;
+        value: string | number
+      }
+    }
+    const props = defineProps<propsType>()
+    // 此方式失去了定义props默认值的能力，为了解决该问题，我们可以使用withDefaults编译器
+  ```
   ```js
     interface Props {
       color:string,
@@ -102,6 +113,54 @@
     // ======================================================
     defineProps<{ msg: string }>()
     <h1>{{ msg }}</h1>
+  ```
+  - propType和ExtractPropTypes
+  ```js
+    import {ExtractPropTypes} from 'vue'
+    type Position = {
+      top: string | number;
+      left: string | number;
+      zIndex: number;
+      width?: string | number;
+      height?: string | number;
+    };
+    export type Position = ExtractPropTypes<typeof Position>;
+
+    import { Position } from './DataNumber.d'
+    defineProps({
+      position: {
+        type: Object as PropType<Position>,
+        required: false,
+        deault: {
+          left: 0,
+          top: 0,
+          zIndex: 0,
+        }
+      }
+    })
+
+    import {ExtractDefaultPropTypes, PropType} from 'vue'
+
+    // 按钮组件
+    export type Size = 'small' | 'medium' | 'large'
+    export type Type = 'primary' | 'success' | ''
+    export type NativeType = 'primary' | 'success' | ''
+
+    export const buttonProps = {
+      size:String as PropType<Size>,
+      type: {
+        type: String as PropType<Type>,
+        validatoe:(val:string) => {
+          return ['primary', 'success', 'warning']
+        }
+      },
+      NativeType:{
+        type:String as PropType<NativeType>,
+        default: 'button'
+      }
+    }
+
+    export type ButtonProps = ExtractDefaultPropTypes<typeof buttonProps>
   ```
 # 9.给emits添加类型注解，通过defineEmits<Emits>()泛型传参
 ```js
@@ -140,12 +199,48 @@ export const constantRoutes: RouteRecordRaw[] = [
 ]
 ```
 # 14.axios使用
-```js
-export interface Http {
-  request<T>(method:string,url:string,params?:unknown):Promise<T>
-}
+  ```js
+    export interface Http {
+      request<T>(method:string,url:string,params?:unknown):Promise<T>
+    }
 
-onMounted(async() => {
-  let res = await http.request<{data:TableData[],total:number}>()
-})
-```
+    onMounted(async() => {
+      let res = await http.request<{data:TableData[],total:number}>()
+    })
+  ```
+
+# 15.vue3中的ts类型工具函数
+  ### （1）PropType<T>,用于在props声明时给一个prop标注更复杂的类型定义
+  ```js
+    import type {propType} from 'vue'
+    interface Book {
+      title:string
+      author:string
+      year:number
+    }
+    export default {
+      props:{
+        book:{
+          type: Object as PropType<Book>,
+          required: true
+        }
+      }
+    }
+  ```
+  ### extractPropTypes<T>,用于在props声明时给一个prop标注更复杂的类型定义
+  ```js
+    import type {propType} from 'vue'
+    interface Book {
+      title:string
+      author:string
+      year:number
+    }
+    export default {
+      props:{
+        book:{
+          type: Object as PropType<Book>,
+          required: true
+        }
+      }
+    }
+  ```

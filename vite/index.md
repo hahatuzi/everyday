@@ -17,7 +17,13 @@
 # 7.vite的配置文件
   ```js
   // vite.config.js解读
+  import {fileURLToPath,URL} from 'path'
   export default defineConfig({
+    resolve:{
+      alias:{
+        '@':fileURLToPath(new URL('./src', import.meta.url))
+      }
+    }
     css:{
       modules:{
         localsConvention:'camemlCaseOnly', // 修改生成的配置对象的key的展示形式
@@ -32,7 +38,16 @@
             // 全局变量
           }
         }
-      }
+      },
+			postcss: {
+				plugins: [
+					postCssPxToRem({
+						rootValue: 37.5, // 自适应，px>rem转换
+						propList: ["*"], // 需要转换的属性，这里选择全部都进行转换
+						selectorBlackList: ["norem"], // 过滤掉norem-开头的class，不进行rem转换
+					}),
+				],
+			},
     }
   })
   ```
@@ -53,6 +68,8 @@
   }
 ```
 # 9.vite的插件使用
+  - unplugin-vue-components:vant组件库的按需导入插件
+  - vite-plugin-imp
 # 10.vite与ts结合使用
 # 11.vite的构建原理
 
