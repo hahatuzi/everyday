@@ -1,6 +1,8 @@
 # 1.rollup-plugin-visualizer：分析打包依赖
 # 2.@rollup/plugin-commonjs：支持commonJS规范
-# 2.unplugin-auto-import/vite: 自动导入
+# 3.unplugin-auto-import/vite: 自动导入
+# 4.unplugin-vue-components/resolvers: 自动导入elementPlus
+
 
 # vite的plugin使用
  ```js
@@ -18,14 +20,19 @@
       vitePlugins.push(createAutoImport())
       vitePlugins.push(createSetupExtend())
       vitePlugins.push(createSvgIcon(isBuild))
+      vitePlugins.push(components({
+        resolvers: [ElementPlusResolver()],
+      }))
       isBuild && vitePlugins.push(...createCompression(viteEnv))
       return vitePlugins
     }
     // 第二步：新建auto-import等文件...引入插件
     // ======================auto-import.ts======================
     import autoImport from 'unplugin-auto-import/vite'
+    import { ElementPlusResolver } from "unplugin-vue-components/resolvers";
     export default function createAutoImport() {
         return autoImport({
+            resolvers: [ElementPlusResolver()],
             imports: [
                 'vue',
                 'vue-router',
@@ -78,7 +85,16 @@
         }
         return plugin
     }
-
+    // =============element-plus的自动导入
+    plugins: [
+      AutoImport({
+        resolvers: [ElementPlusResolver()],
+        imports: ["vue", "vue-router", "pinia"],
+      }),
+      Components({
+        resolvers: [ElementPlusResolver()],
+      }),
+    ],
 
     // 第三步：在vite.config.js中引入插件
     import createVitePlugins from './vite/plugins'
