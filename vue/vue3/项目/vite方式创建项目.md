@@ -128,41 +128,4 @@ stylelint是css的lint工具，可以格式化css代码，检查css语法中错�
       }
   ```
 # 七：环境变量
-# 八：vite常用插件
-  ```js
-    // 第一步：新建vite/plugins/index.js文件
-    import vue from '@vitejs/plugin-vue'
-    import commonjs from '@rollup/plugin-commonjs'
-
-    import createAutoImport from './auto-import'
-    import createSvgIcon from './svg-icon'
-    import createCompression from './compression'
-    import createSetupExtend from './setup-extend'
-
-    export default function createVitePlugins(viteEnv, isBuild = false) {
-        const vitePlugins = [commonjs(), vue()]
-        vitePlugins.push(createAutoImport())
-      vitePlugins.push(createSetupExtend())
-        vitePlugins.push(createSvgIcon(isBuild))
-      isBuild && vitePlugins.push(...createCompression(viteEnv))
-        return vitePlugins
-    }
-    // 第二步：新建auto-import等文件...引入插件
-    import setupExtend from 'unplugin-vue-setup-extend-plus/vite'
-    import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
-    import autoImport from 'unplugin-auto-import/vite'
-
-    // 第三步：在vite.config.js中引入插件
-    import createVitePlugins from './vite/plugins'
-
-    export default defineConfig(({ mode, command }) => {
-      const env = loadEnv(mode, process.cwd())
-      const { VITE_APP_BASE_PATH, VITE_APP_BASE_API, VITE_APP_BASE_URL } = env
-      return {
-        // 默认情况下，vite 会假设你的应用是被部署在一个域名的根路径上
-        // 例如 https://www.ruoyi.vip/。如果应用被部署在一个子路径上，你就需要用这个选项指定这个子路径。例如，如果你的应用被部署在 https://www.ruoyi.vip/admin/，则设置 baseUrl 为 /admin/。
-        base: VITE_APP_BASE_PATH,
-        plugins: createVitePlugins(env, command === 'build')
-      }
-    })
-  ```
+# 八：vite常用插件，转vite文件夹的vite常见插件
