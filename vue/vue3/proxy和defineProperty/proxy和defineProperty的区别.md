@@ -1,6 +1,6 @@
 # proxy和Object.defineProperty的比较
 
-### 1.可以监视到风多的对象操作，比如delete操作和对象中方法的调用
+### 1.可以监视到更多的对象操作，比如delete操作和对象中方法的调用
   ```js
     const person = {
       name:'lisa',
@@ -59,7 +59,7 @@
     obj.name = 'lisa'
   ```
 
-### 附录.proxy的handler方法列表
+### 附录一.proxy的handler方法列表
 |              handler               |                   调用方式                 |
 | ---------------------------------- | -------------------------------------------|
 |                  get               |                   读取属性                 |

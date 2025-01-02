@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    let data = {
+      a: 1,
+      b:2,
+    }
+    // let vue2 = {}
+    // for (const k in data) {
+    //   Object.defineProperty(vue2, k, {
+    //     get () {
+    //       console.log('获取了');
+    //       return data[k]
+    //     },
+    //     set (value) {
+    //       console.log('set了');
+    //       data[k] = value
+    //     }
+    //   })
+    // }
+    // console.log(vue2);
+    // vue2['a'] = 'aa'
+    
+    // // vue2['c'] = [1,2,3]
+    // vue2.c = 3 //　set方法无法捕获到修改
+    // console.log(vue2);
+
+    let vue3 = new Proxy(data, {
+      get (obj, prop) {
+        console.log('get');
+        
+        console.log(obj[prop]);
+      },
+      set (obj, prop, value) {
+        console.log('set');
+        obj[prop] = value
+      }
+    })
+    vue3.c = '3'
+    console.log(vue3);
+    
+  </script>
+</body>
+</html>

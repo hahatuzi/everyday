@@ -128,4 +128,34 @@ stylelint是css的lint工具，可以格式化css代码，检查css语法中错�
       }
   ```
 # 七：环境变量
-# 八：vite常用插件，转vite文件夹的vite常见插件
+# 八：vite常用插件，详情见vite文件夹的vite常见插件
+# 九：常见打包资源配置
+  ```js
+    // 构建配置
+    build: {
+      rollupOptions: {
+        output: {
+          // 用于从入口点创建的块的打包输出格式[name]表示文件名,[hash]表示该文件内容hash值
+          entryFileNames: "js/[name].[hash].js",
+          // 用于命名代码拆分时创建的共享块的输出命名
+          chunkFileNames: "js/[name].[hash].js",
+          // 用于输出静态资源的命名，[ext]表示文件扩展名
+          assetFileNames:'assets/[ext]/[name].[hash].[ext]',
+          // 或者下面更详细的资源分配
+          assetFileNames: (assetInfo) => {
+            const info = assetInfo.name.split(".");
+            let extType = info[info.length - 1];
+            // console.log('文件信息', assetInfo.name)
+            if (/\.(mp4|webm|ogg|mp3|wav|flac|aac)(\?.*)?$/i.test(assetInfo.name)) {
+              extType = "media";
+            } else if (/\.(png|jpe?g|gif|svg)(\?.*)?$/.test(assetInfo.name)) {
+              extType = "img";
+            } else if (/\.(woff2?|eot|ttf|otf)(\?.*)?$/i.test(assetInfo.name)) {
+              extType = "fonts";
+            }
+            return `${extType}/[name].[hash].[ext]`;
+          },
+        },
+      },
+    }
+  ```

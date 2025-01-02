@@ -1,3 +1,7 @@
+# computed的特性
+  - 如果仅定义但是没有使用。那么computed内的方法不会触发
+  - 缓存机制，多次调用computed定义的对象，但是computed内的函数没有改变时，也不会触发computed内的函数
+
 ```js
   let firstName = ref('张')
   let lastName = ref('三')
