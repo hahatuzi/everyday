@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <button onclick="testGet()">get请求</button>
+  <script>
+    function axios({
+      url,
+      method = 'GET',
+      params = {},
+      data = {}
+    }) {
+      return new Promise((resolve, reject) => {
+        // 处理method
+        method = method.toUpperCase()
+
+        //请求参数params处理
+        let queryString = ''
+        Object.keys(params).forEach(key => {
+          queryString += `${key}=${params[key]}&`
+        })
+        if (queryString) {
+          queryString = queryString.slice(0, -1)
+        }
+        url += '?' + queryString
+
+        // 执行ajax请求
+        const request = new XMLHttpRequest()
+        request.open(method, url, true)
+
+        if (method == 'GET') {
+          request.send()
+        } else if (method == 'POST') {
+          request.setRequestHeader('Content-type', 'application/json;charset=utf-8')
+          request.send(JSON.stringify(data))
+        }
+
+        // 绑定状态改变的监听
+        request.onreadystatechange = function () {
+          if (request.readyState != 4) {
+            return
+          }
+          const {status, statusText} = request
+          if (status >= 200 && status <= 299) {
+            const request = {
+              data: JSON.parse(request.response),
+              status,
+              statusText
+            }
+            resolve(response)
+          } else {
+            reject(new Error('request error!!! status is' + status))
+          }
+        }
+      })
+    }
+
+    async function testGet () {
+      try{
+        await axios({
+          url: 'http://localhost:3000/posts',
+          params:{name:'lisa'}
+        }).then(res=>{
+          console.log(res,'getList')
+        })
+      } catch(error){
+        console.log('error',error)
+      }
+    }
+  </script>
+</body>
+</html>

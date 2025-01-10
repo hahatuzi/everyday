@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <button onclick="getPro1()">发送请求1</button>
+  <button onclick="getPro2()">发送请求2</button>
+  <script src="https://cdn.bootcdn.net/ajax/libs/axios/0.26.1/axios.js"></script>
+  <script>
+    // 取消请求
+    let requestList = []
+    function clearRequest () {
+      if (requestList.length > 0) {
+        requestList.forEach(item => {
+          item()
+        })
+        requestList = []
+      }
+    }
+    const cancelToken = new axios.CancelToken((c) => {
+      requestList.push(c)
+    })
+
+    console.log(cancelToken)
+
+    // 创建axios实例
+    const service = axios.create({
+      baseURL: 'http://localhost:3000',
+      cancelToken: cancelToken,
+      // 超时
+      timeout: 20000
+    })
+
+    // request拦截器
+    service.interceptors.request.use(config => {
+      return config
+    }, error => {
+        console.log(error)
+        Promise.reject(error)
+    })
+
+    // 响应拦截器
+    service.interceptors.response.use(res => {
+      try {
+      clearRequest()
+      if (code !== 200) {
+            ElNotification.error({ title: msg })
+            throw new Error(msg)
+          } else {
+            return  Promise.resolve(res.data)
+          }
+        } catch (error) {
+          console.error(error)
+          return Promise.reject(error)
+        }
+      },
+      error => {
+        console.log('err---' + error)
+        if (error.name === 'CanceledError') {
+      console.log('请求已取消')
+          return Promise.reject('请求已取消')
+        }
+        return Promise.reject(error)
+      }
+    )
+    let cancel //用于保存取消请求的函数
+    function pro1 () {
+      return service({
+        url:'http://localhost:3000/product1'
+      })
+    }
+    function pro2 () {
+      return service({
+        url:'http://localhost:3000/product2'
+      })
+    }
+    function getPro1(params) {
+      pro1().then(res=>{
+        console.log('请求1发送成功',res.data)
+        cancel = null // 请求结束后就没必要再保存取消请求的函数。通俗来讲就是请求结束后就没办法再取消了
+      },error=>{
+        console.log('请求失败或者请求取消了',error.message)
+        cancel = null
+      })
+    }
+    function getPro2(params) {
+      pro2().then(res=>{
+        console.log('请求2发送成功',res.data)
+      },error=>{
+        console.log('请求失败或者请求取消了',error.message)
+        cancel = null
+      })
+    }
+
+  </script>
+</body>
+</html>

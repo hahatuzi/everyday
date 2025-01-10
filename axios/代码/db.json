@@ -1,0 +1,72 @@
+{
+  "posts": [
+    {
+      "id": "1",
+      "title": "json-server",
+      "author": "typicode"
+    },
+    {
+      "id": "2"
+    },
+    {
+      "name": "lisa",
+      "id": "3"
+    },
+    {
+      "name": "lisa",
+      "id": "4"
+    },
+    {
+      "name": "lisa",
+      "id": "5"
+    },
+    {
+      "name": "lisa",
+      "id": "6"
+    },
+    {
+      "name": "lisa",
+      "id": "7"
+    },
+    {
+      "name": "lisa",
+      "id": "8"
+    },
+    {
+      "msg": "ok",
+      "id": "9"
+    },
+    {
+      "msg": "ok",
+      "id": "10"
+    },
+    {
+      "id": "9297",
+      "name": "lisa"
+    }
+  ],
+  "comments": [
+    {
+      "id": "1",
+      "body": "some comment",
+      "postId": 1
+    }
+  ],
+  "product1": [
+    {
+      "id": "1",
+      "body": "some comment11",
+      "postId": 1
+    }
+  ],
+  "product2": [
+    {
+      "id": "1",
+      "body": "some comment",
+      "postId": 1
+    }
+  ],
+  "profile": {
+    "name": "typicode"
+  }
+}

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <button onclick="getPro1()">发送请求1</button>
+  <button onclick="getPro2()">发送请求2</button>
+  <button onclick="cancel()">取消请求</button>
+  <script src="https://cdn.bootcdn.net/ajax/libs/axios/0.26.1/axios.min.js"></script>
+  <!-- 场景一：点击取消请求按钮时取消请求 -->
+  <!-- <script>
+    let cancel //用于保存取消请求的函数
+    function getPro1(params) {
+      axios({
+        url:'http://localhost:3000/product1',
+        cancelToken: new axios.CancelToken(c=> {
+          // 保存取消请求的函数，方便之后想要取消请求时使用
+          cancel = c
+        })
+      }).then(res=>{
+        console.log('请求1发送成功',res.data)
+        cancel = null // 请求结束后就没必要再保存取消请求的函数。通俗来讲就是请求结束后就没办法再取消了
+      },error=>{
+        console.log('请求失败或者请求取消了',error.message)
+        cancel = null
+      })
+    }
+    function getPro2(params) {
+      axios({
+        url:'http://localhost:3000/product2'
+      }).then(res=>{
+        console.log('请求2发送成功',res.data)
+      },error=>{
+        console.log('请求失败或者请求取消了',error.message)
+        cancel = null
+      })
+    }
+    function cancel(params) {
+      // 确认是否是在请求发送后的点击取消请求按钮，避免直接点击取消按钮的情况
+      if(typeof cancel === 'function') cancel('请求取消')
+    }
+  </script> -->
+  <!-- 场景二：多次连续点击请求时取消前面的请求 -->
+  <script>
+    let cancel //用于保存取消请求的函数
+    function getPro1(params) {
+      if (typeof cancel === 'function') {
+        cancel('取消请求')
+      }
+      axios({
+        url:'http://localhost:3000/product1',
+        cancelToken: new axios.CancelToken(c=> {
+          // 保存取消请求的函数，方便之后想要取消请求时使用
+          cancel = c
+        })
+      }).then(res=>{
+        console.log('请求1发送成功',res.data)
+        cancel = null // 请求结束后就没必要再保存取消请求的函数。通俗来讲就是请求结束后就没办法再取消了
+      },error=>{
+        // 此处要区分到底时请求失败了还是请求取消了
+        if (axios.isCancel(error)) {
+          console.log('请求1取消了',error.message)
+        } else {
+          console.log('请求1失败',error.message)
+          cancel = null
+        }
+      })
+    }
+    function getPro2(params) {
+      if (typeof cancel === 'function') {
+        cancel('取消请求')
+      }
+      axios({
+        url:'http://localhost:3000/product2'
+      }).then(res=>{
+        console.log('请求2发送成功',res.data)
+      },error=>{
+        // 此处要区分到底时请求失败了还是请求取消了
+        if (axios.isCancel(error)) {
+          console.log('请求2取消了',error.message)
+        } else {
+          console.log('请求2失败',error.message)
+          cancel = null
+        }
+      })
+    }
+  </script>
+</body>
+</html>

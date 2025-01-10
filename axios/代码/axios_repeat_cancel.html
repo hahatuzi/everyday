@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+   <button onclick="getPro1()">发送请求1</button>
+  <button onclick="getPro2()">发送请求2</button>
+  <script src="https://cdn.bootcdn.net/ajax/libs/axios/0.26.1/axios.js"></script>
+  <script>
+
+const pendingRequest = new Map()
+
+// function addPendingRequest (config) {
+//   const CancelToken = axios.CancelToken
+//   const source = CancelToken.source()
+
+//   const requestKey = generateKey(config)
+
+//   if (pendingRequest.has(requestKey)) {
+//     config.cancelToken = source.token
+//     source.cancel('请求已经取消')
+//   } else {
+//     config.cancelToken = source.token
+//     pendingRequest.set(requestKey, source.token)
+//   }
+// }
+
+function removePendingRequest (response) {
+  console.log(response, 'res');
+  
+  if (response.config) {
+    const requestKey = generateKey(response.config)
+
+    if (pendingRequest.has(requestKey)) {
+      pendingRequest.delete(requestKey)
+    }
+  }
+}
+
+function generateKey (config) {
+  if (typeof config.data == 'string') {
+    config.data = JSON.parse(config.data)
+  }
+
+  const {url, method, params, data} = config
+  return [ url, method, JSON.stringify(params), JSON.stringify(data)].join('&')
+}
+    // 创建axios实例
+    const service = axios.create({
+      baseURL: 'http://localhost:3000',
+      // 超时
+      timeout: 20000
+    })
+
+    // request拦截器
+    service.interceptors.request.use(config => {
+
+      const CancelToken = axios.CancelToken
+  const source = CancelToken.source()
+
+  const requestKey = generateKey(config)
+console.log(pendingRequest.has(requestKey));
+
+  if (pendingRequest.has(requestKey)) {
+    config.cancelToken = source.token
+    source.cancel('请求已经取消')
+  } else {
+    config.cancelToken = source.token
+    pendingRequest.set(requestKey, source.token)
+  }
+
+      // addPendingRequest()
+      // let {url, method} = config
+      // if (sourceMap.has(url + method)) {
+      //   sourceMap.get(url + method)('请求取消')
+      // }
+      
+      // let source = CancelToken.source()
+      // console.log(source);
+      // cancel = source.cancel
+      // sourceMap.set(url + method, cancel)
+
+      // config.cancelToken = source.token
+      return config
+    }, error => {
+        console.log(error)
+        Promise.reject(error)
+    })
+
+    // 响应拦截器
+    service.interceptors.response.use(res => {
+      try {
+          removePendingRequest(res)
+          if (code !== 200) {
+            ElNotification.error({ title: msg })
+            throw new Error(msg)
+          } else {
+            return  Promise.resolve(res.data)
+          }
+        } catch (error) {
+          removePendingRequest(res)
+          console.error(error)
+          return Promise.reject(error)
+        }
+      },
+      error => {
+        console.log('err---' + error)
+        removePendingRequest(res)
+          // if (error.name === 'CanceledError') {
+        //   console.log('请求已取消')
+        //   return Promise.reject('请求已取消')
+        // }
+        return Promise.reject(error)
+      }
+    )
+
+   function pro1 () {
+    return service({
+      url:'http://localhost:3000/product1',
+    })
+   }
+
+    function getPro1(params) {
+      console.log('getPro1');
+      
+      pro1().then(res=>{
+        console.log('请求1发送成功',res.data)
+        cancel = null // 请求结束后就没必要再保存取消请求的函数。通俗来讲就是请求结束后就没办法再取消了
+      },error=>{
+        console.log('请求失败或者请求取消了',error.message)
+        cancel = null
+      })
+    }
+    function getPro2(params) {
+      service({
+        url:'http://localhost:3000/product2'
+      }).then(res=>{
+        console.log('请求2发送成功',res.data)
+      },error=>{
+        console.log('请求失败或者请求取消了',error.message)
+        cancel = null
+      })
+    }
+  </script>
+</body>
+</html>

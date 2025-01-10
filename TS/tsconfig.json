@@ -8,8 +8,9 @@
     "skipLibCheck": false, // 是否跳过声明文件的类型检查
     "removeComments": false, // 是否移除注释
     "noEmitOnError": true, // 当发生错误时不允许生成编译文件
+    "noImplicitAny": true, // 不允许隐式的any类型
+    "strictNullChecks": false, // 不允许吧null,undefiners赋值给其他类型
     "strict": true, // 所有严格检查的总开关
-    "noImplicitAny": true,
     "alwaysStrict": false // 用来设置编译后的文件是否使用严格模式
   }
 }

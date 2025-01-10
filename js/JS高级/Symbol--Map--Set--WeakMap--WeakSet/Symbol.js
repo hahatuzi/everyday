@@ -23,6 +23,7 @@ console.log(Object.getOwnPropertySymbols(obj)) // [Symbol(age)]
 for (const key in obj) {
   console.log(key) // 'age'
 }
+console.log(Reflect.ownKeys())
 let SymbolArr = Object.getOwnPropertySymbols(obj)
 for (const element of SymbolArr) {
   console.log(element,'---',obj[element])  // Symbol(age)---18

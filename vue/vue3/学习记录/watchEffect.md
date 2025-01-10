@@ -1,5 +1,5 @@
 # watchEffect
-### watchEffect：立即运行一个函数，同时响应式的追踪其依赖，并在依赖更新的时候重新执行该函数
+### watchEffect：组件渲染时会立即执行一次,收集依赖，同时响应式的自动追踪其依赖，并在依赖更新的时候重新执行该函数
 ###　１.watch和watchEffect对比
 （1）都可以监听响应式数据的变化，但是监听方式不同
 （2）watch需要明确指出监听的数据
@@ -21,3 +21,6 @@ watchEffect((newVal, oldVal) => {
   }
 })
 ```
+
+
+watchEffect  --> 触发某数据的getter -->  getter中收集依赖 -->  修改该数据的时候触发setter  -->  setter中改变依赖

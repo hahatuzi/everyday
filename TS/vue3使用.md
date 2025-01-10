@@ -178,26 +178,26 @@ type Emits = {
   - 比较老的第三方包：比如jquery,从DefinitelyTyped库中下载第三方包的类型声明文件
   - 前后端交互时：自定义类型声明文件,使用axios.request<ResData>({})
 # 定时器
-```js
-let timer: NodeJS.Timer | null = null;
-timer = setInterval(() => {
-  let str = new Date();
-  time.second =
-    str.getSeconds() < 10 ? "0" + str.getSeconds() : "" + str.getSeconds();
-}, 1000);
-  clearInterval(timer as unknown as number);
-```
+  ```js
+    let timer: NodeJS.Timer | null = null;
+    timer = setInterval(() => {
+      let str = new Date();
+      time.second =
+        str.getSeconds() < 10 ? "0" + str.getSeconds() : "" + str.getSeconds();
+    }, 1000);
+    clearInterval(timer as unknown as number);
+  ```
 # 11.声明iframe的contentwindow
 # 12.vue-router的类型约束：RouteRecordRaw
-```js
-export const constantRoutes:RouteRecordRaw[] = []
-```
+  ```js
+    export const constantRoutes:RouteRecordRaw[] = []
+  ```
 # 13.路由内置对象：RouteRecordRaw
-```js
-export const constantRoutes: RouteRecordRaw[] = [
-  {}
-]
-```
+  ```js
+    export const constantRoutes: RouteRecordRaw[] = [
+      {}
+    ]
+  ```
 # 14.axios使用
   ```js
     export interface Http {

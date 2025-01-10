@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <button onclick="testGet()">get请求</button>
+  <button onclick="testPost()">post请求</button>
+  <button onclick="testPut()">put请求</button>
+  <button onclick="testDelete()">delete请求</button>
+  <button onclick="cancel()">取消请求</button>
+  <script src="https://cdn.bootcdn.net/ajax/libs/axios/0.26.1/axios.js"></script>
+  <script>
+    // 创建一个全局取消标识cancel
+    var cancel= null
+    var CancelToken = axios.CancelToken;
+    // 创建axios请求实例对象,比方说当有多个请求服务器地址时，我们可以借助不同的实例对象来发送不同的请求
+    const request = axios.create({
+      baseURL:'http://localhost:3000',
+      timeout:20000
+    })
+    request.interceptors.request.use(config => {
+      console.log(config,'config')
+      return config
+    })
+    // 将axios的get,post请求进行封装
+    var http = {}
+    http.get = function (url,params) {
+      return new Promise((resolve, reject)=>{
+        request.get(
+          url,
+          {
+            params,
+            cancelToken: new CancelToken(function executor(c) {
+              console.log(c,'cancel')
+              cancel = c
+            })
+          })
+        .then(res => {
+          resolve(res)
+          cancel = null
+        }).catch( error => {
+          reject(error)
+        })
+      })
+    }
+    http.post = function (url,params) {
+      return new Promise((resolve,reject) => {
+        request.post(url,params).then( res => {
+          resolve(res)
+        }).catch( error => {
+          reject(error)
+        })
+      })
+    }
+    // 
+    var getList = params=> http.get('/posts',params)// return promise对象，才能被await接收
+    var postList = params=> http.post('/posts',params)// return promise对象，才能被await接收
+
+    async function testGet () {
+      try{
+        // 检测上次请求是否完成，取消上次的请求，常用于解决当客户单多次连续点击时造成的服务器压力过大问题
+        if (cancel !== null) cancel()
+        await getList({name:'lisa'}).then(res=>{
+          console.log(res,'getList')
+        })
+      } catch(error){
+        console.log('error',error)
+      }
+    }
+    async function testPost () {
+      try{
+        await postList({name:'lisa'}).then(res=>{
+          console.log(res,'postList')
+        })
+      } catch(error){
+        console.log('error',error)
+      }
+    }
+  </script>
+</body>
+</html>
