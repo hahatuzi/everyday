@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <button onclick="getPro1()">get请求</button>
+  <script src="https://cdn.bootcdn.net/ajax/libs/axios/0.26.1/axios.js"></script>
+  <script>
+    // requestInterceptors: [{fulfilled1(){}, rejected1(){}}, {fulfilled2(){}, rejected2(){}}]
+    // responseInterceptors: [{fulfilled1-response(){}, rejected1-response(){}}, {fulfilled2-response(){}, rejected2-response(){}}]
+    // chain: [
+    //   fulfilled2, rejected2, fulfilled1, rejected1, 
+    //   dispatchRequest, undefined 
+    //   fulfilled1-response, rejected1-response, fulfilled2-response, rejected2-response, 
+    // ]
+    axios.interceptors.request.use(
+      config => {
+        console.log('request interceptor1 onResolved()');
+        return config
+      },
+      error => {
+        console.log('request interceptor1 onRejected()')
+        return Promise.reject(error);
+      }
+    )
+    axios.interceptors.request.use(
+      config => {
+        console.log('request interceptor2 onResolved()');
+        return config
+      },
+      error => {
+        console.log('request interceptor2 onRejected()')
+        return Promise.reject(error);
+      }
+    )
+    function getPro1(params) {
+      axios({
+        url:'http://localhost:3000/product1',
+      }).then(res=>{
+        console.log('请求1发送成功',res.data)
+      },error=>{
+        // 此处要区分到底时请求失败了还是请求取消了
+          console.log('请求1失败',error.message)
+      })
+    }
+    // request interceptor2 onResolved()
+    // request interceptor1 onResolved()
+  </script>
+</body>
+</html>

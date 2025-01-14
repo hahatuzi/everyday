@@ -1,0 +1,15 @@
+{
+  "name": "code_axios",
+  "version": "1.0.0",
+  "description": "两种运行方式：\r # 方式一：json-server:快速搭建一个restful接口请求\r   ```js\r   // json-server --watch db.json\r   ```",
+  "main": "serve.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.21.2"
+  }
+}

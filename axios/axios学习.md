@@ -1,4 +1,5 @@
 axios:它依赖于ES6的语法promsie，如果你的环境不支持ES6 promise，那么你就需要使用polyfill。安卓 4.x
+[!axios中文文档]https://www.javasoho.com/axios/index.html#google_vignette
 
 # 一：axios特点
   - 1.基于**promiseAPI**
@@ -200,16 +201,16 @@ axios:它依赖于ES6的语法promsie，如果你的环境不支持ES6 promise�
       }
     ```
 
-# 3.axios请求创建方式
-（1）axios(config)
-(2)区分请求方式method的别名请求法
-axios.get(url,config对象)
-axios.delete(url,config对象)
-axios.post(url,data对象,config对象)
-axios.put(url,data对象,config对象)
-axios.patch(url,data对象,config对象)
-**注：单独将url和data写出来的意思即为不需要在config配置中指定**
-```js
-axios.get('/user',{baseUrl:'https://localhost:3000',params:{name:'lisa'}})
-axios.post('/user',{name:'lisa'},{baseUrl:'https://localhost:3000'})
-```
+# 五.axios请求创建方式
+  - （1）axios(config)
+  - （2）区分请求方式method的别名请求法
+    axios.get(url,config对象)
+    axios.delete(url,config对象)
+    axios.post(url,data对象,config对象)
+    axios.put(url,data对象,config对象)
+    axios.patch(url,data对象,config对象)
+    **注：单独将url和data写出来的意思即为不需要在config配置中指定**
+    ```js
+      axios.get('/user',{baseUrl:'https://localhost:3000',params:{name:'lisa'}})
+      axios.post('/user',{name:'lisa'},{baseUrl:'https://localhost:3000'})
+    ```
