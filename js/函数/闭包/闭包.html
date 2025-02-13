@@ -10,14 +10,14 @@
     function test () {
       var a = 1
       function add () {
-        console.log(a++)
+        console.log(++a)
       }
       // 一：在test作用域内部使用test2，词法作用域指向test,closure --> test
       // test2()
       // 二：在test作用域外部访问test
       return add
     }
-    test()
+    // test()
     // 二：在test作用域外部访问test，词法作用域仍然指向test,closure --> test
     var t1 = test()
     t1()

@@ -1,14 +1,17 @@
 # 函数的prototype属性：
-1.每一个函数都存在一个prototype属性，它默认指向一个Object空对象（即称为：原型对象）,注意：是函数拥有一个prototype属性。
-```js
-console.log(typeof Date)// function
-console.log(Date.prototype, typeof Date.prototype) // {}, Object
-```
-2.原型对象中有一个constructor属性，它指向函数对象本身。
-```js
-console.log(typeof Date)// function
-console.log(Date.prototype.constructor) // Date()function
-```
+  - 1.每一个函数都存在一个prototype属性，它默认指向一个Object空对象（即称为：原型对象）,注意：是函数拥有一个prototype属性。
+    ```js
+      function test () {}
+      console.log(test.prototype)  // {}
+      console.log(test.toString()); // 'function test () {}'
+      console.log(typeof Date)// function
+      console.log(Date.prototype, typeof Date.prototype) // {}, Object
+    ```
+  - 2.原型对象中有一个constructor属性，它指向函数对象本身。
+    ```js
+      console.log(typeof Date)// function
+      console.log(Date.prototype.constructor) // Date()function
+    ```
 3.给函数的原型对象添加属性的作用：让函数的所有实例都自动拥有原型中的属性
 ```js
 function Hello () {

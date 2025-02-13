@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    var a = {
+      _default: 0,
+      valueOf: function () {
+        console.log('valueOf');
+        return 4
+      },
+      toString: function () {
+        console.log('toString');
+        return ++ this._default
+      }
+    }
+    // 让== 隐式转换的时候改变a的值
+    if (a == '1' && a == '2' && a == '3') {
+      console.log('成立了！')
+    }
+
+    function Person () {}
+    function Car () {}
+    console.log(Person.prototype == Car.prototype); //false
+    
+    // if (a == 4) {
+    //   console.log('4');
+      
+    // }
+    let _default = 0
+    Object.defineProperty(window, 'b', {
+      get () {
+        return ++ _default
+      }
+    })
+    if (b === 1 && b === 2&& b === 3) {
+      console.log('成立了！')
+    }
+    console.log({} + {});
+    
+  </script>
+</body>
+</html>

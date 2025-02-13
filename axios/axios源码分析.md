@@ -252,3 +252,7 @@
       });
     }
   ```
+
+
+[!axios源码分析视频]https://segmentfault.com/a/1190000015050441
+

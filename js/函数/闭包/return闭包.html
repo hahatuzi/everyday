@@ -52,6 +52,17 @@
         }
       }(i)
     }
+
+    // 
+    var a = 1
+        b = 2
+    function test () {
+      var b = 3
+      return new Function('c', 'console.log(a + b + c)') // 使用Function构造函数创建的函数不会创建闭包环境
+      // return function () {}
+    }
+    var t = test()
+    t(4) // 7,因为new Function方式创建函数和function () {}不同，它不会创建闭包环境，所以b = 2
   </script>
 </body>
 </html>

@@ -21,3 +21,5 @@ gitlab比起jenkins有天然的优势。
 （2）jenkins是通过插件完成扩展功能的，
 
 https://blog.csdn.net/qq_34998786/article/details/122227957?spm=1001.2014.3001.5502
+
+[!自动化打包部署的几种方式]https://blog.csdn.net/weixin_43376417/article/details/144248018

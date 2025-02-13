@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    var a = {
+      _default: 0,
+      valueOf: function () {
+        console.log('valueOF');
+
+      },
+      toString: function () {
+        console.log(this._default);
+        
+        return  ++this._default
+      }
+    }
+    // 让== 隐式转换的时候改变a的值
+    if (a == '1' && a == '2' && a == '3') {
+      console.log('成立了！')
+    }
+
+    let obj = {
+      user:'lisa',
+      valueOf: function () {
+        console.log('valueOF');
+        return {}
+      },
+      toString: function () {
+        console.log('toString');
+        return '20'
+      }
+    }
+    // console.log(String(obj));
+    console.log(100 + obj); // 101
+    
+    function test () {}
+    console.log(test.toString()); // 'function test () {}'
+    console.log(Object.prototype.toString.call(test)); //[object Function]
+    let obj1 = {name:'lisa'}
+    console.log(obj1 + test); //[object Object]function test () {}
+    
+    // let obj = {
+    //   user:"lisa"
+    // }
+    // let arr = [1,2,3]
+    // console.log(String(obj))
+    // console.log(String(arr));
+    // console.log(arr + 100)
+    // let num = 100
+    // console.log(num.toString());
+    // let arr = [1,2,3]
+    // let obj = {name:'lisa'}
+    // let fn = () => {}
+    // console.log(Object.prototype.toString.call(arr)); //[object Array]
+    
+    // console.log(arr.toString(), typeof arr.toString()); // '1,2,3' string
+    // console.log(obj.toString()); // [object Object]
+    // console.log(fn.toString(), typeof fn.toString()); // '() => {}' string
+    var user1 = {
+      "username": "张三",
+      "age":30,
+      toString:function (){
+        //alert(1); 测试执行顺序
+        return this.age;
+      },
+      valueOf:function (){
+        //alert(2); 测试执行顺序
+        return user1;
+        }
+      }
+      function Person(){
+        this.username="李四";
+        this.age=30;
+      }
+      Person.prototype.toString=function (){
+        return this.age;
+      }
+      Person.prototype.valueOf=function (){
+        return Person;
+      }
+      var user2= new Person();
+
+
+      console.log("" + user1);  // toString  --> 30（基本类型） --> ‘30’ -->  30
+      console.log(1 + user1);  // toString  --> 30（基本类型） --> 31
+      console.log(user1 + user2); // user1 --> toString  --> 30（基本类型）
+      // user2 -->  toString -->  Person.prototype.toString --> 30(基本类型)  -->  60
+
+
+      let test1 = ()=>{}
+
+      test1.valueOf = () => {
+        console.log('valueOf');
+        return 100
+      }
+
+      test1.toString = () => {
+        console.log('string');
+        
+        return 'jinnie'
+      }
+
+      // console.log(+ test1); // 100
+      // console.log(test1 * 2); // 200
+      // console.log(test1 == 100); // true
+      // console.log(test1 == "100"); // true
+      console.log(test1.toString());
+      
+      console.log(String(test1));
+      console.log(test1 + '');
+      
+      
+      console.log(test1.valueOf() === '100'); // false,===不会进行类型转化
+  </script>
+</body>
+</html>
