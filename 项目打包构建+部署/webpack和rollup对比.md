@@ -1,0 +1,2 @@
+# 打包对比
+webpack是将commonjs转化为模块化代码，rollup打包后的可读性更好，因为rollup的tree shaking

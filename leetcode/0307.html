@@ -30,6 +30,7 @@
       {id: 21, name: '市政绿化',pid: 17},
     ]
     // 数组 --> 树
+    // 数组转树
     function treeData(data){   
         let cloneData = JSON.parse(JSON.stringify(data))
         return cloneData.filter(parent=>{
@@ -56,21 +57,20 @@
     // console.log(deepQuery(data, 19))
     // 方式二：广度优先,遍历根节点的所有子节点，再从第一个子节点开始依次遍历。
     // let list = []
-    // function breadthQuery(tree, id) {
-    //   let stark = [];
-    //   stark = stark.concat(tree);
-    //   while(stark.length) {
-    //     let temp = stark.shift();
-    //     if(temp.children) {
-    //         stark = stark.concat(temp.children);
-    //     }
-    //     if(temp.id === id) {
-    //         return temp;
-    //     }
-    //   console.log(stark)
-    //   }
-    // }
-    // console.log(breadthQuery(res, 19))
+    function breadthQuery(tree, id) {
+      let stark = [];
+      stark = stark.concat(tree);
+      while(stark.length) {
+        let temp = stark.shift();
+        if(temp.children) {
+            stark = stark.concat(temp.children);
+        }
+        if(temp.id === id) {
+            return temp;
+        }
+      }
+    }
+    console.log(breadthQuery(res, 19))
     // ===================================================================================
     // 树 --> 数组
     // 方式一
