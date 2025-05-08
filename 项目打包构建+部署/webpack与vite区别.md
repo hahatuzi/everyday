@@ -42,10 +42,44 @@
 
 # vite的特点
   - 编译方面：vite利用esm，让代码不再像传统的构建工具一样先去分析引入，然后打包构建。而是**直接保持模块化**，省去了编译时间。
-  - 构建方面，vite采用rollup
+  - 构建方面，vite采用rollup，vite本质就是走一步看一步，而webpack是刚开始就扫描整个项目进行打包编译。
 
   # vite不需要再像webpack一样配置各种loader,比如css文件打包需要css-loader,scss-loader等loader配置
 
   # HMR热更新
 
-# rollup和webpack的区别
+# vite和webpack的HMR的区别
+  |              |             vite HMR                  |              Webpack HMR                |
+  |   运行方式   |             基于原生ESM模块           |              基于webpack依赖图          |
+  |   更新机制   |           按需更新，直接替换模块      |          需要构建整个模块依赖树         |
+  |     性能     |          极快，无需重新打包整个项目   |         需要loader和plugin处理          |
+  |   支持范围   |         原生支持vue/react等           |   需要配置react-refresh或者vue-loader   |
+  | css更新内容  |         直接更新，无页面刷新          |            直接更新，无页面刷新         |
+  |   支持范围   |       仅替换组件，不影响状态          |  可能会丢失状态（React需react-refresh） |
+  |   支持范围   |       模块级更新，不影响页面状态      |     依赖链更新，可能导致整个页面刷新    |
+  |   支持范围   |           需要手动重启 Vite           |          需要手动重启 Webpack           |
+
+ ### vite更新示例
+  - 1.基于 ES Modules (import) 直接更新模块，不需要重新编译整个项目。
+  - 22.利用 **WebSocket** 监听变更，局部更新文件，无需整个页面刷新。
+  - 3.对于 CSS / Vue SFC（单文件组件），可以精准替换，不影响页面状态。
+  ```js
+  // Vite 内部 HMR 机制,直接替换模块，不会触发整个应用重新加载
+    import.meta.hot.accept((newModule) => {
+      updateComponent(newModule.default)
+    })
+  ```
+  ### webpack更新示例
+  - 1.使用 Webpack Dev Server + HMR 插件，监听文件变化。
+  - 2.通过 Webpack **module.hot.accept()** 处理模块更新。
+  - 3.模块更新时，需要重新构建依赖树，部分依赖可能会影响整个项目。
+  ```js
+    if (module.hot) {
+      module.hot.accept('./App.vue', () => {
+        const NewApp = require('./App.vue').default
+        app.component('App', NewApp)
+      })
+    }
+  ```
+  [!参考文章--Vite和Webpack的HMR有什么区别]https://www.cnblogs.com/LylePark/p/18774403
+  [!参考文章--vite热更新原理]https://cloud.tencent.com/developer/article/2414337
