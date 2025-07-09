@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <!-- 这里代表src类型为动态js代码 -->
+  <!-- <script src="data:application/javascript,alert(123)"></script> -->
+  <!-- <script src="data:application/javascript;base64,YWxlcnQoMTIzKQ=="></script> -->
+  <!-- <img src="data:image/png;base64,二进制数据"> -->
+   <!-- 上传图片并实现预览 -->
+    <input type="file" multiple>
+    <img src="" id="preview" alt="" style="width: 100px;">
+    <script>
+      const inp =  document.querySelector('input')
+      const preview = document.getElementById('preview')
+      inp.onchange = () => {
+        const file = inp.files[0]
+        const reader = new FileReader()
+        reader.onload = (e) => {
+          console.log(e)
+          preview.src = e.target.result
+
+        }
+        reader.readAsDataURL(file)
+      }
+    </script>
+</body>
+</html>
