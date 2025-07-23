@@ -66,6 +66,8 @@
                 'vue-router',
                 'pinia'
             ],
+            dir:['./src'],
+            dts: './src/auto-imports.d.ts'
             dts: false
         })
     }
