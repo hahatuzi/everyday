@@ -36,6 +36,17 @@
     // var test = function (){}
     // test()
     
+    // =============================
+    console.log('=============================')
+    console.log(a)
+    var a = 3;
+    function fn () {
+      console.log(a) // undefined
+      console.log(b) // Cannot access 'b' before initialization
+      var a = 2
+      let b = 3
+    }
+    fn()
   </script>
 </body>
 </html>

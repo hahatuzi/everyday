@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    function F () {}
+    Object.prototype.a = function () {
+      console.log('a')
+    }
+    Function.prototype.b = function () {
+      console.log('b')
+    }
+    var f = new F()
+    f.a() // a
+    // f.b() // f.b is not a function
+    F.a() // a
+    F.b()  // b
+    var f1 = new Function()
+    f1.a() // a
+    f1.b() // b
+    console.log(F.prototype) // {}
+    console.log(Function.prototype) // function () {[native code]}
+
+    // ================arguments===================
+    function myConcat(separator) {
+      console.log(typeof arguments)
+      console.log(arguments instanceof Array)
+      console.log(arguments instanceof Object)
+      let result = ""; // 初始化列表
+      // 迭代 arguments
+      for (let i = 1; i < arguments.length; i++) {
+        result += arguments[i] + separator;
+      }
+      return result;
+    }
+    console.log(myConcat("、", "红", "橙", "蓝"));
+    // "红、橙、蓝、"
+
+    console.log(myConcat("；", "大象", "长颈鹿", "狮子", "猎豹"));
+    // "大象；长颈鹿；狮子；猎豹；"
+
+    console.log(myConcat("。", "智者", "罗勒", "牛至", "胡椒", "香菜"));
+  // "智者。罗勒。牛至。胡椒。香菜。"
+
+  // ==============回调函数================
+  function test (title,callback){
+      var _title = title + '前面为标题'
+      callback(_title)
+    }
+    test('光明会', function (title) {
+      console.log(title)
+    })
+
+    //
+    function SayHello () {
+      console.log('sayHello')
+    }
+    const s = new SayHello()
+    console.log(SayHello.prototype) // {}
+    console.log(s.prototype) // undefined
+    function hello() {}
+    console.log(hello.prototype) // {}
+    const sum = new Function()
+      // console.log(sum(1,2))
+      console.log(sum.prototype) // {}
+    // ==================
+    console.log(b in window) // true
+    console.log(window)
+    if(!(b in window)) {
+      var b = 1
+    }
+    console.log(b)
+
+      // ============
+      console.log(name,)
+      console.log(testFn,)
+      console.log(testFn1)
+    function testFn () {
+      console.log('ok')
+      obj={name: 'lisa'}
+    } // 函数提升
+    console.log(obj)
+    var name = 'lisa' // 变量提升
+      testFn1()
+      var testFn1 = function () {
+      console.log('1')
+    } // 变量提升，而非函数提升
+          // ================
+          var c = 1
+      function c(c){
+        console.log(c)
+      }
+      c(2) // c is not a function
+  </script>
+</body>
+</html>

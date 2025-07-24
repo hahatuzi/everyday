@@ -1,5 +1,5 @@
 # 函数的prototype属性：
-  - 1.每一个函数都存在一个prototype属性，它默认指向一个Object空对象（即称为：原型对象）,注意：是函数拥有一个prototype属性。
+  - 1.每一个函数都存在一个prototype属性，prototype属性默认是一个Object空对象，我们可以向该对象添加属性，作为原型属性（即称为：原型对象）,注意：是函数拥有一个prototype属性。
     ```js
       function test () {}
       console.log(test.prototype)  // {}
@@ -17,7 +17,7 @@
 function Hello () {
     console.log('hello')
 }
-console.log(Hello.prototype)// {}
+console.log(Hello.prototype)// {}，对象可以添加属性，所以我们接下来添加test方法放在prototype对象内
 Hello.prototype.test = function () {
     console.log('test')
 }

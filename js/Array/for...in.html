@@ -9,18 +9,57 @@
   </head>
 
   <body>
+    <li>1</li>
+    <li>2</li>
+    <li>3</li>
+    <li>4</li>
+    <li>5</li>
     <script>
       Object.prototype.fn = function () {
         console.log('原型fn')
       }
-      var obj1 = {
-        name: 'lisa'
+      // var obj1 = {
+      //   name: 'lisa'
+      // }
+      // for (var key in obj1) {
+      //   // console.log(key) // fn,name
+      //   if (obj1.hasOwnProperty(key)) {
+      //     console.log(key) // name
+      //   }
+      // }
+      const o = {
+        0:1,
+        1:2,
+        2:3,
+        length:3
       }
-      for (var key in obj1) {
-        if (obj1.hasOwnProperty(key)) {
-          console.log(key)
+      Object.prototype[Symbol.iterator] = generotor
+      function generotor () {
+        var _this = this
+        let nextIndex = 0
+        return {
+          next () {
+            return nextIndex < _this.length ? {value:_this[nextIndex++], done:false} : {value:undefined, done:true}
+          }
         }
       }
+      for (const v of o) {
+        console.log(v)
+      }
+      // const allLi = document.getElementsByTagName('li')
+      // for (const li of allLi) {
+      //   console.log(li.innerText)
+      // }
+      // 生成器：生成返回一个迭代器
+      // function * generotor (arr) {
+      //   for (const key of arr) {
+      //     yield key
+      //   }
+      // }
+      // const iterator = generotor([1,2,3,4,5])
+      // console.log(iterator.next())
+      // console.log(iterator.next().value)
+      // console.log(iterator.next().value)
     </script>
   </body>
 

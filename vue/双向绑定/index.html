@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <div id="app">
+    <div>
+      <input type="text" v-model="name" placeholder="姓名">
+      <input type="text" v-model="age" placeholder="年龄">
+      <input type="text" v-model="phone" placeholder="电话号码">
+    </div>
+    <div>
+      <p>姓名:<span>{{name}}</span></p>
+      <p>年龄:<span>{{age}}</span></p>
+      <p>电话号码:<span>{{phone}}</span></p>
+    </div>
+  </div>
+  <script src="mvvm.js"></script>
+  <script>
+    const app = new MVVM('#app',{
+      name:'',
+      age:'',
+      phone:''
+    })
+  </script>
+</body>
+</html>

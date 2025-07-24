@@ -182,3 +182,12 @@ postcss:postcss可以实现对less等语法进行预编译然后通过补足等�
   }
   // import先创建script标签指向对应的js文件，当路由进入对应的path时，才会进行require按需导入对应的script标签到body中
   ```
+
+# 16.导入import.meta.glob
+  ```js
+    const modules = import.meta.glob('./dir/*.js')
+    Object.entries(modules).forEach([k,v] => {
+      v().then(m => console.log(k + ':' + m.default))
+    })
+  ```
+

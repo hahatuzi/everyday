@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    function Supper () {
+      this.supProp = 'supper '
+    }
+    Supper.prototype.showSupper = function () {
+      console.log(this.supProp)
+    }
+    function Sub () {
+      this.subProp = 'Sub property'
+    }
+    Sub.prototype = new Supper()
+    function Sub1 () {
+      this.subProp = 'Sub1'
+
+    }
+    Sub1.prototype = new Supper()
+    console.log(Supper.prototype.constructor)
+    console.log(Sub.prototype)
+    console.log(Sub1.prototype)
+    console.log(Sub.prototype == Sub1.prototype)
+    console.log(Sub.prototype === Sub1.prototype)
+    console.log(Sub.constructor)
+    console.log(Supper.constructor)
+
+    // Sub.prototype.showSubProp = function () {
+    //   console.log(this.subProp)
+    // }
+    // var sub = new Sub()
+    // sub.showSubProp() // Sub property
+    // sub.showSupper() // supper
+    // console.log(sub.constructor)
+    // sub --> 
+  </script>
+</body>
+</html>

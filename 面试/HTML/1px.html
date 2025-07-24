@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    .test{
+      position: relative;
+      display: inline-block;
+    }
+    .test::after{
+      content:'';
+      position: absolute;
+      left: 0;
+      right: 0;
+      width: 200%;
+      height: 200%;
+      border: 1px solid red;
+      transform: scale(0.5);
+      transform-origin: 0 0;
+    }
+    .line{
+      width: 200px;
+      height: 1px;
+      transform: scaleY(0.5);
+      background-color: red;
+      transform-origin: top;
+    }
+    .line1{
+      width: 200px;
+      height: 1px;
+      background-color: red;
+      margin-top: 20px;
+    }
+    .line2{
+      width: 200px;
+      border-top: 1px solid red;
+      transform: scaleY(0.5);
+      transform-origin: top;
+      margin-top: 20px;
+    }
+    .box_container{
+      width:200px;
+      height:200px;
+      /* transform: scale(1.5); */
+      background:red;
+      margin-top:20px;
+    }
+    .box{
+      transform: translate(10px,20px) ;
+    }
+  </style>
+</head>
+<body>
+  <div class="test">满300-30</div>
+  <div class="line"></div>
+  <div class="line1"></div>
+  <div class="line2"></div>
+  <div class="box_container">
+  <div class="box"></div>
+</div>
+</body>
+</html>

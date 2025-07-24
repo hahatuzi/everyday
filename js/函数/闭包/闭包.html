@@ -21,6 +21,20 @@
     // 二：在test作用域外部访问test，词法作用域仍然指向test,closure --> test
     var t1 = test()
     t1()
+
+    function fun(n,o){
+      console.log(n,o)
+      return {
+        fun:function (m){
+          return fun(m,n)
+        }
+      }
+    }
+    var a = fun(0)
+    console.log(a)
+    a.fun(1) // 1,0
+    a.fun(2) // 2,0
+    a.fun(3) // 3,0
   </script>
 </body>
 </html>

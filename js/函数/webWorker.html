@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <input id="number" type="text" placeholder="请输入数值">
+  <button id="btn">计算</button>
+  <span>计算结果：</span><span id="result"></span><span>，已经过去了</span><span id="second"></span><span>秒</span>
+  <script>
+    var input = document.getElementById('number')
+    document.getElementById('btn').onclick = function () {
+      var number = input.value
+      var worker = new Worker('webWorker.js')
+      let start = new Date().getTime()
+      worker.onmessage = function (e) {
+        console.log('主线程:',e.data)
+        var result = document.getElementById('result')
+        result.innerText = e.data
+        var second = document.getElementById('second')
+        second.innerText = (new Date().getTime() - start ) / 1000
+      }
+      worker.postMessage(number)
+    }
+  </script>
+</body>
+</html>

@@ -16,10 +16,13 @@
     // new Function('a , b', 'return a + b'); // 逗号加空格分隔
     const test = new Function('a','b','c','console.log(a + b + c)')
     const test1 = new Function('a,b,c','console.log(a+b+c)')
+    console.log(test.valueOf() === test.toString())
+    console.log(test.valueOf() == test.toString())
     // test(1,2,4)
     // test1(1,2,4)
     // 注意点二：
     // new Function()的作用域引用的是全局环境，而非包含该函数的外部环境，所以他们不会使用外部环境中的变量,即它不会创建闭包环境！！！
+    // Function构造函数创建的是全局环境，和函数声明不同
     var a = 1
     var b = 2
     var c = 4
@@ -27,8 +30,19 @@
       var a = 2
       return new Function('c','console.log(a + b + c)')
     }
+    function test3 () {
+      const c = 5
+      function fn() {
+        console.log(a + b +c)
+      }
+      return fn
+    }
     var res = test2()
-    res(4)
+    var res1 = test3()
+    res(4) // 7
+    res1(4) // 8
+    console.log(Object.prototype instanceof Object)
+    console.log(Function.prototype instanceof Object)
     // 注意点三：
     // Function()写法，
     // 如果构造函数没有形参，在调用构造函数的时候是可以省略实参列表和圆括号的，

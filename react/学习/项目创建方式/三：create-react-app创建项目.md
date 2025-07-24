@@ -1,3 +1,4 @@
+create-react-app底层由webpack构建
 # 一：创建过程
   ### （1） npx create-react-app 项目名，来创建项目
   ### （2）npm i
@@ -67,4 +68,6 @@
   [!参考链接]https://blog.csdn.net/qiuqiu1894/article/details/123976582
   ### (2)React.Fragment
   是一个专门用来作为父容器的组件，它会将其中的资源塑直接返回，不会创建多余的父元素
+
+# 四：代理http-proxy-middleware
 
