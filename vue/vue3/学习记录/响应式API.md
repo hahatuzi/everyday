@@ -77,52 +77,7 @@
     let car1 = markRaw({brand:'奔驰',price:1000}) // car1标记为原始对象，无法变成响应式的
     let car2 = reactive(car) // 响应式
   ```
-# customRef:自定义ref
-  ```js
-    <span>{{msg}}</span>
-    <input v-model="msg"/>
-    let msg = ref('你好')
-    // 使用customRef来自定义响应式数据
-    let initValue = '你好'
-    let timer:number
-    let msg = customRef((trick,trigger) => {
-      return {
-        get () {
-          track() // 跟踪，告诉vue要跟踪msg的变化，一单msg变化就去更新
-          return initValue
-        },
-        set (val) {
-          setTimeout(() => {
-            initValue = val
-            trigger() // 触发，当msg变化的时候就触发更新
-          },timer)
-        }
-      }
-    })
-  ```
-  ```js
-  // hooks钩子函数封装
-  // useMsgRef.js
-  export default function (initValue:string, timer:number) {
-    let msg = customRef((trick,trigger) => {
-      return {
-        get () {
-          track() // 跟踪，告诉vue要跟踪msg的变化，一单msg变化就去更新
-          return initValue
-        },
-        set (val) {
-          setTimeout(() => {
-            initValue = val
-            trigger() // 触发，当msg变化的时候就触发更新
-          },timer)
-        }
-      }
-    })
-    return {msg}
-  }
-  import useMsg from './useMsgRef'
-  let {msg} = useMsg('你好',3000)
-  ```
+
 
 # 四：toRef和toRefs:
 两个都是将响应式对象转化为普通对象，不同的是，**toRef仅转化某个属性**，**toRefs则是转化整个对象**

@@ -63,12 +63,14 @@ export default defineConfig({
     preprocessorOptions: {
       scss: {
         additionalData: `@import "./src/styles/sassConfig.scss";`,
+        // 全局倒入less变量
+        additionalData:`@import './src/styles/var.less'`
       },
     },
   },
 });
 // (2)创建sassConfig.scss文件，并书写变量
-// =================sassConfig.scss文件参考===============
+// =================sassConfig.scss全局变量文件参考===============
 // $color: orange;
 ```
 

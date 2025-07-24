@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 将函数放入微任务队列
+    function runMicrotask (fn) {
+      if (typeof Promise == 'function') {
+        Promise.resolve().then(fn)
+        return
+      }
+      if (typeof MutationObserver == 'function') {
+        var ob = new MutationObserver(fn)
+        const textNode = document.createTextNode('')
+        ob.observe(textNode,{characterData: true})
+        node.data = 1
+        return
+      }
+      if (process && typeof process.nextTick == 'function'){
+        process.nextTick(fn)
+        return
+      }
+      if (typeof setImmediate == 'function') {
+        setImmediate(fn)
+        return
+      }
+      setTimeout(fn)
+    }
+  </script>
+</body>
+</html>

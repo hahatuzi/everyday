@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    console.log(Math.max())
+    function sum(a,b){
+      let maxLength = Math.max(a.length, b.length)
+      let _a = a.padStart(maxLength, '0')
+      let _b = b.padStart(maxLength , '0')
+      let rest = 0
+      let res = ''
+      for (let i = maxLength - 1; i >= 0; i--) {
+        const sum = +_a[i] + +_b[i] + rest
+        res =  (sum % 10) + res
+        rest = Math.floor(sum / 10)
+        
+      }
+      if (rest) {
+          res = rest + res
+        }
+        return res
+    }
+    console.log(sum('2465462','1352463578798'))
+  </script>
+</body>
+</html>
