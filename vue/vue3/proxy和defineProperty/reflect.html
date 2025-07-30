@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    let person = {
+      name:'lisa',
+      _height:'1.7',
+      set height(newVal) {
+        this._height = newVal * 100
+      },
+      get height () {
+        return this._height + 'cm'
+      }
+    }
+    let personProxy = new Proxy(person,{
+      set (person, key, value, receiver) {
+        // person[key] = value
+        console.log('set',key);
+        return Reflect.set(person,key,value, receiver)
+        
+      }
+    })
+    personProxy.height = 1.65
+    console.log(personProxy.height)
+  </script>
+</body>
+</html>

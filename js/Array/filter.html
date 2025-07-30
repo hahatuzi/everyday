@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    var data = [
+      {id: 1, name: '实时事件',pid: 0},
+      {id: 2, name: '管理力量',pid: 0},
+      {id: 3, name: '重大节日',pid: 0},
+      {id: 6, name: '热线工单',pid: 1},
+      {id: 7, name: '物联告警',pid: 1},
+      {id: 21, name: '街道绿化',pid: 6},
+      {id: 8, name: 'AI告警',pid: 1},
+      {id: 9, name: '管理力量一张图',pid: 2},
+      {id: 10, name: '备勤力量',pid: 2},
+      {id: 11, name: '城管通',pid: 2},
+      {id: 12, name: '大型活动',pid: 3},
+      {id: 13, name: '春运',pid: 3},
+      {id: 14, name: '香讯',pid: 3},
+      {id: 15, name: '环保',pid: 6},
+      {id: 16, name: '水务',pid: 6},
+      {id: 17, name: '市政',pid: 6},
+      {id: 18, name: '备勤力量',pid: 9},
+      {id: 19, name: '居村微平台人员',pid: 9},
+      {id: 20, name: '城管通',pid: 9},
+      {id: 21, name: '市政绿化',pid: 17},
+    ]
+    // let arr = data.filter(item => {
+    //   item.children = data.filter(el => el.pid == item.id)
+    //   return item
+    // })
+    // console.log(data)
+    // console.log(arr)
+    function test () {
+      let _data = JSON.parse(JSON.stringify(data))
+      let arr = _data.filter(item => {
+        item.children = _data.filter(el => el.pid == item.id)
+        return item
+      })
+      console.log(arr)
+      console.log(data)
+    }
+    test()
+  </script>
+</body>
+</html>
