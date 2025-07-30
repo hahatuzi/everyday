@@ -18,15 +18,20 @@
         const person = {
             name:'lisa',
             age:18,
+            num: 0.01,
             child:[1,2,,3]
         }
         const proxy_person = new Proxy(person,{
             deleteProperty(target, prop){
-            console.log('delete')
-            delete target[prop]
+                console.log('delete')
+                delete target[prop]
+            },
+            set (person, prop,value) {
+                person[prop] = value * 100
             }
         })
         delete proxy_person.age
+        proxy_person.num = 1
         proxy_person.child = [1,2,3,4] // 与object.defineProperty不同的是proxy可以监听到属性为数组时的重新赋值
         console.log(proxy_person)
         console.log(person)

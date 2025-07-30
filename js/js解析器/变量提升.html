@@ -23,6 +23,20 @@
     // // console.log(arr) // is not defined
     // 测试案例二：函数声明和变量声明的先后顺序
      test() //1
+     const str = 'str'
+    //  str = 'str1'
+    //  console.log(str);
+     if(true) {
+     console.log(b);
+    //  console.log(age);
+      let age = 18
+      var b = 'b'
+     }
+    //  console.log(age);
+     console.log(b);
+     
+    //  console.log(a);
+
     function test(){
       console.log('1')
     }
@@ -38,15 +52,15 @@
     
     // =============================
     console.log('=============================')
-    console.log(a)
-    var a = 3;
-    function fn () {
-      console.log(a) // undefined
-      console.log(b) // Cannot access 'b' before initialization
-      var a = 2
-      let b = 3
-    }
-    fn()
+    // console.log(a)
+    // var a = 3;
+    // function fn () {
+    //   console.log(a) // undefined
+    //   console.log(b) // Cannot access 'b' before initialization
+    //   var a = 2
+    //   let b = 3
+    // }
+    // fn()
   </script>
 </body>
 </html>
