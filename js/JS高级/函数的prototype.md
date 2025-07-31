@@ -1,4 +1,4 @@
-# 函数的prototype属性：
+# 函数的prototype属性：只有函数才有prototype属性，其他对象没有
   - 1.每一个函数都存在一个prototype属性，prototype属性默认是一个Object空对象，我们可以向该对象添加属性，作为原型属性（即称为：原型对象）,注意：是函数拥有一个prototype属性。
     ```js
       function test () {}

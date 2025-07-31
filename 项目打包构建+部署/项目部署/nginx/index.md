@@ -7,3 +7,4 @@
 (1)location
 try_files $url $url /index.html
 // 解决vue项目history的路由刷新问题
+[!参考文章]https://cloud.tencent.com/developer/article/1647191

@@ -3,7 +3,8 @@
 ```js
 target[prop] = value
 //等价于
-Reflect.set(target, prop,value)
+Reflect.set(target, prop,value, receiver)
+// receiver如果遇到setter，receiver为setter调用时的this
 //=========================
 target[prop]
 // 等价于

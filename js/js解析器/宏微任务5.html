@@ -1,0 +1,40 @@
+！<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // async function fn1 () {
+    //   console.log('1');
+    //   await fn2()
+    //   console.log('2');
+      
+    // }
+    // async function fn2(){
+    //   console.log('3');
+      
+    // }
+    // fn1()
+    Promise.resolve().then(() => {
+      console.log('1');
+      // resolve()
+      // return 6
+      return Promise.resolve(6)
+    }).then((res)=>{
+      console.log(res)
+    })
+    Promise.resolve().then(() => {
+      console.log('2');
+    }).then(()=>{
+      console.log(3)
+    }).then(()=>{
+      console.log(4)
+    }).then(()=>{
+      console.log(5)
+    })
+  </script>
+</body>
+</html>
