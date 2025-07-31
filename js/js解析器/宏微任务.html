@@ -85,6 +85,32 @@
       }, 0);
       console.log('3')
       // 按照1,2,3,4,5,6,7的顺序执行
+      console.log('-------------------')
+      Promise.resolve().then(() => {
+        console.log('p1')
+        setTimeout(() => {
+          console.log('timeout');
+          
+        }, 1000);
+        Promise.resolve().then(() => {
+          console.log('p2')
+        })
+      })
+      setTimeout(() => {
+          console.log('timeout1');
+          
+        }, 1000);
+      Promise.resolve().then(() => {
+          console.log('p3')
+           setTimeout(() => {
+          console.log('timeout2');
+          
+        }, 1000);
+        Promise.resolve().then(() => {
+          console.log('p4')
+        })
+        })
+        // p1, p3, p2,timeout1,timeout
       </script>
   </body>
 

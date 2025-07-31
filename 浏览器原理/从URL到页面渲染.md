@@ -57,16 +57,15 @@
   - **link会阻塞浏览器的渲染**，因为本质上link解析也是浏览器解析的一部分，但**不会阻塞DOM解析**。
   - CSS文件的引入如果放在底部会阻塞DOM渲染。
   ### （3）计算DOM树每个节点的具体样式,Attachment
-  ### （4）DOM树+ CSS树 --> 生成布局树 
-  ### （5）根据布局树生成图层树 update LayerTree
-  ### （6）绘制图层 paint
-  ### （7）组合图层
-  - 图层树：什么样的场景可以生成图层树呢？打开调试工具的layers工具就可以看到图层树
-  添加css 3d的元素，position:fixed的元素，video标签，canvas,css3动画
+  ### （4）DOM树+ CSS树 --> 生成Render树 
+  ### （5）根据Render树生成图层树 update LayerTree
+  ### （6）布局Layou和绘制Paint
+  ### 图层树：什么样的场景可以生成图层树呢？打开调试工具的layers工具就可以看到图层树，什么时候会创建多个layer呢
+  添加3D transform的元素，position:fixed的元素，video标签，canvas,iframe, css3动画opacity动画转换，animation或者transition
 
 # 四：重绘重排
   - layout为重排，重排就是**回流**。
-    - 更新元素的**几何属性**，**计算所有元素在窗口的位置,**。当添加，删除元素，修改大小，位置等时会触发
+    - 更新元素的**几何属性**，**计算所有元素在窗口的位置,**。当窗口resize,添加，删除元素，修改width,height,padding,font-size等时会触发
   - repaint为重绘。
     - 更新元素的**绘制属性**重新**计算所有元素在窗口具体呈现的内容**，比如改变背景颜色。
     重绘重排是以图层为单位进行的,

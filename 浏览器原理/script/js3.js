@@ -1,1 +1,3 @@
-console.log('js3')
+setTimeout(() => {
+  console.log('js3')
+}, 3000);

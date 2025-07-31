@@ -1,1 +1,3 @@
-console.log('js2')
+setTimeout(() => {
+  console.log('js2')
+}, 6000);

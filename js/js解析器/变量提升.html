@@ -37,16 +37,54 @@
     // test()
     
     // =============================
-    console.log('=============================')
-    console.log(a)
-    var a = 3;
-    function fn () {
-      console.log(a) // undefined
-      console.log(b) // Cannot access 'b' before initialization
-      var a = 2
-      let b = 3
+    // console.log('=============================')
+    // console.log(a)
+    // var a = 3;
+    // function fn () {
+    //   console.log(a) // undefined
+    //   console.log(b) // Cannot access 'b' before initialization
+    //   var a = 2
+    //   let b = 3
+    // }
+    // fn()
+
+    function fn1 () {
+      // var a1 = b1 =1
+      var a1 = 1
+      b1 = 1
     }
-    fn()
+    fn1()
+    // console.log(a1)
+    console.log(b1)
+    // ================
+    // var n = 10
+    // function foo () {
+    //   n = 20
+    // }
+    // foo()
+    // console.log(n) // 20
+    // ================
+    // function foo () {
+    //   console.log(n);// undefined
+    //   var n = 200
+    //   console.log(n); // 200
+      
+    // }
+    // var n = 100
+    // foo()
+    // console.log(n) //100
+    // ================
+    var n = 100
+    function foo1 () {
+      console.log(n); //100
+    }
+    function foo2 () {
+      var n =200
+      console.log(n) // 200
+      foo1()
+    }
+    foo2()
+    console.log(n) // 100
   </script>
 </body>
 </html>
