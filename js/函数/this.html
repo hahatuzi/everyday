@@ -8,6 +8,22 @@
 </head>
 <body>
   <script>
+    function fn () {
+      function inner () {
+        console.log(this); // window
+        
+      }
+      inner()
+    }
+    fn()
+    var myfunc = function(a){ this.a = a;
+      };
+      myfunc.prototype = { show:function(){
+        console.log(this);}
+      }
+
+      var newfunc = new myfunc("123123123");
+      newfunc.show();
     // var test = function (name) {
     //   return this.name
     // }

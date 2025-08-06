@@ -1,36 +1,12 @@
 # 函数和Function的关系
   - 在js中**每一个函数**其实**都是一个Function对象**，**Function对象**提供了用于处理**函数**的方法。
-# Function对象
   - **Function()构造函数**创建了一个新的**Function对象**，直接调用**该构造函数**的话**可以动态创建函数**。
   - 而通过自定义名字的构造函数创建的实例则和Function无关。比如 f1 = new Foo()和f = new Function()，分别指向不同的构造函数
-
-# Function和自定义构造函数
-# Function构造函数和函数声明的不同:Function构造函数创建的是全局环境，和函数声明不同
-  ```js
-    // 注意点：
-    // new Function()的作用域引用的是全局环境，而非包含该函数的外部环境，所以他们不会使用外部环境中的变量,即它不会创建闭包环境！！！
-    var a = 1
-    var b = 2
-    var c = 4
-    function test2 () {
-      var a = 2
-      return new Function('c','console.log(a + b + c)')
-    }
-    function test3 () {
-      const c = 5
-      function fn() {
-        console.log(a + b +c)
-      }
-      return fn
-    }
-    var res = test2()
-    var res1 = test3()
-    res(4) // 7
-    res1(4) // 8
-  ```
-# new Foo和new FOO()的区别
-
-# Function和Object
+  ###  Function和自定义构造函数
+    - 1.Function.prototype.prototype在使用function作为构造函数与new运算符一起使用时，用作新对象的原型
+    - 2.Function.prototype.toString()返回表示函数源代码的字符串。重写了 Object.prototype.toString 方法。
+    - 3.Function和自定义构造函数的关系
+  ### new Foo和new FOO()的区别
 
 # 一：函数的六种创建方式
   ### （1）直接声明函数并调用
@@ -93,10 +69,33 @@
 
   ### 构造函数 VS 函数声明 VS 函数表达式
     ```js
+      // Function构造函数和函数声明的不同:Function构造函数创建的是全局环境，和函数声明不同
       var multiply = new Function("x", "y", "return x * y");
       function multiply(x, y) { return x * y }
       var multiply = function (x, y) { return x * y; };
 
+    ```
+    ```js
+      // 注意点：
+      // new Function()的作用域引用的是全局环境，而非包含该函数的外部环境，所以他们不会使用外部环境中的变量,即它不会创建闭包环境！！！
+      var a = 1
+      var b = 2
+      var c = 4
+      function test2 () {
+        var a = 2
+        return new Function('c','console.log(a + b + c)')
+      }
+      function test3 () {
+        const c = 5
+        function fn() {
+          console.log(a + b +c)
+        }
+        return fn
+      }
+      var res = test2()
+      var res1 = test3()
+      res(4) // 7
+      res1(4) // 8
     ```
 
 # 二：函数调用的四种方法：作为对象方法调用，函数调用模式，构造器调用模式，apply,call调用模式
@@ -112,7 +111,7 @@
       blogInfo.showBlog(); // 函数的调用者为blogInfo,所以此处的this就是blogInfo的区域
     ```
 
-  ### （2）函数调用模式, this指向window
+  ### （2）函数调用模式, ，this指向window或者node环境指向global对象
     ```js
       // 定义一个函数，设置一个变量名保存函数，这时this指向到window对象。
       var myfunc = function(a,b){
@@ -121,7 +120,7 @@
       alert(myfunc(3,4));// 无调用者，因为该函数没有调用者，所以this默认指向window，结果为7，但严格模式下结果为undefined
     ```
 
-  ### （3）构造器调用模式
+  ### （3）构造器调用模式,在使用prototype的方法时，必须实例化该对象才能调用其方法。
     ```js
       // 定义一个函数对象，在对象中定义属性，在其原型对象中定义方法。在使用prototype的方法时，必须实例化该对象才能调用其方法。
       var myfunc = function(a){
@@ -135,7 +134,7 @@
       newfunc.show();
     ```
 
-  ### （4）间接调用模式
+  ### （4）间接调用模式，通过call，apply,bind方法可以显式指定this的绑定对象
     ```js
       var myobject={};
       var sum = function(a,b){
@@ -247,18 +246,55 @@
     console.log(myConcat("、", "红", "橙", "蓝"));
     // "红、橙、蓝、"
   ```
-# 五：函数的prototype原型,原型链，instanceof
-  ### 为什么只有函数有protype
+
+# 六：函数的prototype原型,原型链，instanceof
+  ### （1）为什么只有函数有protype
   https://developer.aliyun.com/article/977147
-  ### instanceof
-   - instanceof 运算符用于检验**构造函数的prototype属性**是否出现在**某个示例对象**的**原型链**上。
-   - 如果表达式obj instanceof Foo返回true,则并不意味着该表达式会永远返回 true。因为 Foo.prototype 属性的值有可能会改变，**改变之后的值很有可能不存在于 obj 的原型链上**，这时原表达式的值就会成为 false。另外一种情况下，原表达式的值也会改变，就是改变对象 obj 的原型链的情况，虽然在目前的 ES 规范中，我们只能读取对象的原型而不能改变它，但借助于非标准的 __proto__ 伪属性，是可以实现的。比如执行 obj.__proto__ = {} 之后，obj instanceof Foo 就会返回 false 了。
+  ### （2）instanceof
+   - 1.instanceof原理
+     ```js
+        // instanceOf原理
+        function instance_of(L, R) {  // L 表示左表达式，R 表示右表达式
+          var O = R.prototype;	// 取 R 的显式原型
+          L = L.__proto__;		// 取 L 的隐式原型
+          while (true) { 
+            if (L === null) 
+              return false; 
+            if (O === L)	// 这里重点：当 O 严格等于 L 时，返回 true 
+              return true; 
+            L = L.__proto__; 
+          } 
+        }
+        // 从代码中我们可以看到，instanceof 是比较左侧的 __proto__ (隐式原型)和右侧的 prototype (显示原型)是否相等，如果不相等，取左侧 __proto__ 的 __proto__ ，依次循环比较，直到取到 Object.prototype.__proto__ 即 null 为止。
+        // ================================================================================================
+        // this instanceOf Factory的实现：
+        // 可以分解为两部：this.__proto__和Factory.prototype
+        // 情形一：如果Factory的实例对象是通过new Factory创建的，那么this.__prototype__ = Factory.prototype
+        // 情形二：如果Factory的实例对象是通过Factory()创建的，那么this指向window,所以这也是我们在设计模式中讲到的安全模式类的由来
+        var Factory = function (type, content) {
+          if (this instanceof Factory) {
+            var s = new this[type][content]
+          } else {
+            return new Factory(type, content)
+          }
+        }
+     ```
+    
+   - 2.instanceof 运算符用于检验**构造函数的prototype属性**是否出现在**某个示例对象**的**原型链**上。
+   - 3.如果表达式obj instanceof Foo返回true,则并不意味着该表达式会永远返回 true。因为 Foo.prototype 属性的值有可能会改变，**改变之后的值很有可能不存在于 obj 的原型链上**，这时原表达式的值就会成为 false。另外一种情况下，原表达式的值也会改变，就是改变对象 obj 的原型链的情况，虽然在目前的 ES 规范中，我们只能读取对象的原型而不能改变它，但借助于非标准的 __proto__ 伪属性，是可以实现的。比如执行 obj.__proto__ = {} 之后，obj instanceof Foo 就会返回 false 了。
     ```js
+      // instanceof应用场景第一种：用来判断一个实例是否属于某种类型：
       let test = function (){}
       console.log(test instanceof Function) //true
-      console.log(b instanceof Object)
-      console.log(undefined instanceof Object)
 
+      console.log(undefined instanceof Object)
+      // 第二种，在继承关系中用来判断一个实例是否属于它的父类型
+      function Aoo(){}
+      function Foo(){}
+      Foo.prototype = new Aoo()
+      var foo = new Foo(); 
+      console.log(foo instanceof Foo)  // true 
+      console.log(foo instanceof Aoo)  // true
       function A () {}
       A.prototype.n = 1
       let a1 = new A()
@@ -269,16 +305,13 @@
       let a2 = new A()
       console.log(a1.n, a1.m, a2.n, a2.m,)
     ```
-# Function
-  - Function.prototype.prototype在使用function作为构造函数与new运算符一起使用时，用作新对象的原型
-  - Function.prototype.toString()返回表示函数源代码的字符串。重写了 Object.prototype.toString 方法。
-  - Function和自定义构造函数的关系
 
-# 变量提升和函数提升,即预编译
-  - 变量提升：通过**var定义**的变量，在定义语句之前就可以访问到，值为**undefined**
-  - 函数提升：通过**function声明**的函数，在之前就可以直接调用，值为**函数本身**
-  - 当同时使用var和function定义**同名变量**时，会**先调用function变量提升，后调用var变量提升**，提升后的结果就变成了undefined
-  - 如果函数是通过var定义的，那么它就属于变量提升
+
+# 七：变量提升和函数提升,即预编译
+  - 1.变量提升：通过**var定义**的变量，在定义语句之前就可以访问到，值为**undefined**
+  - 2.函数提升：通过**function声明**的函数，在之前就可以直接调用，值为**函数本身**
+  - 3.当同时使用var和function定义**同名变量**时，会**先调用function变量提升，后调用var变量提升**，提升后的结果就变成了undefined
+  - 4.如果函数是通过var定义的，那么它就属于变量提升
     ```js
       var a = 3
       function fn (){
@@ -306,31 +339,33 @@
       }
       console.log(obj)
     ```
-# 执行上下文和作用域
-  ### 全局执行上下文：在执行全局代码前将**window**作为全局执行上下文。
+
+
+# 八：执行上下文和作用域
+  ### （1）全局执行上下文：在执行全局代码前将**window**作为全局执行上下文。
   - 对全局数据进行预处理：var定义的全局变量-->undefined,添加为window的属性
   - function声明的全局函数-->复制为fun,添加为window的方法
   - this --> window
   - 开始执行全局代码
-  ### 函数执行上下文，在调用函数且准备执行函数体之前，创建对应的函数执行上下文对象。
+  ### （2）函数执行上下文，在调用函数且准备执行函数体之前，创建对应的函数执行上下文对象。
    - 对局部数据进行预处理
    - 形参变量 --> 赋值（实参）--> 添加为执行上下文的属性
    - arguments --> 赋值（实参列表）-->添加为执行上下文的属性
    - var定义的局部变量 --> 赋值undefined-->添加为执行上下文的属性
    - function定义的函数 --> 赋值fun-->添加为执行上下文的属性
    - this --> 调用函数的对象
-  ### 作用域和执行上下文的区别
-   - 作用域是静态的，只要函数定义了就会存在且不会再变化，执行上下文会随着函数的调用结束被释放
-   - 上下文对象从属于所在的作用域，全局上下文环境-->全局作用域，函数上下文环境-->对应的函数作用域
-   ```js
-     var x = 10
-     function fn () {
-      console.log(x)
-     }
-     function show (f) {
-       var x = 20
-       f()
-     }
-     show(fn)
-   ```
+  ### （3）作用域和执行上下文的区别
+   - 1.**作用域是静态**的，只要函数定义了就会存在且不会再变化，**执行上下文**会随着函数的调用结束**被释放**
+   - 2.上下文对象从属于所在的作用域，全局上下文环境-->全局作用域，函数上下文环境-->对应的函数作用域
+    ```js
+      var x = 10
+      function fn () {
+        console.log(x)
+      }
+      function show (f) {
+        var x = 20
+        f()
+      }
+      show(fn)
+    ```
   

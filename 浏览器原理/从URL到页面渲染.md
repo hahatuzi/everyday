@@ -20,7 +20,7 @@
     script阻塞了DOM解析，js执行，从而阻塞了浏览器渲染
   ### 2.async和defer和同步js的下载顺序
   - script包含影响DOM的方法，会阻塞渲染
-  - script defer **延迟**，**异步请求获取该脚本文件**，不会影响后续DOM的渲染，会先**等html解析完毕后再执行该js脚本**,会在DOMcontentLoaded事件之前执行defer中的代码
+  - script defer **延迟**，**异步请求获取该脚本文件**，不会影响后续DOM的渲染，会先**等html解析完毕后再执行该js脚本**,会在DOMcontentLoaded事件之前执行defer中的代码,即页面加载解析后的DOMContentLoaded时间
   - script async **异步**，也是异步请求获取该脚本文件，不会阻塞浏览器解析html，当它**异步数据返回后会中断解析html**，执行相关的js
   - script type="module"按需加载
   - script标签内容执行完毕后会触发**DOMContentLoaded**事件
@@ -30,7 +30,7 @@
   ### 5.async和defer和DOMContentLoaded回调函数的执行顺序
      - **DOMContentLoaded会在defer script执行完毕后执行，与async script无关**
   ### 6.defer和async的使用场景
-  - defer通常用于文档解析后需要操作DOM的JS代码，并且对多个script文件有顺序要求的
+   - defer通常用于文档解析后需要操作DOM的JS代码，并且对多个script文件有顺序要求的
    - 当某个js脚本对首屏渲染没有任何影响时，加个defer，反正会在html都解析完毕后才执行该js，
    - 当用户下拉内容时，页面稳定后，还有100个毫不相关的script渲染100个模块，如使用defer，defer会在100个script下载完毕后才执行，用户如果已经开始翻动，则后面都是白屏，体验是较差的。这时改为async，用户在翻动时会看到最先渲染出来的异步模块，像极了懒加载，体验比defer更好些。
     |         script          |       js执行顺序       |  是否阻塞解析html    |
