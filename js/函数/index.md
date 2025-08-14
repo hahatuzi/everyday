@@ -113,6 +113,7 @@
 
   ### （2）函数调用模式, ，this指向window或者node环境指向global对象
     ```js
+    // 箭头函数中的this指向它所在上下文中的this
       // 定义一个函数，设置一个变量名保存函数，这时this指向到window对象。
       var myfunc = function(a,b){
       　　return a+b;
@@ -123,10 +124,10 @@
   ### （3）构造器调用模式,在使用prototype的方法时，必须实例化该对象才能调用其方法。
     ```js
       // 定义一个函数对象，在对象中定义属性，在其原型对象中定义方法。在使用prototype的方法时，必须实例化该对象才能调用其方法。
-      var myfunc = function(a){
+      var Myfunc = function(a){
       　　this.a = a;
       };
-      myfunc.prototype = {
+      Myfunc.prototype = {
       　　show:function(){alert(this.a);}
       }
 
@@ -248,8 +249,16 @@
   ```
 
 # 六：函数的prototype原型,原型链，instanceof
-  ### （1）为什么只有函数有protype
-  https://developer.aliyun.com/article/977147
+  ### （1）为什么只有函数有prototype
+  js通过new来创建对象，但是这样创建的对象每次都不一样，又因为js最初没有class的概念，为了能在不同对象之间共享属性，就使用了prototype来处理共享属性
+  ```js
+    function People (name) {this.name = name}
+    People.prototype.age = 18
+    let p1 = new People('lisa')
+    let p2 = new People('rose')
+    console.log(p1.age, p2.age)
+  ```
+  [!参考链接]https://developer.aliyun.com/article/977147
   ### （2）instanceof
    - 1.instanceof原理
      ```js
@@ -305,7 +314,8 @@
       let a2 = new A()
       console.log(a1.n, a1.m, a2.n, a2.m,)
     ```
-
+  ### (3)__proto__和Object.getPrototypeOf(target)
+   - 两者等价，后者是ES6的标准
 
 # 七：变量提升和函数提升,即预编译
   - 1.变量提升：通过**var定义**的变量，在定义语句之前就可以访问到，值为**undefined**
@@ -369,3 +379,12 @@
       show(fn)
     ```
   
+# 九：apply,call,bind对比及源码实现
+  ```js
+    Function.prototype.call = function call (context, ...params) {
+      let self = this
+    }
+  ```
+
+
+

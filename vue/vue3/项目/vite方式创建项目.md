@@ -7,8 +7,9 @@
 # 二：项目eslint插件添加
   eslint9.0版本使用https://blog.csdn.net/qq_52845451/article/details/140160247
   ```js
+  // 方式一
     （1）npm i eslint  -D
-    // 生成配置文件.eslint.cjs
+    // 生成配置文件.eslint.cjs或者eslint.config.js
     （2）npx eslint --init
     // --problems
     // --esm
@@ -34,7 +35,8 @@
       'lint':'eslint src',
       'fix': "eslint src --fix"
     }
-
+  // 方式二
+    （1）npm i @eslint/js  -D
   ```
 # 三：配置prettier：eslint保证代码质量，prettier保证代码美观
   ```js

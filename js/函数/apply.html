@@ -8,8 +8,20 @@
 </head>
 <body>
   <script>
-    var arr = [1,2,3]
-    console.log(arr.push.__proto__)
+    // var arr = [1,2,3]
+    // console.log(arr.push.__proto__)
+    function fn (x,y) {
+       console.log(this,x,y);
+       
+    }
+    let obj = {
+      name:'lsisa'
+    }
+    // fn.call(obj,10,20)
+    // fn.apply(obj,[10,20])
+    fn.bind(obj,10,20)()
+    // document.body.addEventListener('click', fn.call(obj,45,21))
+    // document.body.addEventListener('click', fn.bind(obj,15,45))
   </script>
 </body>
 </html>

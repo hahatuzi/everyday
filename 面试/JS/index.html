@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    function debounce(fn, delay) {
+      let timeout
+      return () => {
+          if (timeout) clearTimeout(timeout)
+          timeout = setTimeout(() => {
+          fn()
+        }, delay);
+      }
+    }
+    function throttle(fn, wait){
+      let lastTime = 0
+      return function (...arg) {
+         const now = Date.now()
+         if(now >= lastTime + wait) {
+          fn.call(this, ...arg)
+          lastTime = now
+         }
+      }
+    }
+    // debounce(() => {console.log('ok')}, 4000)()
+    // debounce(() => {console.log('ok1')}, 7000)()
+    // let _debounce = debounce(() => {console.log('ok')}, 4000)
+    // setTimeout(() => {
+    //   console.log('1000');
+      
+    //   _debounce()
+    // }, 1000);
+    // setTimeout(() => {
+    //   console.log('2000');
+      
+    //   _debounce()
+    // }, 2000);
+    // setTimeout(() => {
+    //   console.log('3000');
+      
+    //   _debounce()
+    // }, 3000);
+    // setTimeout(() => {
+    //   console.log('4000');
+      
+    //   _debounce()
+    // }, 4000);
+    throttle(() =>{console.log('ok')})
+    let _throttle = throttle(() =>{console.log('ok')}, 4000)
+    setTimeout(() => {
+      console.log('1000');
+      
+      _throttle()
+    }, 1000);
+    setTimeout(() => {
+      console.log('2000');
+      
+      _throttle()
+    }, 2000);
+    setTimeout(() => {
+      console.log('3000');
+      
+      _throttle()
+    }, 3000);
+    setTimeout(() => {
+      console.log('4000');
+      
+      _throttle()
+    }, 4000);
+  </script>
+</body>
+</html>

@@ -1,0 +1,23 @@
+{
+  "name": "eslintproject",
+  "version": "1.0.0",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "lint": "eslint ."
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "@eslint/js": "^9.33.0",
+    "eslint": "^9.33.0",
+    "eslint-plugin-vue": "^10.4.0",
+    "globals": "^16.3.0"
+  },
+  "dependencies": {
+    "@typescript-eslint/parser": "^8.39.1",
+    "vue-eslint-parser": "^10.2.0"
+  }
+}

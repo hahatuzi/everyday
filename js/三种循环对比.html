@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    let arr = new Array(99999).fill(0)
+    console.time('FOR~~');
+    for (var i = 0; i < arr.length; i++) {}
+    console.timeEnd('FOR~~')
+    // //FOR~~: 0.655029296875 ms
+    // console.time('WHILE~~')
+    // // let i = 0
+    // var i = 0
+    // while (i < arr.length) {
+    //   i++
+    // }
+    // console.timeEnd('WHILE~~')
+    // WHILE~~: 1.177001953125 ms
+  </script>
+</body>
+</html>
