@@ -7,7 +7,59 @@
 </head>
 <body>
   <script>
-    
+    let obj = {
+      name:"lisa",
+      age: 18,
+      list:[1,2,3],
+      skill:{
+        fn:[1,2,3],
+      }
+    }
+    let newArrayPrototype = Object.create(Array.prototype)
+    let oldArrayPrototype = Array.prototype;
+    ['push','unshift'].forEach(item => {
+      newArrayPrototype[item] = function (...arg) {
+        oldArrayPrototype[item].call(this, ...arg)
+      }
+    })
+    function defineReactive (target, key, value) {
+    observer(value)
+      Object.defineProperty(target,key, {
+        get () {
+          console.log('getter');
+          return value
+        },
+        set (newVal) {
+          console.log('setter',key)
+          if (newVal != value) {
+            value = newVal
+            observer(newVal)
+          }
+        }
+      })
+    }
+    function observer (data) {
+      if (typeof data !== 'object' || typeof data == 'null') return data
+      if (Array.isArray(data)){
+        data.__proto__ = newArrayPrototype
+      }
+      for (const key in data) {
+        defineReactive(data, key, data[key])
+      }
+    }
+    observer(obj)
+    // obj.skill.fn = '90'
+    // obj.name = 'jisoo'
+    // obj.sum = '89'
+    obj.age = '20'
+    obj.skill.fn = [3,4,5,6]
+    obj.skill = {fn1:'9'}
+    obj.list.push(100)
+    console.log(obj.list)
+    // 无法监听set数据结构
+    // let setData = new Set([1,2,3])
+    // observer(setData)
+    // console.log(setData)
   </script>
 </body>
 </html>
