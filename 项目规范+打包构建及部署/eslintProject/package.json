@@ -18,6 +18,7 @@
   },
   "dependencies": {
     "@typescript-eslint/parser": "^8.39.1",
+    "commitizen": "^4.3.1",
     "vue-eslint-parser": "^10.2.0"
   }
 }
