@@ -19,22 +19,33 @@
             name:'lisa',
             age:18,
             num: 0.01,
-            child:[1,2,,3]
+            child:{
+                name:"kl",
+                list:[1,24,]
+            }
         }
-        const proxy_person = new Proxy(person,{
+        let handler = {
+            get (target, key) {
+                console.log('getter',key)
+                return target[key]
+            },
             deleteProperty(target, prop){
                 console.log('delete')
                 delete target[prop]
             },
             set (person, prop,value) {
+                console.log('setter',prop)
                 person[prop] = value * 100
             }
-        })
+        }
+        const proxy_person = new Proxy(person,handler)
         delete proxy_person.age
         proxy_person.num = 1
-        proxy_person.child = [1,2,3,4] // 与object.defineProperty不同的是proxy可以监听到属性为数组时的重新赋值
+        proxy_person.skill = 'ol'
+        // proxy_person.child = [1,2,3,4] // 与object.defineProperty不同的是proxy可以监听到属性为数组时的重新赋值
         console.log(proxy_person)
         console.log(person)
+        console.log(proxy_person.child.name)
         // =======================================
         // 数组类型
         // let arr = [{name:'雄安命', age:18}]
