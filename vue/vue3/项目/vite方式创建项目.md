@@ -58,26 +58,41 @@
   ```
 # 四：项目添加stylelint
 stylelint是css的lint工具，可以格式化css代码，检查css语法中错误的地方
-[!参考文章]https://blog.csdn.net/blue_121/article/details/130888804?spm=1001.2014.3001.5502
+  ### 第一步：安装stylelint相关插件
   ```js
-    （1）新增stylelint.cjs文件
-    （2）新增stylelintignore文件
-        //   dist
-        // node_modules
-        // public
-        // .husky
-        // .vscode
-        // .idea
-        // *.sh
-        // *.md
+    "stylelint": "^16.19.1",// stylelint核心库
+    "stylelint-config-html": "^1.1.0",// 共享html配置，昆邦postcss-html并对其进行配置
+    "stylelint-config-recess-order": "^6.0.0", // 提供优化样式顺序的配置
+    "stylelint-config-recommended": "^15.0.0", // stylelint标准共享配置
+    "stylelint-config-recommended-scss": "^14.1.0", // 拓展stylelint-config-recommended共享配置并为scss配置规则
+    "stylelint-config-recommended-vue": "^1.6.0",  // 拓展stylelint-config-recommended共享配置并为vue配置规则
+    "stylelint-prettier": "^5.0.3",
+    "postcss": "^8.5.3",
+    "postcss-html": "^1.8.0", // 解析html的postcss语法
+    "postcss-scss": "^4.0.9",// postcss的scss解析器
+  ```
+  ### 第二步：新增stylelint.cjs文件
+  ### 第三步：新增stylelintignore文件
+   ```js
+    //   dist
+    // node_modules
+    // public
+    // .husky
+    // .vscode
+    // .idea
+    // *.sh
+    // *.md
 
-        // src/assets
-        // stats.html
-    （3）运行脚本
+    // src/assets
+    // stats.html
+  ```
+  ### 第四步：添加运行脚本
+  ```js
     script:{
       "lint:stylelint": "stylelint  \"**/*.{css,scss,vue}\" --fix",
     }
   ```
+[!参考文章]https://blog.csdn.net/blue_121/article/details/130888804?spm=1001.2014.3001.5502
 # 五：项目添加husky
 利用husky在代码提交之前触发git hook(git在客户端的钩子)，然后执行pnpm run format来自动的格式化我们的代码
   ```js
@@ -92,6 +107,7 @@ stylelint是css的lint工具，可以格式化css代码，检查css语法中错�
     . "$(dirname -- "$0")/_/husky.sh"
     npm run format
   ```
+  ### 安装lint-staged
 # 六：配置commitlint:按照统一的标准来执行
   ```js
     // （1）安装,仅在开发环境下

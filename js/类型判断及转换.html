@@ -7,6 +7,11 @@
 </head>
 <body>
   <script>
+    console.log(null == null)
+    console.log(undefined == null)
+    console.log(typeof undefined);
+    console.log(typeof null);
+    
     let arr =[]
     console.log(arr instanceof Array); // true
     console.log(arr instanceof Object); // true
@@ -22,11 +27,10 @@
     // console.log(Object.prototype.toString.call(arr)); // [object Array]
     // console.log(Object.prototype.toString.call(obj)); // [object Object]
     // console.log(Object.prototype.toString.call(fn)); // [object Function]
-    // console.log(!null);
-    // console.log(!0);
-    // console.log(!undefined);
-    // console.log(!NAN);
-    
+    console.log(!null);
+    console.log(!0);
+    console.log(!undefined);
+    console.log(!NAN);
   </script>
 </body>
 </html>

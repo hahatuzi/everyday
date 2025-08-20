@@ -29,7 +29,6 @@
       for(let key in origin) {
         // 再次判断，确定该属性不在对象原型上即可
         if (origin.hasOwnProperty(key)){
-
           if (typeof origin[key] == 'object' && origin[key] !== null){
             tar[key] = Object.prototype.toString.call(origin[key]) === '[object Array]' ? [] : {}
             deepClone(origin[key], tar[key])
