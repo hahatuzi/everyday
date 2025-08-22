@@ -30,7 +30,16 @@
   ### 2.@rollup/plugin-commonjs：支持commonJS规范
   ### 3.unplugin-auto-import/vite: 自动导入
   ### 4.unplugin-vue-components/resolvers: 自动导入elementPlus
-
+  ### 5.vite-plugin-px2rem
+    ```js
+      import { px2rem } from 'vite-plugin-px2rem'
+      plugins:[
+        px2rem({
+          width:750, // 设计稿宽度
+          rootFontSize: 16, // 根字体大小，可以不用
+        })
+      ]
+    ```
 
 # 四：vite的plugin使用
  ```js
