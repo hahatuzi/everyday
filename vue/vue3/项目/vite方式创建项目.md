@@ -70,6 +70,7 @@ stylelint是css的lint工具，可以格式化css代码，检查css语法中错�
     "postcss": "^8.5.3",
     "postcss-html": "^1.8.0", // 解析html的postcss语法
     "postcss-scss": "^4.0.9",// postcss的scss解析器
+    "sass"
   ```
   ### 第二步：新增stylelint.cjs文件
   ### 第三步：新增stylelintignore文件
