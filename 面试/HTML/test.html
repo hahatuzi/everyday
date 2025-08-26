@@ -4,18 +4,36 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
+  <style>
+    div:nth-child(2n + 1 ){
+      color:red
+    }
+    div{
+      font-size: 12px;
+
+    }
+    .item3{
+      font-size: 12px;
+      transform: scale(0.5);
+      transform-origin: 100% 100%;
+    }
+    svg text{
+      font-size: 6px;
+
+    }
+  </style>
 </head>
 <body>
-  <script>
-    // var a = 2
-    // function test () {
-    //     console.log(a);
-    //     let a = 1
-    // }
-    // test()
-
-    
-
-  </script>
+    <div class="item1">item1</div>
+    <div class="item2">item2</div>
+    <svg width="100" height="20">
+      <text>
+        <tspan x="0" dy="6">svg_title</tspan>
+      </text>
+    </svg>
+    <span>span1</span>
+    <span>span2</span>
+    <span>span3</span>
+    <div class="item3">item3</div>
 </body>
 </html>

@@ -9,9 +9,21 @@
       width: 100px;
       height: 100px;
     }
-    .container{
+    .container:after{
+      display: table;
+      content:'';
+      height: 0;
+      /* overflow: hidden; */
+    }
+    .container1:after{
+      display: table;
+      content: '';
+      clear: both;
       /* overflow: auto; */
       /* display: flow-root; */
+    }
+    .after{
+      clear: both;
     }
     .box1{
       background-color: blue;
@@ -29,7 +41,7 @@
       float: left;
     }
     .main{
-      height: 200px;
+      /* height: 200px; */
       background-color: red;
       /* overflow: hidden; */
       padding-left: 100px;
@@ -42,9 +54,10 @@
     <div class="box1"></div>
   </div>
   <div class="box2"></div> -->
-  <div class="container">
+  <div class="container1">
     <div class="aside">aside</div>
     <div class="main">菜菜菜菜单菜单菜单菜单菜单菜单单菜菜单菜单菜单菜单菜单菜单单菜菜单菜单菜单菜单菜单菜单单菜菜单菜单菜单菜单菜单菜单单菜菜单菜单菜单菜单菜单菜单单菜菜单菜单菜单菜单菜单菜单单单菜单菜单菜单菜单菜单单</div>
+    <div class="after"></div>
   </div>
 </body>
 </html>
