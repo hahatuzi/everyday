@@ -10,7 +10,8 @@
       height: 100px;
     }
     .container{
-      overflow: auto;
+      /* overflow: auto; */
+      /* display: flow-root; */
     }
     .box1{
       background-color: blue;
@@ -19,14 +20,31 @@
     .box2{
       background-color: red;
       margin-top: 10px;
+      /* float: left; */
+    }
+    .aside{
+      width: 100px;
+      height: 100px;
+      background-color: blue;
       float: left;
+    }
+    .main{
+      height: 200px;
+      background-color: red;
+      /* overflow: hidden; */
+      padding-left: 100px;
+
     }
   </style>
 </head>
 <body>
-  <div class="container">
+  <!-- <div class="container">
     <div class="box1"></div>
-  <div class="box2"></div>
+  </div>
+  <div class="box2"></div> -->
+  <div class="container">
+    <div class="aside">aside</div>
+    <div class="main">菜菜菜菜单菜单菜单菜单菜单菜单单菜菜单菜单菜单菜单菜单菜单单菜菜单菜单菜单菜单菜单菜单单菜菜单菜单菜单菜单菜单菜单单菜菜单菜单菜单菜单菜单菜单单菜菜单菜单菜单菜单菜单菜单单单菜单菜单菜单菜单菜单单</div>
   </div>
 </body>
 </html>
