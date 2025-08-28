@@ -40,7 +40,7 @@
     |      <script defer>     |    按html顺序执行      |        不阻塞        |
 
 # 三：渲染进程的详细渲染流程
-  ### （1）使用**html解析器**将html页面转换成DOM树，ParseHTML。
+  ### （1）HTML解析：使用**html解析器**将html页面转换成DOM树，ParseHTML。
   - html是如何转换为DOM的
     服务响应数据bytes -->  分词器tokens --> 生成Node --> DOM
   - DOM解析时CSS对它的影响：
@@ -52,26 +52,33 @@
   - CSS是否会影响JS的解析？
     JavaScript 引擎在解析 JavaScript 之前，是不知道 JavaScript 是否操纵了 CSSOM 的，所以**渲染引擎在遇到 JavaScript 脚本时**，不管该脚本是否操纵了 CSSOM，**都会执行 CSS 文件下载，解析操作，再执行 JavaScript 脚本**。比如script的代码app.style.color = 'red'
   - DOM解析器处理跨站点资源
-  ### （2）将css解析成CSS树，ParserCSS
+  ### （2）样式计算：将css解析成CSS树，ParserCSS
   - 如果css样式没有通过link标签引入，样式还是会通过html解析器解析。
   - **link会阻塞浏览器的渲染**，因为本质上link解析也是浏览器解析的一部分，但**不会阻塞DOM解析**。
   - CSS文件的引入如果放在底部会阻塞DOM渲染。
-  ### （3）计算DOM树每个节点的具体样式,Attachment
-  ### （4）DOM树+ CSS树 --> 生成Render树 
-  ### （5）根据Render树生成图层树 update LayerTree
-  ### （6）布局Layou和绘制Paint
+  ### （3）布局
+  - 计算DOM树每个节点的具体样式，比如宽高，位置，然后生成**布局树layout**!!
+  ### （4）分层
+  - 对**布局树**进行**分层**，生成**图层树** update LayerTree
+  ### （5）绘制Paint
+  - 对**每个图层**进行**绘制**，然后主线程将每个图层的绘制信息提交到合成线程进行合成。
+  ### （6）分块tiling:合成线程将每个图层进行分块处理！!
+  ### （7）光栅化raster。
+  - **合成线程**将块信息**交给GPU进程**，**GPU完成光栅化**，光栅化的结果就是**位图**，比如网络不好的时候出现的只有文字的网页。
+  ### （8）draw
+  - 合成线程配合GPU进程，将位图的**位置，旋转，缩放等quad指引信息**进行**draw**,完成最终页面效果
   ### 图层树：什么样的场景可以生成图层树呢？打开调试工具的layers工具就可以看到图层树，什么时候会创建多个layer呢
   添加3D transform的元素，position:fixed的元素，video标签，canvas,iframe, css3动画opacity动画转换，animation或者transition
 
 # 四：重绘重排
-  - layout为重排，重排就是**回流**。
+  - layout为重排，重排就是**回流**。回流直接回到第三步layout布局,布局是在主线程进行的！！影响性能
     - 更新元素的**几何属性**，**计算所有元素在窗口的位置,**。当窗口resize,添加，删除元素，修改width,height,padding,font-size等时会触发
-  - repaint为重绘。
+  - repaint为重绘。回到第五步绘制，绘制时已经分层，性能消耗较少
     - 更新元素的**绘制属性**重新**计算所有元素在窗口具体呈现的内容**，比如改变背景颜色。
     重绘重排是以图层为单位进行的,
     重排一定触发重绘，但重绘不一定会触发重排。
-
-# 五：performance API
+# 五：为什么tranform的效率高？因为transform发生在最后一步draw合成阶段。不会影响主线程性能
+# 六：performance API
   ### :,
 |   时间节点  |              描述              |                               含义                            |
 | ----------- | -------------------------------| --------------------------------------------------------------|
