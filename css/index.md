@@ -168,3 +168,5 @@
           }
       }
     ```
+# 十二：line-height:120%和line-height：1.2的区别
+  line-height:1.2可以继承，即使子元素有自己的font-size，但是子元素的行高仍然不是自己的font-size的高度，而是继承自父元素的1.2*自己的font-size
