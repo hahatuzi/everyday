@@ -5,7 +5,7 @@
     npm create vite
   ```
 # 二：项目eslint插件添加
-  eslint9.0版本使用https://blog.csdn.net/qq_52845451/article/details/140160247
+  [!参考链接eslint与prettier搭配使用]https://blog.csdn.net/qq_52845451/article/details/140160247
   ```js
   // 方式一
     （1）npm i eslint  -D
