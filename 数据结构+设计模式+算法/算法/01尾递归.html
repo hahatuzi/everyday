@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 尾递归的目的是什么：减少栈的使用，避免造成内存溢出
+    function factorial(n){
+      if(n == 0) {
+        return 1
+      } else {
+        return n * factorial(n-1) // 此写法函数空间不会释放，会导致栈中的函数越来越多！！从而导致栈溢出
+      }
+    }
+    // console.log(factorial(20))
+    // console.log(factorial(10000)) // 计算量太大的时候会导致栈溢出
+
+    function _factorial(n, acc = 1){
+      if(n == 0) {
+        return acc
+      } else {
+        return _factorial(n - 1, acc * n) // 此写法函数空间不会释放，会导致栈中的函数越来越多！！从而导致栈溢出
+      }
+    }
+    // console.log(_factorial(10000))
+  </script>
+</body>
+</html>

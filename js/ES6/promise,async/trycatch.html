@@ -11,8 +11,8 @@
     try {
       new Promise((resolve, reject) =>{
         reject(Error('异步任务promsie出错了'))
-      }).catch(error =>{
-        console.log('promisecatch捕获的',error)
+      // }).catch(error =>{
+        // console.log('promisecatch捕获的',error)
       })
       //以上异步任务产生的错误无法被try catch捕获
       setTimeout(() => {

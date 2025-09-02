@@ -182,6 +182,10 @@ postcss:postcss可以实现对less等语法进行预编译然后通过补足等�
   }
   // import先创建script标签指向对应的js文件，当路由进入对应的path时，才会进行require按需导入对应的script标签到body中
   ```
+  ### （3）路径导入别名@可以减少查找次数，extensions后缀尝试查找列表
+  ### （4）split分包
+  ### (5)vite的tree shaking
+  ### (6)build的配置项：关闭生成map文件，删掉console等
 
 # 16.导入import.meta.glob
   ```js

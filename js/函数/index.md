@@ -1,12 +1,18 @@
 # 函数和Function的关系
+  ###  1.Function和自定义构造函数
+    - （1）.Function.prototype.prototype在使用function作为构造函数与new运算符一起使用时，用作新对象的原型
+    - （2）.Function.prototype.toString()返回表示函数源代码的字符串。重写了 Object.prototype.toString 方法。
+    - （3）.Function和自定义构造函数的关系
+  ### 2.new Foo和new Foo()的区别
+  ### 3.区别实例对象和Function对象
   - 在js中**每一个函数**其实**都是一个Function对象**，**Function对象**提供了用于处理**函数**的方法。
-  - **Function()构造函数**创建了一个新的**Function对象**，直接调用**该构造函数**的话**可以动态创建函数**。
+  - **Function()构造函数**创建了一个新的**Function实例对象**，直接调用**该构造函数**的话**可以动态创建函数**。
   - 而通过自定义名字的构造函数创建的实例则和Function无关。比如 f1 = new Foo()和f = new Function()，分别指向不同的构造函数
-  ###  Function和自定义构造函数
-    - 1.Function.prototype.prototype在使用function作为构造函数与new运算符一起使用时，用作新对象的原型
-    - 2.Function.prototype.toString()返回表示函数源代码的字符串。重写了 Object.prototype.toString 方法。
-    - 3.Function和自定义构造函数的关系
-  ### new Foo和new FOO()的区别
+    ```js
+      function Fn(){}
+      Fn.call() //此时Fn为Function对象，因为它此时是作为对象调用call属性的目的
+      var f1 = new Fn() //实例对象
+    ```
 
 # 一：函数的六种创建方式
   ### （1）直接声明函数并调用
@@ -385,6 +391,5 @@
       let self = this
     }
   ```
-
 
 
