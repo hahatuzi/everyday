@@ -66,7 +66,7 @@
   ### （7）光栅化raster。
   - **合成线程**将块信息**交给GPU进程**，**GPU完成光栅化**，光栅化的结果就是**位图**，比如网络不好的时候出现的只有文字的网页。
   ### （8）draw
-  - 合成线程配合GPU进程，将位图的**位置，旋转，缩放等quad指引信息**进行**draw**,完成最终页面效果
+  - 合成线程配合**GPU进程**，将位图的**位置，旋转，缩放等quad指引信息**进行**draw**,完成最终页面效果
   ### 图层树：什么样的场景可以生成图层树呢？打开调试工具的layers工具就可以看到图层树，什么时候会创建多个layer呢
   添加3D transform的元素，position:fixed的元素，video标签，canvas,iframe, css3动画opacity动画转换，animation或者transition
 
