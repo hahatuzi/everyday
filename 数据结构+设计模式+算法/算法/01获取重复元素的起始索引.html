@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    mergeArr([''])
+    function mergeArr(arr: string[]) {
+      let res = [];
+      let startIndex = 0;
+      let endIndex = 0;
+      arr.forEach((item, i) => {
+        if (arr[i] !== arr[i + 1]) {
+          res.push({ value: item, start: startIndex, end: endIndex });
+          startIndex = i + 1;
+        }
+        endIndex = i + 1;
+      });
+      return res;
+    }
+  </script>
+</body>
+</html>

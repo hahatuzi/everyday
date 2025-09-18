@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <button id="btn">add</button>
+  <div id="count"></div>
+  <script>
+    let count = 0
+    
+    function add () {
+      count++
+    }
+
+    const handler = {
+      get(target, key){
+        console.log('get', target, key);
+        return Reflect.get(target, key)
+      },
+      set(target, key,value){
+        console.log('set', target, key,value);
+        Reflect.set(target, key, value)
+        render()
+      }
+    }
+
+    const obj = {
+      count:0
+    }
+    // 监听obj任何属性的变更
+    const proxyObj = new Proxy(obj, handler)
+
+    let btn = document.getElementById('btn')
+    btn.addEventListener('click',() => {
+      proxyObj.count++
+    })
+
+    // 渲染数据
+    function render () {
+      document.getElementById('count').innerHTML = `<h3>${proxyObj.count}</h3>`
+    }
+    render()
+  </script>
+</body>
+</html>
