@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <button id="btn">add</button>
+  <div id="count"></div>
+  <script>
+    let count = 0
+    function render () {
+      document.getElementById('count').innerHTML = count
+    }
+    render()
+    function add () {
+      count++
+    }
+    let btn = document.getElementById('btn')
+    btn.addEventListener('click',() => {
+      // 数据变更操作
+      add()
+      // 重新渲染视图
+      render()
+    })
+  </script>
+</body>
+</html>

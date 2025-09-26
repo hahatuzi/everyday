@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    function* foo () {
+      console.log('1');
+      console.log('2');
+      yield 'lisa'
+      console.log('3');
+      yield 'rose'
+      console.log('4');
+      
+    }
+    const generator = foo()
+    console.log(generator.next()) // {value:'lisa', done: false}
+    console.log(generator.return(12)); // {value: 12, done: true} // 当return的时候后面的next就不会执行
+    console.log(generator.next()) // {value: undefined, done: true}
+  </script>
+</body>
+</html>

@@ -34,8 +34,8 @@
         length:3
       }
       console.log(o)
-      Object.prototype[Symbol.iterator] = generotor
-      function generotor () {
+      Object.prototype[Symbol.iterator] = iterator
+      function iterator () {
         var _this = this
         let nextIndex = 0
         return {
@@ -59,8 +59,8 @@
       // }
       // const iterator = generotor([1,2,3,4,5])
       // console.log(iterator.next())
-      // console.log(iterator.next().value)
-      // console.log(iterator.next().value)
+      // console.log(iterator.next())
+      // console.log(iterator.next())
     </script>
   </body>
 

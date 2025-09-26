@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    const info = {
+      name:'lisa',
+      age:28,
+      friends:['jennie', 'rose', 'jisoo'],
+      [Symbol.iterator]: function () {
+        const entries = Object.entries(this)
+        let index = 0 
+        const iterator = {
+          next: function () {
+            if (index < entries.length) {
+              return {done: false, value: entries[index++]}
+            } else {
+              return { done:true}
+            }
+          }
+        }
+        return iterator
+      }
+    }
+    function foo(arg1, arg2, arg3) {
+      console.log(arg1, arg2, arg3);
+    }
+    foo(...info) // 自定义的迭代器实现了...解构
+
+    const set1 = new Set(['a', 'b', 'c']) // Set也可以传入可迭代对象
+    console.log(set1);
+    
+  </script>
+</body>
+</html>
