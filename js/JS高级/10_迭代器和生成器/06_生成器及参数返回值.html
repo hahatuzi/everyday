@@ -10,14 +10,16 @@
     function* foo () {
       console.log('1');
       console.log('2');
-      yield 'lisa'
-      console.log('3');
-      yield 'rose'
-      console.log('4');
+      const name1 = yield 'lisa'
+      console.log('3',name1);
+      const name2 = yield 'rose'
+      console.log('4',name2);
+      return undefined
       
     }
-    const generator = foo()
+    const generator = foo('name1')
     console.log(generator.next()) // {value:'lisa', done: false}
+    console.log(generator.next('name2')) // {value:'lisa', done: false}
     console.log(generator.return(12)); // {value: 12, done: true} // 当return的时候后面的next就不会执行
     console.log(generator.next()) // {value: undefined, done: true}
   </script>
