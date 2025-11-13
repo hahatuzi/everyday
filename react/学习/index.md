@@ -1,35 +1,6 @@
 #  一：jsx语法
-  ### 1.jsx语法规范
-   - 使用{}插入表达式
-   - style中必须使用对象
-  ### 2.jsx实现列表渲染
-  ### 3.jsx实现条件渲染
-  ### 4.jsx实现复杂条件渲染
-    ```js
-      function getItem () {
-        if (state = 1) {
-          return <div>1</div>
-        } else if (state = 2) {
-          return <div>2</div>
-        } else {
-          return <div>3</div>
-        }
-      }
-      <div>{getItem()}</div>
-      {flag ? <span>渲染</span> : ''}
-      <div className={styles.child + ' ' + (item.show ? styles.child_select : '')}></div>
-      <div className={styles.child + ' ' + (item.show ? styles.child_select : '')}></div>
-      <div className={["title", index === this.state.active?"active":null].join(' ')}></div>
-    ```
-  ### 5.JSX语法的转化过程
-    - jsx仅仅是createElement方法的语法糖
-    - jsx语法被@babel/preset-react插件编译为createElement方法
-  ### 6.classnames,classnames是一个简单的js库，可以方便的通过条件动态控制class类名的显示
-  ```js
-  import classnames from 'classnames'
-    className={`nav-item ${type == item.type && 'active'}`}
-    className={classnames('nav-item', {active: type == item.type})}
-  ```
+
+
 # 二：组件通信
   ### 1.父传子：props,当子组件中间嵌套内容时，父组件可以通过props.children来获取该内容
     ```js

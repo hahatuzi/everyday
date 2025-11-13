@@ -1,6 +1,6 @@
 create-react-app底层由webpack构建
 # 一：创建过程
-  ### （1） npx create-react-app 项目名，来创建项目
+  ### 第一步： npx create-react-app 项目名 --template typescript，来创建项目
   ### （2）npm i
   ### (3)npm i react-router-dom
   ### (4)npm run start

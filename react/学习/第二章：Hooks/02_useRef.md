@@ -42,6 +42,17 @@
   ### 场景三：监听div滚动事件
    ```js
     const peopleRef = useRef<HTMLDivElement>(null);
+    function handleScroll (e: any) {
+      let {scrollHeight, scrollTop, clientHeight} = e.target
+      if(scrollHeight - scrollTop - clientHeight < 1) {
+        setPageInfo({
+          pageSize:10,
+          pageNum: pageInfo.pageNum++
+        })
+        
+        getPeopleList()
+      }
+    }
     useEffect(() => {
       if(['居住人口（个）'].includes(screenModule.name)) {
         getPeopleList()

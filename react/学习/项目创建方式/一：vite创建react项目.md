@@ -20,22 +20,33 @@
   },
 ```
 
-(3)第三步：修改 vite.config.js 将@指向 src 文件夹
+(3)第三步：修改 vite.config.js 将@指向 src 文件夹,修改 tsconfig.json，当输入@时提示 src 下的文件路径
 
-```js
-import { defineConfig } from "vite";
-import react from "@vitejs/plugin-react";
-import path from "path"; // 如果使用的是ts的话，要先安装node库的ts声明配置：npm i -D @types/node
-// https://vitejs.dev/config/
-export default defineConfig({
-  plugins: [react()],
-  resolve: {
-    alias: {
-      "@": path.resolve(__dirname, "./src"),
-    },
-  },
-});
-```
+	```js
+		import { defineConfig } from "vite";
+		import react from "@vitejs/plugin-react";
+		import path from "path"; // 如果使用的是ts的话，要先安装node库的ts声明配置：npm i -D @types/node
+		// https://vitejs.dev/config/
+		export default defineConfig({
+			plugins: [react()],
+			resolve: {
+				alias: {
+					"@": path.resolve(__dirname, "./src"),
+				},
+			},
+		});
+
+	// 如果是typescript需要在tsconfig.json同时配置,修改 tsconfig.json，当输入@时提示 src 下的文件路径
+		compilerOptions：{
+		// 解析非相对模块名的基准目录
+			"baseUrl": "./",
+			// 模块名到基于 baseUrl的路径映射的列表。
+			"paths": {
+				"@": ["src"],
+				"@/*": ["src/*"]
+			}
+		}
+	```
 
 (4)第四步：全局 css 样式管理,组件化 module.scss 的样式管理,全局样式变量管理
 
@@ -74,15 +85,10 @@ export default defineConfig({
 // $color: orange;
 ```
 
-(5)修改 tsconfig.json，当输入@时提示 src 下的文件路径
+(5)prettier插件安装 npm i prettier eslint-config-prettier eslint-plugin-prettier -D
 
 ```js
-  "compilerOptions": {
-    "baseUrl": "./",
-    "paths": {
-      "@/*":["src/*"]
-    },
-  },
+
 ```
 
 # [!React 从 CRA 到 Vite 迁移笔记]https://www.jianshu.com/p/b5c4436b744c
