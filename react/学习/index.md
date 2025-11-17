@@ -35,67 +35,74 @@
 
   ### 3.兄弟组件通信
   ### 4.context跨层级通信
-  - 1.使用ceateContext方法创建一个上下文对象
-  - 2.在顶层组件App中通过ctx.provider组件提供数据
-  - 3.在底层组件B中通过useContext钩子函数获取到消费数据
-    ```js
-      // 相当于一个公共的存储空间，这样无需通过props层层传递，就可以让组件访问到这些数据
-      // 当我们通过context访问数据时，他会读取距离他最近的Provider中的数据，如果咩有Provider，则hi读取context中默认数值
-      // 使用方式：
-      // 第一步：使用ceateContext方法创建一个上下文对象
-      import { createContext } from 'react'
-      const msgContext = createContext()
-      <context.Provider value={{name:'孙悟空',age:18}}></context.provider>
-      // 第二步：在顶层组件App中通过ctx.provider组件提供数据
-      function App () {
-        const msg = 'this is a msg'
-        return (
-          <div>
-            <msgContext.provider>
-              this is APP
-              <A></A>
-            </msgContext.provider>
-          </div>
-        )
-      }
-      // 第三步：在底层组件B中通过useContext钩子函数获取到消费数据
-      import context from '/store/context'
-      const CompB = () => {
-        const ctx = useContext(msgContext)
-        return (
-          <div></div>
-        )
-      }
-    ```
-    ```js
-      // appContext.js
-      import { createContext } from "react";
-      const appContext = createContext({
-        title:'hello context'
-      })
-      export default  appContext
 
-      //CreateContext组件
-      import Child from './comp/Child'
-      import appContext from '../../utils/appContext'
-      import { useState } from 'react'
-
-      function CreateContext () {
-        const [title, setTitle] = useState({title:'HI'})
-        const changeTitle = () => {
-          setTitle({title:'Hello'})
+  ### 5.store
+  ```js
+  npm i react-redux
+    // store--index.ts
+    import { configureStore } from '@reduxjs/toolkit';
+    import {screenReducer} from './screenReducer';
+    const store = configureStore({
+      reducer:{
+        screenModule:screenReducer,
+      }
+    })
+    export default store;
+    // store--screenReducer.ts
+    import { createSlice } from "@reduxjs/toolkit";
+    const screenSlice = createSlice({
+      name:'screenModule',
+      initialState:{
+        name:'',
+        show:false
+      },
+      reducers:{
+        setModule(state, action) {
+          let {name, show} = action.payload
+          state.name = name
+          state.show = show
         }
-        return (
-          <div>
-            <appContext.Provider value={title}>
-              <button onClick={changeTitle}>changeTItle</button>
-              <Child></Child>
-            </appContext.Provider>
-          </div>
-        )
       }
-      export default CreateContext
-    ```
+    })
 
-# 
+    export const {reducer: screenReducer } = screenSlice
+    export const {setModule} = screenSlice.actions
+    // PeopleDialog.tsx
+    import { useSelector } from 'react-redux';
 
+    type GetStateType = typeof store.getState
+
+    const PeopleDialog = () => {
+      const screenModule = useSelector((state: ReturnType<GetStateType>) => state.screenModule)
+
+      useEffect(() => {
+        if(['居住人口（个）'].includes(screenModule.name)) {
+          getPeopleList()
+          setTimeout(() => {
+            communityBoundary()
+          }, 1000);
+          if (peopleRef.current){
+            peopleRef.current.addEventListener('scroll', (val) => {
+              handleScroll(val)
+            })
+          }
+        }
+        return () => {
+          peopleRef.current?.removeEventListener('scroll', handleScroll)
+        }
+      },[screenModule.name])
+    }
+    // index.tsx
+    import { useDispatch, useSelector } from 'react-redux'
+    type GetStateType = typeof store.getState
+    const Left = () => {
+      
+      const screenModule = useSelector((state: ReturnType<GetStateType>) => state.screenModule)
+      console.log(screenModule.name);
+      
+      const dispatch = useDispatch()
+      const handleFn = (data:ModuleItem) => {
+        dispatch(setModule({name: data.name, show:data.show}))
+      }
+    }
+  ```
