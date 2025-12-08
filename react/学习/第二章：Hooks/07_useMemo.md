@@ -1,3 +1,0 @@
-# useMemo和useCallback的区别
-1.useMemo传入的函数内部需要有返回值
-2.useMemo只能声明在函数式组件内部,但是react.memo()是直接包裹在函数式组件的外部，类似于computed

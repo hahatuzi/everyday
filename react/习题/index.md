@@ -250,3 +250,8 @@ update3=() => {
 ```
 
 # 19.useEffect 中为什么不能使用 async
+# 1.路由懒加载react中的lazy
+# 2.outlet
+# 3.useRoutes
+# 4.路由配置表
+# 5.vite项目中的vite-env.d.ts文件作用
