@@ -25,7 +25,12 @@
         return _factorial(n - 1, acc * n) // 此写法函数空间不会释放，会导致栈中的函数越来越多！！从而导致栈溢出
       }
     }
+
+    function fibonacci (n) {
+      return n <= 2 ? 1 : fibonacci(n - 1) + fibonacci(n - 2)
+    }
     // console.log(_factorial(10000))
+    // console.log(fibonacci(1000))
   </script>
 </body>
 </html>

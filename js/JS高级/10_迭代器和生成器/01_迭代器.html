@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    let names = ['abc', 'bca', 'eds']
+    let index = 0
+    const nameIterator = {
+      next: function () {
+        if (index < names.length) {
+          return { done: false, values: names[index++]}
+        } else {
+          return { done:true}
+        }
+      }
+    }
+    console.log(nameIterator.next()) // {done: false, values: 'abc'}
+    console.log(nameIterator.next()) // {done: false, values: 'bca'}
+  </script>
+</body>
+</html>

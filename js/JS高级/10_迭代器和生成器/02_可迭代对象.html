@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 将info变成可迭代对象
+    const info = {
+      friends:['lisa', 'jennie', 'jisoo', 'rose']
+    }
+
+    const _info = {
+      friends:['lisa', 'jennie', 'jisoo', 'rose'],
+      [Symbol.iterator] () {
+        let index = 0 
+        const infoIterator = {
+          next: function () {
+            if (index < _info.friends.length) {
+              return {done:false, value: _info.friends[index++]}
+            } else {
+              return {done: true}
+            }
+          }
+        }
+        return infoIterator
+      }
+    }
+    // const iterator = _info[Symbol.iterator]()
+    // console.log(iterator.next());
+    // console.log(iterator.next());
+    // console.log(iterator.next());
+    // 通过对象的自定义 [Symbol.iterator]()实现了迭代
+    for (const item of _info) {
+      console.log(item);
+    }
+
+ 
+  </script>
+</body>
+</html>

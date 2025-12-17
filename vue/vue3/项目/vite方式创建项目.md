@@ -34,6 +34,9 @@
     script:{
       'lint':'eslint src',
       'fix': "eslint src --fix"
+      // 或者检测指定文件
+      "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+      "lint:eslint": "eslint --fix --ext .js,.ts,.tsx ./src",
     }
   // 方式二
     （1）npm i @eslint/js  -D

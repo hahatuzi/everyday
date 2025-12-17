@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    class Person {
+      constructor (name, age, height, friends) {
+        this.name = name
+        this.age = age
+        this.height = height
+        this.friends = friends
+      }
+
+      [Symbol.iterator] () {
+        let index = 0
+        const iterator = {
+          next: () => {
+            if(index < this.friends.length) {
+              return {doen:false, value: this.friends[index++]}
+            } else {
+              return {done: true}
+            }
+          },
+          return: function() {
+            console.log('监听到了中断');
+            return iterator
+          }
+        }
+        return iterator
+      }
+    }
+    const p1 = new Person('lisa', 28, 1.7, ['jennie', 'jisoo', 'rose'])
+    for (const item of p1) {
+      console.log(item);
+      // 尝试中断
+      if(item == 'jisoo') {
+        break
+      }
+    }
+  </script>
+</body>
+</html>
