@@ -1,0 +1,14 @@
+# 组件设计开发思路：
+  ### 1.架构设计
+  - 分层：从基础组件(input)到复合组件(inputSearch)再到业务组件的逐步分层
+  - 解藕：对于每一个组件都定义自己的样式，ts类型，工具方法，操作
+  ### 2.状态管理
+  - 全局管理国际化语言，主题配置等状态属性
+  ### 3.模块化
+  - 可复用性：props,event
+  - 公共方法抽离成模块
+# 组件开发流程
+  - 1.工程架构：monorepo:core+components+hooks+utils+shared,参见githu：mantine
+  - 2.typescript
+  - 3.流程化(CICD)，规范化（eslint9,stylelint,prettier,commitlint,husky），自动化（自动构建，增量构建，构建缓存）
+  - 4.测试，单元测试（vitest,jest+react-testing-library)

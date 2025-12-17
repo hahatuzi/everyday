@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    let arr = []
+    let num = 4
+    function translate (num) {
+      let a = num / 2
+      console.log(a)
+      if (a <= 1) {
+        a < 1 ? arr.push(1) : arr.push(0)
+      } else {
+        arr.push(1)
+        translate(a)
+      }
+    }
+    translate(num)
+    console.log(arr);
+    
+  </script>
+</body>
+</html>
