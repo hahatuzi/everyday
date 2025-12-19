@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 第一版
+    class Queue1 {
+      _items = []
+      removeFront () {
+        this._items.shift()
+      }
+      insertEnd (e) {
+        this._items.push(e)
+      }
+      isEmpty () {
+        return this._items.length == 0
+      }
+      size () {
+        return this._items.length
+      }
+      clear () {
+        this._items = []
+      }
+      toString () {
+        return this._items.join('')
+      }
+    }
+
+    let q1 = new Queue1()
+    // 第二版
+    class Queue {
+      _data = {}
+      _first = 0
+      _last = 0
+      removeFront () {
+        let res = this._data[this._first]
+        delete this._data[this._first]
+        this._first++
+        return res
+      }
+      insertEnd (e) {
+        this._data[this._last] = e
+        this._last++
+      }
+      isEmpty () {
+        return this.size() == 0
+      }
+      size () {
+        return this._last - this._first
+      }
+      clear () {
+        this._items = {}
+        this._first = 0
+        this._last = 0
+      }
+      toString () {
+        let res = ''
+        for (let i = this._first; i < this._last; i++) {
+          res += this._data[i]
+        }
+        return res
+      }
+    }
+    let q2 = new Queue()
+  </script>
+</body>
+</html>

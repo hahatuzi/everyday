@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <!-- 双端队列:队头可以插入，队尾可以离开 -->
+  <script>
+    class DeQueue {
+      _data = []
+      _length = 0
+
+      removeFront () {
+        delete this._data[0]
+        this._length--
+      }
+      removeEnd () {
+
+      }
+      insertFront () {
+
+      }
+      insertEnd (e) {
+        this._data[this._length] = e
+        this._length++
+      }
+    }
+  </script>
+</body>
+</html>
