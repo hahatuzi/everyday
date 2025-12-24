@@ -219,4 +219,127 @@
   ### 11.Image图片组件
   ### 12.文本输入组件:TextField
   ### 13.常用滚动组件：SingleChildScrollView
+  ### 14.常见滚动组件：ListView：按需渲染，只构建当前可视区域的列表项
+  - separated模式：在listView.builder的基础上额外添加了构建分割线的能力
+    ```js
+      class MainPage extends StatelessWidget {
+        int count = 0;
+        @override
+        Widget build(BuildContext context) {
+          return MaterialApp(
+          title:"Hello Flutter",
+          home: Scaffold(
+            body:ListView.separated(
+              itemBuilder: (BuildContext context, int index){
+                return Container(
+                  margin:EdgeInsets.only(top:10),
+                  color: Colors.blue,
+                  width:double.infinity,
+                  height:30,
+                  child: Text('第${index + 1}个',style: TextStyle(color: Colors.white,fontSize: 20)),
+                  alignment: Alignment.center,
+                );
+              }, separatorBuilder: (BuildContext context, int index){
+                return Container(
+                  height:10,
+                  width:double.infinity
+                );
+              }, itemCount: 100)
+          )
+        );}
+      }
+    ```
+  ### 15.常用滚动组件：GridView：用于创建二维码可滚动网格布局的核心组件。
+  - GridView默认构造方式
+  - GridView.count:基于固定列数的网格布局
+  - GridView.extent：基于固定子项最大宽度
+  - GridView.builder:动态长网格：gridDeletegate布局委托，itemBuilder构建函数，itemCount构建数量
+    ```js
+      class MainPage extends StatelessWidget {
+        int count = 0;
+        @override
+        Widget build(BuildContext context) {
+          return MaterialApp(
+          title:"Hello Flutter",
+          home: Scaffold(
+            body:GridView.count(
+              crossAxisCount: 3,
+              children: List.generate(100, (int index){
+                return Container(
+                  color: Colors.blue,
+                  alignment: Alignment.center,
+                  child: Text('第${index + 1}个',style: TextStyle(color: Colors.white,fontSize: 20)),
+                );
+              }),
+            )
+          )
+        );}
+      }
+    ```
+  ### 16.自定义滚动容器：CuntomScrollView用于组合多个可滚动组件（如列表，网格），实现统一协调的滚动效果
+  - sliver:Fultter中描述可滚动视图内部一部分内容的组件
+  ### 17.pageView整页滚动容器：用于实现分页滚动视图，支持懒加载
 
+
+# 七：组件通信
+  |   通信方式 |    员工编号|     员工姓名    |
+  | --------- | -----------| ----------------|
+  |      0    |    00      |        lisa     |
+  |      1    |    01      |        rose     |
+  ### 1.父传子（构造函数传参）
+  - (1)子组件定义接受属性
+  - (2)子组件在构造函数中接收参数
+  - (3)父组件传递属性给子组件
+  - (4)有状态组件在**对外的类**接受属性，**对内的类**通过widget对象获取对应属性
+  - (5)子组件定义接收属性需要使用**final**关键字，因为属性由父组件决定，子组件不能随意更改
+    ```js
+      class MainPage extends StatelessWidget {
+
+        const MainPage({Key?key}) : super(key:key);
+
+        @override
+        Widget build(BuildContext context) {
+          return MaterialApp(
+            home:Scaffold(
+              body:Container(
+                alignment: Alignment.center,
+                child:Column(children: [
+                  Text('父组件',style:TextStyle(color:Colors.blue,fontSize:20)),
+                  Child(message:'父组件')
+                ],)
+              )
+            )
+          );
+        }
+      }
+      // 无状态组件
+      class Child extends StatelessWidget{
+        // 子组件定义属性
+        final String? message;
+        // 构造函数中接收参数
+        const Child({Key?key, this.message}) : super(key:key);
+        @override
+        Widget build(BuildContext context){
+          return Container(
+            child:Text('子组件--$message',style:TextStyle(color:Colors.red,fontSize:16))
+          );
+        }
+      }
+      // 有状态组件
+      class Child extends StatefulWidget {
+        final String message;
+        Child({Key? key, required this.message}) : super(key: key);
+
+        @override
+        _ChildState createState() => _ChildState();
+      }
+
+      class _ChildState extends State<Child> {
+        @override
+        Widget build(BuildContext context) {
+          return Container(
+            child: Text('子组件-${widget.message}',style:TextStyle(color:Colors.red,fontSize:16)),
+          );
+        }
+      }
+    ```
