@@ -7,7 +7,6 @@
     server ready -->  route1  --> module (按需构建路由对应的模块)
                  -->  route2  --> module
                  -->  route3  --> module
-
 # 2.批量引入文件的区别，
   ```js
     // 首先是webpack中
@@ -46,7 +45,8 @@
 
   # vite不需要再像webpack一样配置各种loader,比如css文件打包需要css-loader,scss-loader等loader配置
 
-  # HMR热更新
+  # HMR热更新：webpack改一行代码需要重新解析它的依赖，导致启动慢，HMR慢。
+  # vite处理案例：请求main.ts --> import APp.vue -->  使用vitejs/plugin-vue编译 --> 返回js模块
 
 # vite和webpack的HMR的区别
   |              |             vite HMR                  |              Webpack HMR                |
