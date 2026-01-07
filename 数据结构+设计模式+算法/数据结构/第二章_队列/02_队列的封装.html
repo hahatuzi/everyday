@@ -7,6 +7,40 @@
 </head>
 <body>
   <script>
+    // 构造函数方式创建对象
+    function Queue() {
+      this.items = []
+      Queue.prototype.enqueue = function (element) {
+        this.items.push(element)
+      }
+      Queue.prototype.dequeue = function () {
+        return this.items.shift()
+      }
+      Queue.prototype.front = function () {
+        return this.items[0]
+      }
+      Queue.prototype.isEmpty = function () {
+        return this.items.length === 0
+      }
+      Queue.prototype.size = function () {
+        return this.items.length
+      }
+      Queue.prototype.toString = function () {
+        return this.items.toString()
+      }
+    }
+        var q = new Queue()
+    q.enqueue(1)
+    q.enqueue(2)
+    q.enqueue(3)
+    q.enqueue(4)
+    q.enqueue(5)
+    console.log(q)
+    console.log(q.dequeue())
+    console.log(q.front())
+    console.log(q.isEmpty())
+    console.log(q.size())
+    console.log(q.toString())
     // 第一版
     class Queue1 {
       _items = []
@@ -32,7 +66,7 @@
 
     let q1 = new Queue1()
     // 第二版
-    class Queue {
+    class Queue2 {
       _data = {}
       _first = 0
       _last = 0
@@ -65,7 +99,7 @@
         return res
       }
     }
-    let q2 = new Queue()
+    let q2 = new Queue2()
   </script>
 </body>
 </html>

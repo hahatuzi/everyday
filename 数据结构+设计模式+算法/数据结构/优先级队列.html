@@ -9,12 +9,14 @@
 <body>
   <script>
     function PriorityQueue () {
-      this.items = []
       // 封装一个新的构造函数，用来保存
       function QueueElement(el,priority) {
         this.element  = el
         this.priority = priority
       }
+      // 封装属性
+      this.items = []
+      // 实现插入方法
       PriorityQueue.prototype.equeue = function (element,priority) {
         // 创建QueueElement对象
         let queueElement = new QueueElement(element,priority)
