@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // function test (arr) {
+    //   console.time()
+    //   let len = arr.length
+    //   for (let i = 0; i < len - 1; i++) {
+    //     for (let j = i + 1; j < len; j++) {
+    //       if(arr[j] > arr[i]) {
+    //         let temp = arr[i]
+    //         arr[i] = arr[j]
+    //         arr[j] = temp
+    //       }
+    //     }
+    //   }
+    //   console.timeEnd()
+    //   return arr
+    // }
+    // console.log(test([34,20,56,567,1,35,6,2,25,34])) // 0.02099609375
+    function test1 (arr) {
+      console.time()
+      let len = arr.length
+      for (let i = 0; i <= len - 1; i++) {
+        var j = i
+        while (arr[j - 1] > arr[j] && j > 0) {
+          var temp = arr[j]
+          arr[j] = arr[j - 1]
+          arr[j - 1] = temp
+          j--
+        }
+      }
+      console.timeEnd()
+      return arr
+    }
+    console.log(test1([34,20,56,567,1,35,6,2,25])) //  0.025146484375 ms
+    // 1:(0,1),1-0
+    // 2:(0,2),2-1,1-0
+    // 3:(0,3),3-2,2-1,1-0
+    // n:(0,n),n-n-1,,,4-3,3-2,2-1,1-0
+  </script>
+</body>
+</html>

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    let arr = []
+    let num = 16
+    // 二进制转化
+    function translate (num) {
+      let a = num / 2
+      if (a < 1) {
+        arr.unshift(1)
+      } else {
+        arr.unshift(Math.floor(num % 2))
+        translate(a)
+      }
+    }
+    function Stack() {
+      // 栈的属性
+      this.items = []
+      // 栈的相关操作
+      // push
+      // this.push = function () {}方式一
+      Stack.prototype.push = function (element) {
+        this.items.push(element)
+      }
+      Stack.prototype.pop = function () {
+        return this.items.pop()
+      }
+      Stack.prototype.peek = function () {
+        return this.items[this.items.length - 1]
+      }
+      Stack.prototype.isEmpty = function () {
+        return this.items.length == 0
+      }
+      Stack.prototype.size = function () {
+        return this.items.length
+      }
+      Stack.prototype.toString = function () {
+        return this.items.toString()
+      }
+    }
+    translate(num)
+    function transStrack (number) {
+      var s1 = new Stack()
+      
+      while (number > 0) {
+      console.log(number);
+        s1.push(number % 2)
+        number = Math.floor(number / 2)
+      }
+      var str = ''
+      while (!s1.isEmpty()) {
+        str += s1.pop()
+      }
+      return str
+    }
+    console.log(transStrack(9))
+  </script>
+</body>
+</html>
