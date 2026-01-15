@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    class HashTable {
+      constructor () {
+        this.table = []
+      }
+      hashCode (key) {
+        let hash = ''
+        for (let i = 0; i < key.length; i++) {
+          hash += key[i].charCodeAt()
+        }
+        return hash % 37
+      }
+      put(key,value){
+        const position = hashCode(key)
+        this.table[position] = value
+      }
+      remove(key){
+        const position = hashCode(key)
+        this.table[position] = undefined
+      }
+      get(key){
+        const position = hashCode(key)
+        return this.table[position]
+      }
+    }
+  </script>
+</body>
+</html>
