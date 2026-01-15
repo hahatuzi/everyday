@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // head -->  Node(data, next) --> Node(deata, next)
+    function LinkedList () {
+      // 内部的节点类
+      function Node (data) {
+        this.data = data
+        this.next = null
+      }
+      this.head = null
+      this.length = 0
+
+      LinkedList.prototype.append = function (data) {
+        let node = new Node(data)
+        if (this.length == 0) {
+          this.head = node
+        } else {
+          let lastNode = this.head
+          while (lastNode.next) {
+            lastNode = lastNode.next
+          }
+          lastNode.next = node
+        }
+        this.length+=1
+      }
+    }
+    let link = new LinkedList()
+    link.append('lisa')
+    link.append('jisoo')
+    link.append('rose')
+    link.append('jennie')
+    console.log(link);
+    
+  </script>
+</body>
+</html>

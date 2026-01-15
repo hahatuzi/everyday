@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // [[k,v], [k,v], [k,v]]
+    function HashTable () {
+      // 属性
+      this.storage = [] // 存放的相关元素
+      this.count = 0 // 当前已经存放了多少元素
+      this.limit = 7 // 标记数组中一共可以存放多少元素
+      // loadFactor装填因子
+      // 方法
+      // 哈希函数
+      HashTable.prototype.hashFn = function (str,size) {
+        // 1.定义hashCode变量
+        let hashCode = 0
+        // 2.霍纳算法，来计算hashCode的值
+        for (let i = 0; i < str.length; i++) {
+          hashCode = 37 * hashCode + str.charCodeAt(i)
+        }
+        let index = hashCode % size
+        return index
+      }
+      HashTable.prototype.put = function (key, value) {
+        // 1.根据key获取index,目的是将数据插入到对应的位置
+        let index = this.hashFn(key, this.limit)
+        // 2.根据index取出对应的bucket
+        let buckett = this.storage[index]
+        // 3.如果index的位置有值就修改它，没有的话就新增
+        if (buckey == null) {
+          bucket = []
+          this.storage[index] = bucket
+        }
+        // 4.判断bucket中是否包含了key对应的数据
+        for (let i = 0; i < bucket.length; i++) {
+          const item = bucket[i];
+          if(item[0] == key) {
+            item[1] = value
+            return 
+          }
+        }
+        // 5.进行添加操作
+        bucket.push([key, value])
+        this.count++
+      }
+    }
+  </script>
+</body>
+</html>

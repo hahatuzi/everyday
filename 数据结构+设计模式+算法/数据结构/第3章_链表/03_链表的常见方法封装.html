@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // head -->  Node(data, next) --> Node(deata, next)
+    function LinkedList () {
+      // 内部的节点类
+      function Node (data) {
+        this.data = data
+        this.next = null
+      }
+      this.head = null
+      this.length = 0
+
+      LinkedList.prototype.append = function (data) {
+        let node = new Node(data)
+        if (this.length == 0) {
+          this.head = node
+        } else {
+          let lastNode = this.head
+          while (lastNode.next) {
+            lastNode = lastNode.next
+          }
+          lastNode.next = node
+        }
+        this.length+=1
+      }
+      // toString()
+      LinkedList.prototype.toString = function () {
+        let res = ''
+        if (this.length != 0) {
+          let curNode = this.head
+          while (curNode) {
+            res += curNode.data
+            curNode = curNode.next
+          }
+        }
+        return res
+      }
+      // insert
+      LinkedList.prototype.insert = function (position, data) {
+        if (position < 0 || position > this.length) return false
+        let newNode = new Node(data)
+        if (position == 0) {
+          newNode.next = this.head
+          this.head = newNode
+        } else {
+          let index = 0
+          let curNode = this.head
+          let previousNode = null
+          while (index < position) {
+            index++
+            previousNode = curNode
+            curNode = curNode.next
+          }
+          newNode.next = curNode
+          previousNode.next = newNode
+        }
+        this.length+=1
+      }
+      // get
+      LinkedList.prototype.get = function (position) {
+        if (position < 0 || position > this.length) return false
+        let index = 0
+        let curNode = this.head
+        while (index++ < position) {
+          curNode = curNode.next
+        }
+        return curNode.data
+      }
+      // indexOf
+      LinkedList.prototype.indexOf = function (data) {
+        let index = -1
+        let curNode = this.head
+        while (curNode) {
+          if(curNode.data == data) return index
+          index += 1
+          curNode = curNode.next
+        }
+        return index
+      }
+      // update
+      LinkedList.prototype.update = function (position, data) {
+        if (position < 0 || position > this.length) return false
+        let index = 0
+        let curNode = this.head
+        while (index++ < position) {
+          curNode = curNode.next
+        }
+        curNode.data = data
+        return curNode
+      }
+      // removeAt
+      LinkedList.prototype.removeAt = function (position) {
+        if (position < 0 || position > this.length) return false
+        if (position == 0) {
+          this.head = this.head.next
+        } else {
+          let index = 0
+          let curNode = this.head
+          let previousNode = null
+          while (index++ < position) {
+            previousNode = curNode
+            curNode = curNode.next
+          }
+          previousNode.next = curNode.next
+        }
+        this.length--
+      }
+      // remove
+      LinkedList.prototype.remove = function (data) {
+        // let index = -1
+        let curNode = this.head
+        let previousNode = null
+        while (curNode.data != data) {
+          previousNode = curNode
+          curNode = curNode.next
+        }
+        previousNode.next = curNode.next
+        this.length--
+      }
+      // isEmpty
+      LinkedList.prototype.isEmpty = function () {
+        return this.length == 0
+      }
+      // isEmpty
+      LinkedList.prototype.size = function () {
+        return this.length
+      }
+    }
+    let link = new LinkedList()
+    link.append('lisa')
+    link.append('jisoo')
+    link.append('rose')
+    link.append('jennie')
+    // console.log(link);
+    // console.log(link.toString());
+    link.insert(3,'lili')
+    console.log(link);
+    // console.log(link.get(2));
+    // console.log(link.indexOf('rose'));
+    // console.log(link.update(3,'li'));
+    // link.removeAt(3)
+    link.remove('lisa')
+    console.log(link);
+    
+    
+  </script>
+</body>
+</html>

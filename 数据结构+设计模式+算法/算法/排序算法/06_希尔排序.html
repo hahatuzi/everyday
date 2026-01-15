@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    let arr = [34, 2, 5, 1, 654, 7,20,18]
+    function shellSort () {
+        console.time()
+      let length = arr.length
+      let gap = Math.floor(length / 2)
+      while(gap >= 1) {
+        for (let i = gap; i < length; i++) {
+          
+          const temp = arr[i];
+          let j = i
+          // 插入排序内层循环
+          while (arr[j - gap] > temp && j > gap - 1) {
+            arr[j] = arr[j - gap]
+            j -= gap
+          }
+          arr[j] = temp
+        }
+        gap = Math.floor(gap /2)
+      }
+        console.timeEnd()
+    }
+    shellSort()
+    console.log(arr);
+    
+    // 1: (1, n/2)<-->(n/2+1)
+    // 1: (1, n/2)<-->(n/2+1)
+  </script>
+</body>
+</html>
