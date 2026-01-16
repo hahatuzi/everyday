@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 质数，只能被1和自己整除，不能被2到自己之间的任意数整除
+    function isPrime (num) {
+      for (let i = 2; i < num; i++) {
+        if(num % i == 0) {
+          return false
+        }
+      }
+      return true
+    }
+    function _isPrime (num) {
+      // 获取num的平方根
+      let temp = parseInt(Math.sqrt(num))
+      for (let i = 2; i <= temp; i++) {
+        if(num % i == 0) {
+          return false
+        }
+      }
+      return true
+    }
+  </script>
+</body>
+</html>
