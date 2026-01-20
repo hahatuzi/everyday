@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    function BinarySearchTree () {
+      function Node(key){
+        this.key = key
+        this.left = null
+        this.right = null
+      }
+      this.root = null
+      BinarySearchTree.prototype.insert = function (key) {
+        let newNode = new Node(key)
+        if(this.root == null){
+          this.root = newNode
+        } else {
+          this.insertNode(this.root, newNode)
+        }
+      }
+      BinarySearchTree.prototype.insertNode = function (node, newNode) {
+        if(newNode.key < node.key) {
+          // 向左查找
+          if(node.left == null) {
+            node.left = newNode
+          } else {
+            this.insertNode(node.left, newNode)
+          }
+        } else {
+          if (node.right == null) {
+            node.right = newNode
+          } else {
+            this.insertNode(node.right, newNode)
+          }
+        }
+      }
+      // 树的遍历
+      //  1.先序遍历
+      BinarySearchTree.prototype.preOrderTraversal = function (handler){
+        this.preOrderTraversalNode(this.root, handler)
+      }
+      BinarySearchTree.prototype.preOrderTraversalNode = function (node, handler) {
+        if(node !== null) {
+          //  1.打印当前经过的节点
+          handler(node.key)
+          // 2.遍历所有的左子树
+          this.preOrderTraversalNode(node.left, handler)
+          // 2.遍历所有的右子树
+          this.preOrderTraversalNode(node.right, handler)
+        }
+      }
+      // 2.中序遍历
+      BinarySearchTree.prototype.midOrderTraversal = function (handler) {
+        this.midOrderTraversalNode(this.root, handler)
+      }
+      BinarySearchTree.prototype.midOrderTraversalNode = function (node, handler) {
+        if (node != null){
+          // 1.处理左子节点
+          this.midOrderTraversalNode(node.left, handler)
+          handler(node.key)
+          // 1.处理右子节点
+          this.midOrderTraversalNode(node.right, handler)
+        }
+      }
+      // 3.后序遍历
+      BinarySearchTree.prototype.postOrderTraversal = function (handler) {
+        this.postOrderTraversalNode(this.root, handler)
+      }
+      BinarySearchTree.prototype.postOrderTraversalNode = function (node, handler) {
+        if (node != null){
+          // 1.处理左子节点
+          this.postOrderTraversalNode(node.right, handler)
+          // 2.处理右子节点
+          this.postOrderTraversalNode(node.left, handler)
+          handler(node.key)
+        }
+      }
+      // 4.最大值
+      BinarySearchTree.prototype.max = function () {
+        let node = this.root
+        while(node != null){
+          node = node.right
+        }
+        return node.key
+      }
+      // 5.最大值
+      BinarySearchTree.prototype.min = function () {
+        let node = this.root
+        while(node != null){
+          node = node.left
+        }
+        return node.key
+      }
+      // 6.搜索值
+      BinarySearchTree.prototype.search = function (key) {
+        return this.searchNode(this.root, key)
+      }
+      BinarySearchTree.prototype.searchNode = function (node, key) {
+        // 传入的node是null，就退出递归
+        if(node === null){
+          return false
+        }
+        if(node.key > key){
+          return this.searchNode(node.left, key)
+        } else if (node.key < key) {
+          return this.searchNode(node.right, key)
+        } else {
+          return true
+        }
+      }
+      // 删除
+      BinarySearchTree.prototype.remove =function (key) {
+        let currentNode = this.root
+        let parent = null
+        let  isLeftChild = false
+
+        while (currentNode.key != key) {
+          parent = currentNode
+          if (key < currentNode.key) {
+            isLeftChild = true
+            currentNode = currentNode.left
+          } else {
+            isLeftChild = false
+            currentNode = currentNode.right
+          }
+          if(currentNode == null) return false
+        }
+        if (currentNode.left == null && currentNode.right == null) {
+          if(currentNode == this.root) {
+            this.root = null
+          } else if (isLeftChild) {
+            parent.left = null
+          } else {
+            parent.right = null
+          }
+        } else if ( currentNode.right == null) {
+          if(currentNode == this.root) {
+            this.root = null
+          } else if (isLeftChild) {
+            parent.left = currentNode.left
+          } else {
+            parent.right = currentNode.right
+          }
+        } else if (currentNode.left = null ) {
+          if(currentNode == this.root) {
+            this.root = null
+          } else if (isLeftChild) {
+            parent.left = currentNode.left
+          } else {
+            parent.right = currentNode.right
+          }
+        }
+      }
+    }
+    
+    let bst = new BinarySearchTree()
+    bst.insert(11)
+    bst.insert(7)
+    bst.insert(15)
+    bst.insert(5)
+    bst.insert(3)
+    bst.insert(9)
+    bst.insert(8)
+    bst.insert(10)
+    bst.insert(12)
+    bst.insert(13)
+    bst.insert(14)
+    bst.insert(11)
+    bst.insert(20)
+    bst.insert(18)
+    bst.insert(25)
+    bst.insert(6)
+
+    // let res = ''
+    // bst.preOrderTraversal(function (key) {
+    //   res += key + ' '
+    // })
+    // console.log(res);
+    
+    // let res1 = ''
+    // bst.midOrderTraversal(function (key) {
+    //   res1 += key + ' '
+    // })
+    // console.log(res1);
+    bst.remove(5)
+    console.log(bst)
+  </script>
+</body>
+</html>
