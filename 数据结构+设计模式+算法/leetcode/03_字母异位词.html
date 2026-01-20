@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    function test (arr) {
+      let m1 = new Map()
+      for (let i = 0; i < arr.length; i++) {
+        const item = arr[i];
+        let str = item.split('').sort().join('')
+        if(m1.has(str)) {
+          m1.get(str).push(item)
+        } else {
+          m1.set(str,[item])
+        }
+      }
+      return [...m1.values()]
+    }
+    console.log(test(['eta','ate','tea','adf']))
+  </script>
+</body>
+</html>

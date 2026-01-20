@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    function longest (arr) {
+      let s = new Set(arr)
+      let res = 0
+      for (const item of s) {
+        if(!s.has(item-1)){
+          let count = 1
+          let cur = item
+          while(s.has(cur+1)){
+            count++
+            cur = cur+1
+          }
+          res = Math.max(count)
+        }
+      }
+      return res
+    }
+    console.log(longest([1,5,6,0,2,9,4,7]))
+  </script>
+</body>
+</html>
