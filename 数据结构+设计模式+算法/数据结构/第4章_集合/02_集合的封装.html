@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    function Set () {
+      this.items = {}
+      Set.prototype.add = function (value) {
+        // 集合中如果包含了该元素，就添加失败
+        if (this.has(value)) return false
+        this.items[value] = value
+        return true
+      }
+      Set.prototype.has = function (value) {
+        return this.items.hasOwnProperty(value)
+      }
+      Set.prototype.remove = function (value) {
+        if(!this.has(value)) return false
+        delete this.items[value]
+        return true
+      }
+      Set.prototype.clear = function () {
+        this.items = {}
+      }
+      Set.prototype.size = function () {
+        return Object.keys(this.items).length
+      }
+      Set.prototype.values = function () {
+        return Object.keys(this.items)
+      }
+    }
+    let set = new Set()
+    set.add('lisa')
+    set.add('jennie')
+    set.add('jisoo')
+    set.add('rose')
+    set.add('lili')
+    console.log(set)
+    console.log(set.remove('lili'))
+    console.log(set.remove('lili'))
+    console.log(set.values())
+  </script>
+</body>
+</html>
