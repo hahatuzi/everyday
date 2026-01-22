@@ -139,7 +139,7 @@
           }
         } else if ( currentNode.right == null) {
           if(currentNode == this.root) {
-            this.root = null
+            this.root = currentNode.left
           } else if (isLeftChild) {
             parent.left = currentNode.left
           } else {
@@ -147,13 +147,41 @@
           }
         } else if (currentNode.left = null ) {
           if(currentNode == this.root) {
-            this.root = null
+            this.root = currentNode.right
           } else if (isLeftChild) {
             parent.left = currentNode.left
           } else {
             parent.right = currentNode.right
           }
+        } else {
+          let successor = this.getSuccessor(currentNode)
+          if (currentNode == this.root){
+            this.root = successor
+          } else if (isLeftChild){
+            parent.left = successor
+          } else {
+            parent.right = successor
+          }
+          successor.left = currentNode.left
         }
+      }
+      BinarySearchTree.prototype.getSuccessor = function (delNode) {
+        // 1.定义变量，保存找到的后继节点
+        let successor = delNode
+        let currentNode = delNode.right
+        let successParent = delNode
+        // 2.循环查找
+        while (currentNode != null) {
+          successParent = successor
+          successor = currentNode
+          currentNode = currentNode.left
+        }
+        // 3.判断寻找的后继节点是否直接就是delNode的right节点
+        if(successor != delNode.right){
+          successParent.left = successor.right
+          successor.right = delNode.right
+        }
+        return successor
       }
     }
     
