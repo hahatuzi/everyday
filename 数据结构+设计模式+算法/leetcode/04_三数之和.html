@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 在三数之和之前我们先来看一下两数之和
+    function sum (nums,target) {
+      let left = 0
+      let right = nums.length - 1
+      while(right > left){
+        if(nums[left] + nums[right] > target) {
+          right--
+        } else if (nums[left] + nums[right] < target) {
+          left++
+        } else {
+          return [left, right]
+        }
+      }
+    }
+    console.log(sum([2,4,7,11,15], 9))
+    // 三数之和
+    function threeSum (nums,target) {
+      let arr = nums.sort((a,b) => a-b)
+      console.log(arr)
+      let res = []
+      for (let i = 0; i < arr.length; i++) {
+        const item = arr[i];
+        let left = i + 1
+        let right = arr.length - 1
+        let rest = target - arr[i]
+        while(right > left){
+          if(arr[left] + arr[right] > rest) {
+            right--
+          } else if (arr[left] + arr[right] < rest) {
+            left++
+          } else {
+            res.push([arr[i], arr[left], arr[right]])
+            left++
+            right--
+          }
+        }
+      }
+      return res
+    }
+    console.log(threeSum([-1,-1,0,2,-7,-4,4], 0))
+  </script>
+</body>
+</html>
