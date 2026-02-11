@@ -22,17 +22,19 @@
       // 第五趟：比较length-1- 4趟，将第五小的值放在第五位
       function choiceSort(arr) {
         for (var i = 0; i < arr.length - 1; i++) {
+          var min = i
           for (var j = i + 1; j <= arr.length - 1; j++) {
-            var min = i
             if (arr[j] < arr[min]) {
-              var temp = arr[min]
-              arr[min] = arr[j]
-              arr[j] = temp
+              min = j
             }
           }
+          var temp = arr[min]
+          arr[min] = arr[i]
+          arr[i] = temp
         }
         console.log(arr)
       }
+      // 比较次数：n-1+(n-2)+(n-3)+(n-4)+1=n^2/2-n/2
       var arr1 = [23, 10, 28, 24, 25, 15]
       choiceSort(arr1)
       // 1:(0,n):0
