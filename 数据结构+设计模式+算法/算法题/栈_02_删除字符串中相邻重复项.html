@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script src="./栈_00_栈结构.js"></script>
+  <script>
+    function removeDuplicates (str) {
+      let s1 = new Stack()
+      for (const v of str) {
+        const el = s1.pop();
+        console.log(s1);
+        
+        if (el != v) {
+          s1.push(el)
+          s1.push(v)
+        }
+      }
+      return s1.items.join('')
+    }
+    console.log(removeDuplicates('abbaca'))
+    console.log(removeDuplicates('abbbsaca'))
+  </script>
+</body>
+</html>
