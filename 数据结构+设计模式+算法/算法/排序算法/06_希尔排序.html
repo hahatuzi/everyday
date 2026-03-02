@@ -9,12 +9,15 @@
   <script>
     let arr = [34, 2, 5, 1, 654, 7,20,18]
     function shellSort () {
-        console.time()
+      console.time()
+      // 1.获取数组的长度
       let length = arr.length
+      // 2.初始化增量
       let gap = Math.floor(length / 2)
+      // 3.while循环gap不断减小
       while(gap >= 1) {
+        // 4.以gap作为间隔，进行分组，对分组进行插入排序
         for (let i = gap; i < length; i++) {
-          
           const temp = arr[i];
           let j = i
           // 插入排序内层循环
@@ -22,11 +25,12 @@
             arr[j] = arr[j - gap]
             j -= gap
           }
+          // 5.将j位置的元素赋值temp
           arr[j] = temp
         }
         gap = Math.floor(gap /2)
       }
-        console.timeEnd()
+      console.timeEnd()
     }
     shellSort()
     console.log(arr);

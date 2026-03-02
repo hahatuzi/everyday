@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    function Dictionay () {
+      this.items = {}
+      // 向字典中添加键值对
+      Dictionay.prototype.set = function (key, value) {
+        this.items[key] = value
+      }
+      // 判断字典中是否有某个key
+      Dictionay.prototype.has = function (key) {
+        return this.items.hasOwnProperty(key)
+      }
+      // 从字典中移除元素
+      Dictionay.prototype.remove = function (key){
+        if(!this.hash(key)) return false
+        delete this.items[key]
+        return true
+      }
+      // 根据key获取value
+      Dictionay.prototype.get = function (key) {
+        return this.has(key) ? this.items[key] : undefined
+      }
+      // 获取所有的keys
+      Dictionay.prototype.keys = function () {
+        return Object.keys(this.items)
+      }
+      // 获取所有的values
+      Dictionay.prototype.values = function () {
+        return Object.values(this.items)
+      }
+      // size方法
+      Dictionay.prototype.size = function () {
+        return this.keys().length
+      }
+      // clear清除
+      Dictionay.prototype.clear = function () {
+        this.items = {}
+      }
+    }
+    function Queue() {
+      this.items = []
+      Queue.prototype.enqueue = function (element) {
+        this.items.push(element)
+      }
+      Queue.prototype.dequeue = function () {
+        return this.items.shift()
+      }
+      Queue.prototype.front = function () {
+        return this.items[0]
+      }
+      Queue.prototype.isEmpty = function () {
+        return this.items.length === 0
+      }
+      Queue.prototype.size = function () {
+        return this.items.length
+      }
+      Queue.prototype.toString = function () {
+        return this.items.toString()
+      }
+    }
+    function Graph () {
+      // 属性：顶点，边
+      this.vertexes  = []
+      // 属性：边
+      this.edges = new Dictionay()
+      // 添加顶点的方法
+      Graph.prototype.addVertex = function (v) {
+        this.vertexes.push(v)
+        this.edges.set(v, [])
+      }
+      Graph.prototype.addEdge = function (v1,v2) {
+        this.edges.get(v1).push(v2)
+        this.edges.get(v1).push(v1)
+      }
+      Graph.prototype.toString = function () {
+        let res = ''
+        for (let i = 0; i < this.vertexes.length; i++) {
+          res += this.vertexes[i] + '-->'
+          let adj = this.edges.get(this.vertexes[i])
+          for (let j = 0; j < adj.length; j++) {
+            res += adj[j] + ' '
+          }
+          res += '\n'
+        }
+        return res
+      }
+      // 初始化状态万色
+      Graph.prototype.initColor = function () {
+        let colors = []
+        for (let i = 0; i < this.vertexes.length; i++) {
+          colors[this.vertexes[i]] = 'white'
+        }
+        return colors
+      }
+      Graph.prototype.bfs = function (initV, handler) {
+        // 初始化颜色
+        let colors = this.initColor()
+        // 2.创建队列
+        let queue = new Queue()
+        // 3.将顶点加入到队列中
+        queue.enqueue(initV)
+        // 4.循环从队列中取出元素
+        while (!queue.isEmpty()) {
+          // 4-1.从队列中取出一个顶点
+          let v = queue.dequeue()
+          // 4-2.获取顶点相邻的顶点
+          let vList = this.edges.get(v)
+          // 4-3.将v的颜色设置为灰色
+          colors[v] = 'gray'
+          // 4-4.遍历所有的顶点，并加入到队列中
+          for (let i = 0; i < vList.length; i++) {
+            const element = vList[i];
+            if(colors[element] == 'white'){
+              colors[element] = 'gray'
+              queue.enqueue(element)
+            }
+          }
+          // 4-5.访问顶点
+          handler(v)
+          // 4-6.将顶点设置为黑色
+          colors[v] = 'black'
+        }
+      }
+      Graph.prototype.dfs = function (initV, handler) {
+        // 初始化颜色
+        let colors = this.initColor()
+        this.dfsVisit(initV,colors, handler)
+      }
+      Graph.prototype.dfsVisit = function (initV,colors, handler) {
+        // 1.将颜色设置为灰色
+        colors[initV] = 'gray'
+        // 2.处理v顶点
+        handler(initV)
+        // 3.访问v相连的顶点
+        let vList = this.edges.get(initV)
+        for (let i = 0; i < vList.length; i++) {
+          const element = vList[i];
+          if(colors[element] == 'white'){
+            this.dfsVisit(element, colors, handler)
+          }
+        }
+        // 4.将顶点设置为黑色
+        colors[initV] = 'black'
+      }
+    }
+    let g1 = new Graph()
+    // 添加顶点
+    let list = ['A','B','C','D','E','F','G','H','I','J']
+    for (let i = 0; i < list.length; i++) {
+      g1.addVertex(list[i])
+    }
+    console.log(g1)
+    // 添加边
+    g1.addEdge('A','B')
+    g1.addEdge('A','C')
+    g1.addEdge('A','D')
+    g1.addEdge('C','D')
+    g1.addEdge('C','G')
+    g1.addEdge('D','G')
+    g1.addEdge('D','H')
+    g1.addEdge('B','E')
+    g1.addEdge('B','F')
+    g1.addEdge('E','I')
+    console.log(g1.toString());
+    let res = ''
+    // g1.bfs(g1.vertexes[0], function (v) {
+    //   res += v + ' '
+    // })
+     g1.dfs(g1.vertexes[0], function (v) {
+      res += v + ' '
+    })
+    console.log(res)
+  </script>
+</body>
+</html>

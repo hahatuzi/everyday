@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    function Set () {
+      this.items = {}
+      Set.prototype.add = function (value) {
+        // 集合中如果包含了该元素，就添加失败
+        if (this.has(value)) return false
+        this.items[value] = value
+        return true
+      }
+      Set.prototype.has = function (value) {
+        return this.items.hasOwnProperty(value)
+      }
+      Set.prototype.remove = function (value) {
+        if(!this.has(value)) return false
+        delete this.items[value]
+        return true
+      }
+      Set.prototype.clear = function () {
+        this.items = {}
+      }
+      Set.prototype.size = function () {
+        return Object.keys(this.items).length
+      }
+      Set.prototype.values = function () {
+        return Object.keys(this.items)
+      }
+      Set.prototype.union = function (otherSet) {
+        let unionSet = new Set()
+        let values = this.values()
+        for (let i = 0; i < values.length; i++) {
+          unionSet.add(values[i])
+        }
+        let values1 = otherSet.values()
+        for (let i = 0; i < values1.length; i++) {
+          if(!unionSet.has(values1[i])) unionSet.add(values1[i])
+        }
+        return unionSet
+      }
+      Set.prototype.intersection = function (otherSet) {
+        let intersectionSet = new Set()
+        let values = this.values()
+        let values1 = otherSet.values()
+        for (let i = 0; i < values.length; i++) {
+          if (otherSet.has(values[i]))intersectionSet.add(values1[i])
+        }
+        return intersectionSet
+      }
+      Set.prototype.diff = function (otherSet) {
+        let diffSet = new Set()
+        let values = this.values()
+        let values1 = otherSet.values()
+        for (let i = 0; i < values.length; i++) {
+          if (!otherSet.has(values[i]))diffSet.add(values[i])
+        }
+        return diffSet
+      }
+      Set.prototype.child = function (otherSet) {
+        let values = this.values()
+        let values1 = otherSet.values()
+        for (let i = 0; i < values.length; i++) {
+          if (!otherSet.has(values[i])) return false
+        }
+        return true
+      }
+    }
+    let set1 = new Set()
+    let set2 = new Set()
+    set1.add('lisa')
+    set1.add('jennie')
+    set1.add('jisoo')
+    set1.add('rose')
+    set1.add('lili')
+    set2.add('小明')
+    set2.add('小王')
+    set2.add('小李')
+    set2.add('小林')
+    set2.add('lili')
+    console.log(set1)
+    console.log(set2)
+    console.log(set1.union(set2))
+    console.log(set1.intersection(set2))
+    console.log(set1.diff(set2))
+    console.log(set1.child(set2))
+  </script>
+</body>
+</html>
