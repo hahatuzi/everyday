@@ -92,16 +92,20 @@ export default defineConfig({
 ```
 (6)prettier插件安装
 	```js
-	// 第一步：安装相关插件
+	  // 第一步：安装相关插件
 	  npm i prettier eslint-config-prettier eslint-plugin-prettier -D
-		// 第二步：新建.vscode文件夹-->settings.json
+		// 第二步：让prettier插件生效：
+		// 生效方式一：新建.vscode文件夹-->settings.json
 		{
-			"editor.codeActionsOnSave": {
-				"source.fixAll": "explicit",
-				"source.fixAll.eslint": "explicit",
-				"source.fixAll.stylelint": "explicit"
-			}
+			"editor.defaultFormatter": "esbenp.prettier-vscode",// 明确指定prettier为默认的格式化器
+      "editor.formatOnSave": true, // 保存时自动格式化
+			// "editor.codeActionsOnSave": {
+			// 	"source.fixAll": "explicit",
+			// 	"source.fixAll.eslint": "explicit",
+			// 	"source.fixAll.stylelint": "explicit"
+			// }
 		}
+		// 生效方式二：修改vscode的首选项--设置--搜索format--修改formatter on save为true,default formatter为prettier
 	```
 (7)husky安装
 ```js

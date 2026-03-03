@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    function ArrayList (data) {
+      this.array = data
+    }
+    // 快速排序
+    ArrayList.prototype = {
+        swap: function (left, right) {
+          var temp = this.array[left]
+          this.array[left] = this.array[right]
+          this.array[right] = temp
+        },
+        // 1.选择枢纽,并比较left,center,right的值进行交换
+        median: function (left, right) {
+          let center = Math.floor((left + right)/2)
+          
+          if(this.array[left] > this.array[center]){
+            this.swap(left, center)
+          }
+          if(this.array[center] > this.array[right]){
+            this.swap(center, right)
+          }
+          if(this.array[left] > this.array[right]){
+            this.swap(left, right)
+          }
+          // 将center换到right - 1索引位置
+          this.swap(center, right - 1)
+          
+          return this.array[right - 1]
+        },
+        quick: function (left, right) {
+          // 1.结束条件
+          if (left >= right) return
+          // 2.获取枢纽
+          let pivot = this.median(left, right)
+          console.log(pivot);
+          
+          // 3.定义变量，记录指针位置
+          var i = left
+          var j = right - 1
+          // 4.开始交换
+          while (true) {
+            while(this.array[++i] < pivot){ }
+            while(this.array[--j] > pivot){ }
+            if (i < j){
+              this.swap(i, j)
+            } else {
+              break
+            }
+          }
+          // 5.将枢纽放在正确位置
+          this.swap(i, right - 1)
+          // 6.分而治之
+          this.quick(left, i - 1)
+          this.quick(i + 1, right)
+        },
+        quickSort: function () {
+          this.quick(0, this.array.length - 1)
+        }
+      }
+   
+    let list = new ArrayList([66,88,12,87,100,5,566,23])
+    list.quickSort()
+    console.log(list);
+    
+  </script>
+</body>
+</html>
