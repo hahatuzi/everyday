@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script src="./链表_00_链表结构.js"></script>
+  <script>
+    let link = new LinkedList()
+    link.append(1)
+    link.append(2)
+    link.append(3)
+    link.append(3)
+    link.append(4)
+    link.append(5)
+    link.append(6)
+    link.append(6)
+    function deleteDuplicates (link) {
+      if(!link.head) return link.head
+      let curNode = link.head
+      while(curNode.next != null){
+        if(curNode.val == curNode.next.val){
+          curNode.next = curNode.next.next
+          link.length--
+        } else {
+          curNode = curNode.next
+        }
+      }
+      return link
+    }
+    console.log(deleteDuplicates(link))
+  </script>
+</body>
+</html>
