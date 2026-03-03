@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script src="./栈_00_栈结构.js"></script>
+  <script>
+    function sampleURL (str) {
+      let arr = str.split('/')
+      let res = []
+      for (let i = 0; i < arr.length; i++) {
+        const el = arr[i];
+        
+          if (el != '.' && el && el != '..') {
+            res.push(el)
+          }
+      }
+      return '/' + res.join('/')
+    }
+    console.log(sampleURL('/home/'))
+    console.log(sampleURL('/home//foo/'))
+    console.log(sampleURL('/../'))
+    console.log(sampleURL('/a/./b/../../c'))
+  </script>
+</body>
+</html>
