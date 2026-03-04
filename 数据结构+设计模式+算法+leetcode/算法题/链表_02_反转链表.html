@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script src="./链表_00_链表结构.js"></script>
+  <script>
+        let link = new LinkedList()
+    link.append(1)
+    link.append(2)
+    link.append(3)
+    link.append(4)
+    link.append(5)
+    link.append(6)
+    function reverseLink (){
+      let prev = null
+      let curNode = link.head
+      while(curNode){
+        const next = curNode.next
+        curNode.next = prev
+        prev = curNode
+        curNode = next
+        // console.log(curNode)
+      }
+    }
+    reverseLink(link)
+    console.log(link)
+  </script>
+</body>
+</html>

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script src="./队列_00_队列结构.js"></script>
+  <script>
+    let q1 = new Queue()
+    function ping (num) {
+      q1.enqueue(num)
+      q1.items.forEach(item => {
+        if(item < 1 && item > 100) {
+          q1.dequeue()
+        }
+      })
+      console.log(q1.items)
+      return q1.items.length
+    }
+    console.log(ping(2))
+    console.log(ping(0))
+    console.log(ping(99))
+    console.log(ping(100))
+    console.log(ping(110))
+  </script>
+</body>
+</html>
