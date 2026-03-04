@@ -1,68 +1,105 @@
-# 一：项目规范化范围
-  - (1)代码结构,包括组件等文件命名以及书写位置规范，配置代码规范比如axios,hooks,router等基础配置
-  - (2)风格规范，变量命名，代码书写空格，缩进换行等风格统一,eslint+prettier+stylelint
-  - (3)git 提交规范，Commitlint或者husky，CICD通过调用脚本来实现校验触发
+# 1.eslint解读
+[!参考文章]https://blog.51cto.com/u_11887782/5724620
+  ```js
+    module.exports = {
+      root: true,
+      env: {
+        browser: true,
+        es2021: true,
+        node: true,
+      },
+      // 解析器类型：从eslint的解析器中选择合适的解析器：esprima默认解析器，babel-eslint：balel解析器，
+      parser: "vue-eslint-parser",
+      extends: [
+        // https://eslint.vuejs.org/user-guide/#usage
+        "./.eslintrc-auto-import.json",
+        "prettier",
+        "plugin:vue/vue3-recommended", // 除了包含vue3-essential的所有规则外还添加了别的规则
+        "plugin:vue/vue3-essential", // vue3语法规则
+        "plugin:@typescript-eslint/recommended", // ts语法规则校验
+        "plugin:prettier/recommended",
+      ],
+      parserOptions: {
+        ecmaVersion: "latest",
+        sourceType: "module",
+        parser: "@typescript-eslint/parser",
+        project: "./tsconfig.*?.json",
+        createDefaultProgram: false,
+        extraFileExtensions: [".vue"],
+      },
+      // eslint第三方插件
+      plugins: ["vue", "@typescript-eslint"],
+      // eslint规则
+      rules: {
+        // https://eslint.vuejs.org/rules/#priority-a-essential-error-prevention
+        "vue/multi-word-component-names": "off",
+        "vue/no-v-model-argument": "off",
+        "vue/script-setup-uses-vars": "error",
+        "vue/no-reserved-component-names": "off",
+        "vue/custom-event-name-casing": "off",
+        "vue/attributes-order": "off",
+        "vue/one-component-per-file": "off",
+        "vue/html-closing-bracket-newline": "off",
+        "vue/max-attributes-per-line": "off",
+        "vue/multiline-html-element-content-newline": "off",
+        "vue/singleline-html-element-content-newline": "off",
+        "vue/attribute-hyphenation": "off",
+        "vue/require-default-prop": "off",
+        "vue/require-explicit-emits": "off",
+        "vue/html-self-closing": [
+          "error",
+          {
+            html: {
+              void: "always",
+              normal: "never",
+              component: "always",
+            },
+            svg: "always",
+            math: "always",
+          },
+        ],
 
-# 二：eslint
-  eslint9以及oxclint，rust相关实践，校验其实就是在编译的基础上对代码进行校验，又因为编译有js,jsx,ts,tsx,vue等不同的编译格式，所以出现了针对不同编译类型的插件,比如vite-plugin-vue,tsbable等
-  ### 1.eslint安装使用步骤
-  - **方式一：**
-    - 第一步：**npm i eslint@9.X**,因为9.x有重大革新
-    - 第二步：**package.json添加lint命令**。方便调试"scripts": { "lint": "eslint ."  }
-    - 第三步：**新建eslint.config.js文件**添加eslint规范化脚本
-    - 第四步：解决npm run lint时报错SyntaxError: Unexpected token 'export',package.json添加"type": "module"
-    - 第五步：也可以忽略上述四步，直接使用eslint的js集成工具@eslint/js,npm i @eslint/js
-    - 第六步：针对ts文件做校验，**npm i @typescript-eslint/parser -D**,如果不安装该插件的话npm run lint无法识别ts文件并进行校验
-    - 第七步：在eslint.config.js中配置**@typescript-eslint/parser**
-    - 第八步：针对vue文件进行校验,**npm i vue-eslint-parser**
-    ```js
-      // 使用方式一
-      import tsParser from '@typescript-eslint/parser'**
-      import vueParser from 'vue-eslint-parser'
-      export default{
-        files:['**/*.ts'],
-        ignores:['eslint.config.js'],
-        languageOptions:{
-          parser:vueParser, // 指定解析器
-          parserOptions:{//  解析器的语法parser配置
-            parser:tsParser,
-            sourceType:"module"
-          }
+        "@typescript-eslint/no-empty-function": "off", // 关闭空方法检查
+        "@typescript-eslint/no-explicit-any": "off", // 关闭any类型的警告
+        "@typescript-eslint/no-non-null-assertion": "off",
+        "@typescript-eslint/ban-ts-ignore": "off",
+        "@typescript-eslint/ban-ts-comment": "off",
+        "@typescript-eslint/ban-types": "off",
+        "@typescript-eslint/explicit-function-return-type": "off",
+        "@typescript-eslint/no-explicit-any": "off", // 禁止使用any类型
+        "@typescript-eslint/no-var-requires": "off",
+        "@typescript-eslint/no-empty-function": "off",
+        "@typescript-eslint/no-use-before-define": "off",
+        "@typescript-eslint/no-non-null-assertion": "off",
+        "@typescript-eslint/explicit-module-boundary-types": "off",
+        "@typescript-eslint/no-unused-vars": "off",
+
+        "prettier/prettier": [
+          "error",
+          {
+            endOfLine: "auto",
+            useTabs: false, // 不使用制表符
+          },
+        ],
+      },
+      // 为特定的文件指定处理器
+      // eslint不能对html文件生效
+      overrides: [
+        {
+          files: ["*.html"],
+          processor: "vue/.vue",
         },
-        rules:{
-          "no-unused-vars":"error", // 不允许声明没有使用的变量,off,warn,error
-          "no-console":"error",// 不允许打印console
-          "no-sparse-arrays":"error", // 不允许组数定义的时候有多余的逗号
-          "no-undef":"error", // 不允许未声明的变量
-          "no-unreachable":"error", // 不允许函数return后还写代码
-          "no-dupe-keys":"error", // 不允许对象有重复的key
-        }
-      }
-      // 使用方式二
-      // 或者使用以下代码，直接使用推荐的默认推荐集成规范
-      // import js from @eslint/js
-      // export defualt [
-      //   ...js.configs.recommended
-      // ]
-    ```
-  - **方式二：**
-    - 直接使用eslint的集成插件：**npm init @eslint/config@latest**，就会直接在项目中生成eslint.config.js，并自动安装集成工具@eslint/js
-    ```js
-      import js from "@eslint/js";
-      import globals from "globals";
-      import pluginVue from "eslint-plugin-vue";
-      import { defineConfig } from "eslint/config";
+      ],
+      // https://eslint.org/docs/latest/use/configure/language-options#specifying-globals
+      globals: {
+        OptionType: "readonly",
+      },
+    };
 
-      export default defineConfig([
-        { files: ["**/*.{js,mjs,cjs,vue}"], plugins: { js }, extends: ["js/recommended"], languageOptions: { globals: globals.browser } },
-        pluginVue.configs["flat/essential"],
-      ]);
-    ```
+  ```
 
-  ### 2.eslint文件常见规范解读--->转vue/vue3/项目/eslint文件解读.md
-  [!参考文章]https://blog.csdn.net/qq_36973122/article/details/145433792
-  [!参考项目]https://gitee.com/youlaiorg/vue3-element-admin.git
-  ### 3.eslint完整使用案例
+
+# 2.eslint完整使用案例
     ```js
     // https://eslint.org/docs/latest/use/configure/configuration-files-new
 
@@ -222,8 +259,8 @@
 
     ```
 
-  ### eslint自定义rules规则
-    - 第一步：**rule定义**：针对需求编写一个rule,原理是通过ast，通过ast节点处理
+# 3.eslint自定义rules规则
+  - 第一步：**rule定义**：针对需求编写一个rule,原理是通过ast，通过ast节点处理
       ```js
         // 规则的本质是一个对象，
         // 插件化体系中，这个对象的属性约束就是我们讲的插件化协议
@@ -314,94 +351,12 @@
       ```
  
 
-# 三：stylelint格式化,stylelint是css的lint工具，可以格式化css代码，检查css语法中错误的地方
-  ### 第一步：安装stylelint相关插件
-    ```js
-      "stylelint": "^16.19.1",// stylelint核心库
-      "stylelint-config-html": "^1.1.0",// 共享html配置，昆邦postcss-html并对其进行配置
-      "stylelint-config-recess-order": "^6.0.0", // 提供优化样式顺序的配置
-      "stylelint-config-recommended": "^15.0.0", // stylelint标准共享配置
-      "stylelint-config-recommended-scss": "^14.1.0", // 拓展stylelint-config-recommended共享配置并为scss配置规则
-      "stylelint-config-recommended-vue": "^1.6.0",  // 拓展stylelint-config-recommended共享配置并为vue配置规则
-      "stylelint-prettier": "^5.0.3",
-      "postcss": "^8.5.3",
-      "postcss-html": "^1.8.0", // 解析html的postcss语法
-      "postcss-scss": "^4.0.9",// postcss的scss解析器
-    ```
-  ### 第二步：新增stylelint.cjs文件
-  ### 第三步：新增stylelintignore文件
-    ```js
-      //   dist
-      // node_modules
-      // public
-      // .husky
-      // .vscode
-      // .idea
-      // *.sh
-      // *.md
+# eslint相关问题
+  ### eslint和prettier概念
+    - prettier代码格式化，
+  - 是否了解eslint9,或者oxclint
+  - voidzero为什么需要通过rust重构整个工具链：统一ast,建构，叫妖孽，格式化等所有环境共用一个ast
 
-      // src/assets
-      // stats.html
-    ```
-  ### 第四步：添加运行脚本
-    ```js
-      script:{
-        "lint:stylelint": "stylelint  \"**/*.{css,scss,vue}\" --fix",
-      }
-    ```
+# eslint9
 
-
-# 四：husky,lint-staged和commitlint结合实现git提交规范
-   ### 第一步：huksy安装以及相关配置
-    ```js
-      // 第一步：安装husky
-      npm i husky --save-dev
-      // 第二步：安装husky git hooks
-      // 安装husky git hooks的方式一
-      npx husky install
-      // 安装husky git hooks的方式二：配置package.json,scripts: "prepare":"husky inastall"
-      npm run prepare
-      // 第三步：测试脚本：测试husky钩子，添加pre-commit钩子
-      // npx husky add .husky/pre-commit "npm test"
-    ```
-  ### 第二步：lint-staged安装以及相关配置
-    ```js
-      // lint-staged:是一个在git add到暂存区的文件运行linter的工具，避免在git commit提交时在整个项目执行
-      // 第一步
-      npm i lint-staged -D
-      // 第二步：在package.json中添加git提交时的lint检测配置,并添加scripts命令
-       "scripts": {
-        "lint:lint-staged": "lint-staged",
-      },
-      "lint-staged": {
-        "*.{js,ts}": [
-          "eslint --fix",
-          "prettier --write"
-        ],
-        "*.{cjs,json}": [
-          "prettier --write"
-        ],
-        "*.{vue,html}": [
-          "eslint --fix",
-          "prettier --write",
-          "stylelint --fix"
-        ],
-        "*.{scss,css}": [
-          "stylelint --fix",
-          "prettier --write"
-        ],
-        "*.md": [
-          "prettier --write"
-        ]
-      }
-      // 第三步：在husky文件夹中的pre-commit添加命令npm run lint:lint-staged --allow-empty
-      npm run lint:lint-staged --allow-empty
-    ```
-  # 第三步：安装commitlint以及相关插件检查提交消息是否符合commit format
-    ```js
-      // 第一步：执行命令
-      npm i -D @commitlint/cli @commitlint/config-conventional
-      // 第二步：创建commitlint.config.cjs配置文件,可以参考https://gitee.com/youlaiorg/vue3-element-admin.git
-      // 第三步：执行命令npx husky add .husky/commit-msg 'npx --no-install commitlint --edit "$1"'
-      npx husky add .husky/commit-msg 'npx --no-install commitlint --edit "$1"'
-    ```
+[!参考学习视频--妙码学院eslint]https://www.bilibili.com/video/BV1USEjzZE6a?spm_id_from=333.788.player.switch&vd_source=afbd897dda8c1c6166fce57f249edafd&p=14
