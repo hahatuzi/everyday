@@ -42,8 +42,11 @@ systemctl status postfix
 ```js
 // 下载gitlab镜像
 wget https://mirrors.tuna.tsinghua.edu.cn/gitlab-ce/yum/el7/gitlab-ce-13.1.2-ce.0.el7.x86_64.rpm
+// centos8
+wget --content-disposition https://packages.gitlab.com/gitlab/gitlab-ce/packages/ol/8/gitlab-ce-18.9.1-ce.0.el8.x86_64.rpm/download.rpm
 // 安装gitlab
 rpm -ivh gitlab-ce-13.1.2-ce.0.el7.x86_64.rpm
+sudo rpm -i gitlab-ce-18.9.1-ce.0.el8.x86_64.rpm
 ```
 ## 6.修改gitlab配置文件
 ```js
@@ -56,7 +59,14 @@ vi gitlab.rb
 ```js
 gitlab-ctl reconfigure
 gitlab-ctl restart
+
 ```
-## 打开页面
+
+## 7.ssl证书以及打开页面
 **gitlab初次安装后，登录gitlab网页需要账号和密码**
-账号为root，密码需要打开文件查看：vi /etc/gitlab/initial_root_password
+```js
+// 查看gitlab登录账号root的密码
+cat /etc/gitlab/initial_root_password
+// 或者以下命令
+vi /etc/gitlab/initial_root_password
+```
