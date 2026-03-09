@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    let m = new Map()
+    function twoSum (source, target) {
+      for (let i = 0; i < source.length; i++) {
+        const el = source[i];
+        let data = target - el
+        if(m.has(data)) {
+          return [m.get(data), i]
+        } else {
+          m.set(el, i)
+        }
+      }
+    }
+    console.log(twoSum([3,6,2,8,1],5))
+  </script>
+</body>
+</html>
