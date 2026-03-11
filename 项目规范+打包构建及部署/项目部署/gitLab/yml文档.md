@@ -168,47 +168,7 @@ deploy_production_manual:
     url: https://staging.example.com
   when: manual
 ```
-# tags
-用于从允许运行该项目的所有runner列表中选择特定的runner，在runner注册期间，您可以指定runner的标签
-# allow_failure
-允许作业失败，默认值为false，启用之后，如果作业失败，该作业将在用户界面中显示橙色警告，但是**管道默认该作业是成功的，并且pipeline不会被阻塞**
-# when，控制作业运行
- (1) on_success:前面的阶段中的所有作业都成功时才执行作业，默认值
-（2）on_failure:当前面阶段出现失败时执行
-（3）always：总是执行作业
-  (4)manual:手动执行作业
-  (5)delayed：延迟执行作业
-```js
-deploy:
-  when: manual
-  script:
-    - echo "deploy"
-```
-#　retry
-配置当作业失败时重新尝试的次数。max:最大重试次数 when：重试失败的错误类型
-when的类型包括：always(在发生任何故障时重试)，unknow_failure,script_failure
-```js
-retry:
-  max:1
-  when:
-   - script_failure
-```
-# timeout：超时包括三种，作业超时，项目超时，runner超时
-作业级别的超时可以超过项目级别的超时，但是不能超过runner级别的超时时间，
-# parellel
-配置要并行运行的作业实例数，此值必须>=2,<=50,这会导致pipeline中的某个job并行运行N次。
-# only，except
-only和except正在逐渐被rules替换，only用来定义哪些分支和标签的git项目将被job执行
-except定义那些分支和标签的igt项目将不会被执行。
-# rules
-rules不能与
-# workflow
-# cache
-cache:
-  key:
-    files:
-      - package.json #当该文件发生变化时创建缓存
-    paths:
+
       
 # needs
 可无序执行作业，无需按照阶段顺序运行某些作业，可以让多个阶段同时运行
@@ -216,8 +176,7 @@ cache:
 local:引入本地配置：可以允许引入外部YAML文件,文件具有扩展名.yml或者.yaml
 使用合并功能可以自定义和覆盖包含本地定义的CICD配置
 引入同一存储库中的文件使用相对于根目录的完整路径进行引用，与配置文件在同一分支上使用
-include：
-  local:'ci/localci/yml'
+
 # extends
 # trigger
 ### 多项目管道：跨多个项目设置流水线，以便一个项目中的管道可以触发另一个项目中的管道
