@@ -13,7 +13,7 @@
     - 第二步：CI，缺陷扫描，ESLint检查，unit Test,自动触发构建脚本,npm i && npm build
     - 第三步：CD,构建产物部署到环境：部署方式**ECS部署**或者**Docker**
   ### 3.工具链
-    - 持续集成的工具：**jenkins**,**github action**,travis CI,circleCI
+    - 持续集成的工具：**jenkins**,**github action**,travis CI,circleCI，gitlab-CI
     - 持续交付：ArgoCD,spinnaker
     - 产物部署管理：**docker compose**, **k8s**
 

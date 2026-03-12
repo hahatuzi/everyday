@@ -211,8 +211,27 @@
       ```
 
 
-# 执行器：Shell, Docker, Kubernetes
-# 7.ssl证书以及打开页面
+# 四：执行器：Shell, Docker, Kubernetes
+
+# 五：模板库
+  ### 1.流程：目的：满足前后端各种场景下的打包需求，定义一个模板流水线工程
+  - 第一步：创建一个git仓库用于存放模板
+  - 第二步：在仓库内创建一个template目录用于存放所有pipeline的模板
+  - 第三步：在仓库内创建一个jobs目录存放job模板
+  ### 2.前端npm集成
+  - 第一步：install阶段：执行npm install 命令，根据package.json安装node_modules依赖包
+  - 第二步：eslint阶段：执行eslint检查，判断代码格式是否符合规范，如果不符合停止pipeline
+  - 第三步：build阶段：编译成生产代码，可以通过webpack之类的打包工具执行编译，也可以通过脚手架自身提供的编译命令进行编译,如npm run build
+  - 第四步：deploy阶段：部署阶段，将刚才的build阶端生成的生产代码部署到生产访问的服务器上，
+  ```js
+  ```
+
+# 六：
+  ### 1.SonarQube代码扫描
+    - 第1步：在centos8上下载sonar-scanner客户端
+  ### 2.git pull请求集成配置
+
+# 七.ssl证书以及打开页面
   **gitlab初次安装后，登录gitlab网页需要账号和密码**
   ```js
   // 查看gitlab登录账号root的密码
@@ -222,25 +241,26 @@
   ```
 [!参考文章-本机虚拟机安装gitlab]https://blog.csdn.net/qq_42141141/article/details/126397059
 
-
-stages:
-  - build
-  - deploy
-
-build:
-  stage: build
-  tags:
-    - build
-  only:
-    - master
-  script:
-    - echo "mvn clean"
-    - echo "mvn install"
-
-deploy:
-  stage: deploy
-  tags:
-    - deploy
-  only:
-    - master
-  script:
+# 八：k8s部署runner
+  ### 1.安装helm3
+    ```js
+      https://github.com/helm/helm/releases
+      tar -zxvf helm-v3.0.0-linux
+      mv linux-amd64/helm /user/local/bin/helm
+    ```
+  ### 2.配置chart存储库
+    ```js
+      // 第1步：添加chart存储库
+      helm repo add gitlab https://charts.gitlab.io
+      // 第2步：验证源
+      helm repo list
+      // 第3步：查询可以安装的gitlab-runner chart
+      helm search repo -l gitlab/gitlab-runner
+    ```
+  ### 3.更新配置信息
+    ```js
+      helm fetch gitlab/gitlab-runner --version=0.15.0
+      [root@hahatuzi-service]# ls
+      Desktop es
+      Documents gitlab-runner-0.15.0.tgz
+    ```

@@ -169,42 +169,7 @@ deploy_production_manual:
   when: manual
 ```
 
-      
-# needs
-可无序执行作业，无需按照阶段顺序运行某些作业，可以让多个阶段同时运行
-# include
-local:引入本地配置：可以允许引入外部YAML文件,文件具有扩展名.yml或者.yaml
-使用合并功能可以自定义和覆盖包含本地定义的CICD配置
-引入同一存储库中的文件使用相对于根目录的完整路径进行引用，与配置文件在同一分支上使用
 
-# extends
-# trigger
-### 多项目管道：跨多个项目设置流水线，以便一个项目中的管道可以触发另一个项目中的管道
-### 父子管道，在同一个项目中管道可以触发一组同时运行的子管道，子管道仍然按照阶段顺序执行器每个作业，但是可以自由地继续执行作业阶段，无需等待父管道中的作业。
-多项目管道：当前面的阶段运行完成后，触发某一个项目的master流水线，创建上游管道的用户需要具有对下游项目的访问权限，如果发现下游项目用户没有访问权限，则staging作业将被标记为失败
-```js
-staging:
-  variables:
-    ENVIROMENT: staging
-  stage: deploy
-  trigger:
-    project: #用于指定下游项目的完整路径
-    branch: master指定的项目分支名，使用variables关键字将变量传递到下游管道
-    strategy: depend将自身状态从触发的管道合并到源网桥作业
-```
-# image
-images:默认在注册runner的时候需要填写一个基础的镜像，只要使用执行器为docker类型的runner，所有的操作运行都会在容器中运行，如果全局指定了image则所有作业使用此image创建容器并在其中运行，全局未指定image，再次查看job中是否有指定，如果有此job按照指定镜像创建容器并运行，没有则使用注册runner时的指定默认镜像
-# services
-工作期间运行的另一个docker映像，并link到image关键字定义的docker映像，这样您就可以在构建期间访问服务映象。
-# environment
-```js
-deploy to production
-  stage:deploy
-  script: git push production HEAD:master
-  environment:
-    name: production
-    url: https://prod.example.com
-```
 ```js
   include:
     - project: 'cidevops/cidevops-gitlabci-service'

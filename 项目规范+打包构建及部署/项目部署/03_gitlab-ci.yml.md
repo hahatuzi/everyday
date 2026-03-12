@@ -1,5 +1,36 @@
 # 一：名词解释：
+  ### 0.pipeline
+  一次pipeline相当于一次构建任务，里面可以包含多个流程，如安装依赖，运行测试，编译，部署测试服务器，部署生产服务器等流程。
+  ```js
+    +----------------+           +----------+
+    | Commit / Merge +---------->+ Pipeline |
+    +----------------+           +----------+
+  ```
   ### 1.job
+    - jobs表示构建工作，表示在某个stage中执行的工作。如果多个jobs之间的stage是相同的，那么这些job会是并行执行的，只有当所有的jobs都成功时该stage才会成功。
+    ```js
+      +---------------------------------------+
+      |                                       |
+      |  Pipeline                             |
+      |                                       |
+      | +---------------------+               |
+      | | Job 1               |               |
+      | |      +---------+    |               |
+      | |      | Stage 1 |    |               |
+      | |      +---------+    |               |
+      | |                     |               |
+      | +---------------------+               |
+      |                                       |
+      |                                       |
+      | +---------------------+               |
+      | | Job 2               |               |
+      | |      +---------+    |               |
+      | |      | Stage 1 |    |               |
+      | |      +---------+    |               |
+      | |                     |               |
+      | +---------------------+               |
+      +---------------------------------------+
+    ```
   ### 2.script：
    - 每个job作业中至少包含一个script。
    - before_script:**它的运行失败会导致整个job失败，但不会导致after_script失败**。
@@ -13,6 +44,15 @@
   ### 3.stages
    - 一次pipeline中可以包含多个stages,所有的stages会**按照顺序执行**，只有当所有的stages都完成时该构建任务才会成功。
    - 同一阶段的作业并行运行，不同阶段按顺序执行
+    ```js
+      +--------------------------------------------------------+
+      | Pipeline                                               |
+      |                                                        |
+      | +-----------+  +------------+  +------------+          |
+      | | Stage 1   |->| Stage 2    |->| Stage 3    |          |
+      | +-----------+  +------------+  +------------+          |
+      +--------------------------------------------------------+
+    ```
     ```js
       stages:
         - build
@@ -189,6 +229,29 @@
       include：
         local:'ci/localci/yml'
     ```
+    ```js
+      include:
+        - project: 'cidevops/cidevops-gitlabci-service'
+          ref: master
+          file: 'jobs/build.yml'
+      variables:
+        BUILD_SHELL: 'npm run build'
+        CACHE_DIR: 'dist/'
+      cache:
+        paths:
+          - ${CACHE_DIR}
+          - node_moduules/
+      stages:
+        - install
+        - build
+      install:
+        stage: install
+        script:
+          - 'npm install'
+      build:
+        stage: build
+        extends: .build
+    ```
   ### 19.extends
     ```js
       .test:
@@ -197,11 +260,72 @@
       testjob:
         extends: .tests
     ```
-1.文件解读
-```js
-  stages:
-    - build
-    - test
-    - codescan
-    - deploy
-```
+  ### 20.trigger
+    - 当gitlab从trigger定义创建的作业启动的时候，将创建一个下游管道
+    - 多项目管道和子管道
+    - 将trigger和when:manual一起使用会导致错误
+    - **多项目管道**：跨多个项目设置流水线，以便一个项目中的管道可以触发另一个项目中的管道
+    - **父子管道**：在同一个项目中管道可以触发一组同时运行的子管道，子管道仍然按照阶段顺序执行器每个作业，但是可以自由地继续执行作业阶段，无需等待父管道中的作业。
+    - 当前面的阶段运行完成后，触发某一个项目的master流水线，创建上游管道的用户需要具有对下游项目的访问权限，如果发现下游项目用户没有访问权限，则staging作业将被标记为失败
+    ```js
+      staging:
+        variables:
+          ENVIROMENT: staging
+        stage: deploy
+        trigger:
+          project: #用于指定下游项目的完整路径
+          branch: master指定的项目分支名，使用variables关键字将变量传递到下游管道
+          strategy: depend将自身状态从触发的管道合并到源网桥作业
+    ```
+  ### 21.image
+    - 第一步：注册一个工作类型为docker的runner
+      ```js
+        gitlab-runner register \
+          --non-interactive \
+          --executor "docker" \
+          --docker-image alpine:latest \
+          --url "http://106.14.38.228/" \
+          --registration-token "dwe1kTT9v8bZcqyBupB7" \
+          --description "devops-runner" \
+          --tag-list "build,deploy" \
+          --run-untagged="true" \
+          --locked="false" \
+          --access-level="not_protected" 
+      ```
+    - images:默认在注册runner的时候需要填写一个基础的镜像，只要使用执行器为docker类型的runner，所有的操作运行都会在容器中运行。
+    - 如果全局指定了image则所有作业使用此image创建容器并在其中运行。
+    - 全局未指定image，再次查看job中是否有指定，如果有此job按照指定镜像创建容器并运行，没有则使用注册runner时的指定默认镜像。
+  ### 22.services
+    - 工作期间运行的另一个docker映像，并link到image关键字定义的docker映像，这样您就可以在构建期间访问服务映象。
+      ```js
+        before_script:
+          - ls
+        services:
+          - name mysql:latest
+          alias: mysql-1
+      ```
+  ### 23.environment
+    ```js
+      deploy:
+        stage:deploy
+        script: git push production HEAD:master
+        environment:
+          name: production
+          url: https://prod.example.com
+    ```
+  ### 24.inherit
+    - 使用或者禁用全局定义的环境变量或者默认值
+    ```js
+      // 使用方式一：true/false
+      inherit:
+        default: false
+        variables: false
+      // 使用方式二：继承部分变量或者默认值
+      inherit:
+        default:
+          - 变量一
+          - 变量二
+        variables:
+          - v1
+          - v2
+    ```
