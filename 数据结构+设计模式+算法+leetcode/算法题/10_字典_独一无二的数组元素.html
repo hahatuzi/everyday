@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    /*
+    * 判断输入数组是否为所有元素都不一样的数组
+    */
+    function uniqueArray (arr) {
+      let m1 = new Map()
+      for (let i = 0; i < arr.length; i++) {
+        const el = arr[i];
+        m1.set(el, (m1.get(el) || 0 ) + 1)
+      }
+      return m1.size == arr.length
+    }
+    console.log(uniqueArray([1,2,3,4,2,3]))
+  </script>
+</body>
+</html>

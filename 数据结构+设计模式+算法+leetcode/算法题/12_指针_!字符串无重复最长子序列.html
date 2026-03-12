@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    function longest (str) {
+       let arr = str.split('')
+       let m1 = new Map()
+       let left = 0
+       let maxNum = 0
+      for (let i = 0; i < arr.length; i++) {
+        if(m1.has(arr[i]) && m1.get(arr[i]) >= left) {
+          left = m1.get(arr[i])+ 1
+        } else {
+          maxNum = Math.max(maxNum, i - left + 1)
+          m1.set(arr[i], i)
+        }
+      }
+      console.log(m1)
+      return maxNum
+    }
+    console.log(longest('abcbefc'))
+  </script>
+</body>
+</html>

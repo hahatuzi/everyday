@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    let res = ''
+    // 先遍历所有子节点，再遍历子节点的子节点
+     function breadthQuery (arr) {
+      let stack = []
+      stack = stack.concat(arr)
+      while(stack.length) {
+        let el =  stack.shift()
+        res+= el.val
+        if (el.children){
+          stack = stack.concat(el.children)
+        }
+      }
+    }
+    let data = [
+      {val:'1'},
+      {val:'2',children:[
+        {val:'4',children:[
+          {val:'7'}
+        ]},
+        {val:'5'},
+      ]},
+      {
+        val:'3',children:[
+          {val:'6',children:[
+            {val:'8'}
+          ]}
+        ]
+      }
+    ]
+    breadthQuery(data)
+    console.log(res)
+  </script>
+</body>
+</html>
