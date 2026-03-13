@@ -284,6 +284,7 @@
               Identifier(node){
                 console.log(node);
                 if (node.name == 'chinese') {
+                  // 上报错误
                   context.report({
                     node,
                     messageId:'noChineseName'
