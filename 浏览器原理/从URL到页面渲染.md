@@ -30,6 +30,10 @@
   ### 5.async和defer和DOMContentLoaded回调函数的执行顺序
      - **DOMContentLoaded会在defer script执行完毕后执行，与async script无关**
   ### 6.defer和async的使用场景
+  | First Header  | Second Header |
+  | ------------- | ------------- |
+  | Content Cell  | Content Cell  |
+  | Content Cell  | Content Cell  |
    - defer通常用于文档解析后需要操作DOM的JS代码，并且对多个script文件有顺序要求的
    - 当某个js脚本对首屏渲染没有任何影响时，加个defer，反正会在html都解析完毕后才执行该js，
    - 当用户下拉内容时，页面稳定后，还有100个毫不相关的script渲染100个模块，如使用defer，defer会在100个script下载完毕后才执行，用户如果已经开始翻动，则后面都是白屏，体验是较差的。这时改为async，用户在翻动时会看到最先渲染出来的异步模块，像极了懒加载，体验比defer更好些。
