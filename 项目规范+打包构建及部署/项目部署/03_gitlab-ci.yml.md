@@ -329,3 +329,95 @@
           - v1
           - v2
     ```
+# 实例
+  ```js
+    // 构建阶段-任务,包含五个stage:analytics,test,build,package,deploy
+    stages:
+      - analytics
+      - test
+      - build
+      - package
+      - deploy
+
+    // 构建工作job名称
+    build_analytics:
+      // 该工作执行阶段
+      stage: analytics
+      // 设置只对master分支有效
+      only:
+        - master
+        - tags
+      tags:
+        - runner-tag-snoreqube
+      script:
+        - echo "=============== 开始代码质量检测 ==============="
+        - echo "=============== 结束代码质量检测 ==============="
+
+    build_test:
+      stage: test
+      only:
+        - master
+        - tags
+      tags:
+        - runner-tag
+      script:
+        - echo "=============== 开始测试任务 ==============="
+        - echo "=============== 结束测试任务 ==============="
+
+
+    build:
+      stage: build
+      only:
+        - master
+        - tags
+      tags:
+        - runner-tag
+      script:
+        - echo "=============== 开始编译任务 ==============="
+        - echo "=============== 结束编译任务 ==============="
+
+    package:
+      stage: package
+      tags:
+        - runner-tag
+      script:
+        - echo "=============== 开始打包任务 ==============="
+        - echo "=============== 结束打包任务 ==============="
+
+    deploy_test:
+      stage: deploy
+      tags:
+        - runner-tag
+      // 输出在gitlab-ci中设置的变量
+      script:
+        - echo "=============== 自动部署到测试服务器 ==============="
+        - echo "测试服务器:" ${SERVER_TEST}
+      #环境变量
+      environment:
+        name: test
+        url: https://staging.example.com
+
+    deploy_test_manual:
+      stage: deploy
+      tags:
+        - runner-tag
+      script:
+        - echo "=============== 手动部署到测试服务器 ==============="
+      environment:
+        name: test
+        url: https://staging.example.com
+      // 设置条件 manual 允许失败  
+      when: manual
+
+    deploy_production_manual:
+      stage: deploy
+      tags:
+        - runner-tag
+      script:
+        - echo "=============== 手动部署到生产服务器 ==============="
+        - echo "测试服务器:" ${SERVER_TEST}
+      environment:
+        name: production
+        url: https://staging.example.com
+      when: manual
+  ```
