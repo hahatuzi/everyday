@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    function intersection (arr1, arr2) {
+      let arr = []
+      let m = new Map()
+      for (let i = 0; i < arr1.length; i++) {
+        m.set(arr1[i], i)
+      }
+      for (let i = 0; i < arr2.length; i++) {
+        const element = arr2[i];
+        if(m.has(arr2[i])) {
+          arr.push(arr2[i])
+        }
+      }
+      return arr
+    }
+    function intersection1 (arr1, arr2) {
+      let s1 = new Set(arr1)
+      return [...new Set(arr2)].filter(item => s1.has(item))
+    }
+    console.log(intersection1([1,2,3,4],[5,6,7,8]))
+    console.log(intersection1([1,2,3,4],[5,6,7,8,4,1,4]))
+  </script>
+</body>
+</html>

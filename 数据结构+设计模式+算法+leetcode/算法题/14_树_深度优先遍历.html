@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    let res = ''
+     function deepQuery (arr) {
+      for(let i =0; i < arr.length; i++){
+          res += arr[i].val
+        if (arr[i].children){
+          deepQuery(arr[i].children)
+        }
+      }
+    }
+    let data = [
+      {val:'a'},
+      {val:'f',children:[
+        {val:'s',children:[
+          {val:'p'}
+        ]},
+        {val:'e'},
+      ]},
+      {
+        val:'g',children:[
+          {val:'x',children:[
+            {val:'r'}
+          ]}
+        ]
+      }
+    ]
+    deepQuery(data)
+    console.log(res)
+  </script>
+</body>
+</html>
