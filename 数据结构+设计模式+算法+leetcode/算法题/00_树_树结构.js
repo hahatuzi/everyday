@@ -43,6 +43,32 @@ function BinarySearchTree () {
     }
     return arr
   }
+  // 栈版本--后序遍历
+  BinarySearchTree.prototype.postOrderTraversal1 = function () {
+    if (this.root === null) return []
+    let stack = [this.root]
+    let arr = []
+    while(stack.length !== 0) {
+      console.log([...stack])
+      let node = stack.pop()
+      arr.unshift(node.key)
+      node.left && stack.push(node.left)
+      node.right && stack.push(node.right)
+    }
+    return arr
+  }
+  BinarySearchTree.prototype.postOrderTraversal = function (handler) {
+    this.postOrderTraversalNode(this.root, handler)
+  }
+  BinarySearchTree.prototype.postOrderTraversalNode = function (node, handler) {
+    if (node != null){
+      // 1.处理左子节点
+      this.postOrderTraversalNode(node.right, handler)
+      // 2.处理右子节点
+      this.postOrderTraversalNode(node.left, handler)
+      handler(node.key)
+    }
+  }
   BinarySearchTree.prototype.midOrderTraversal1 = function (){
     if (this.root === null) return []
     let stack = []

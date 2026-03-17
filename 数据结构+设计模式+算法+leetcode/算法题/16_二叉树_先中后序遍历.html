@@ -38,6 +38,12 @@
       res2 += (key + ',')
     })
     console.log(res2)
+    let res3 = ''
+    bst.postOrderTraversal(key => {
+      res3 += (key + ',')
+    })
+    console.log(res3)
+    console.log(bst.postOrderTraversal1().join(','))
   </script>
 </body>
 </html>
