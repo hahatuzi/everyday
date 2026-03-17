@@ -1,10 +1,60 @@
 # multirepo和monorepo的区别
 # react项目结构
-# 一：jsx转换
+# 一：VDOM与jsx转换
+  ### 1.虚拟DOM的，what,why,where,how
+   - where:react中的哪里用到了虚拟DOM?**渲染时**react根据jsx函数生成了**VDOM**（ReactElement）,状态变化的时候：生成新的VDOM,Diff算法对比新旧VDOM
   ### 1.实现jsx方法
   - jsxDEV(dev环境)
   - jsx方法(prod环境)
   - React.createElement方法
+    ```js
+      const ReactElement = function (type: Type, key: Key, ref: Ref, props: Props): ReactElement {
+        const element = {
+          $$typeof: REACT_ELEMENT_TYPE,
+          type,
+          key,
+          ref,
+          props,
+          __mark: 'hahatuzi'
+        }
+        return element
+      }
+
+      export const jsx = (type:ElementType, config:any, ...children:any) => {
+        let key:Key = null;
+        const props:Props = {};
+        let ref:Ref = null;
+        for (const prop in config) {
+          const val = config[prop]
+          if(prop == 'key'){
+            if (val != undefined){
+              key = '' + val
+            }
+            continue
+          }
+          if(prop == 'ref'){
+            if (val != undefined){
+              ref = '' + val
+            }
+            continue
+          }
+          if({}.hasOwnProperty.call(config, prop)){
+            props[prop] = val
+          }
+        }
+        const childrenlength = children.length
+        if(childrenlength){
+          if (childrenlength == 1) {
+            props.children = children[0];
+          } else {
+            props.children = children;
+          }
+        }
+        return ReactElement(type, key, ref, props)
+      }
+
+      export const jsxDEV = jsx;
+    ```
   ### 2.实现打包流程：针对上述3个方法打包对应文件
   - react/jsx-dev-runtime.js(dev环境)
   - react/jsx-runtime.js(prod环境)

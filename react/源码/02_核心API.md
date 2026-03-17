@@ -32,3 +32,8 @@
    - schedule阶段：调度更新阶段
    - render阶段：workLoop --> beginWork,completeWork：处理更新阶段
    - commit阶段(commitWork),包含三个子阶段：befreMutation阶段，mutation阶段，layout阶段
+
+# 事件系统：
+  模拟浏览器事件捕获，实现合成事件对象
+  - 实现reactDOM和reconcoler对接：
+  将事件毁掉保存在DOM中，通过创建DOM和更新属性时对接
