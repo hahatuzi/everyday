@@ -1,8 +1,8 @@
 
 # 一：VDOM与jsx转换
-  ### 1.虚拟DOM的，what,why,where,how
+  ### 1.虚拟DOM的what,why,where,how
    - where:react中的哪里用到了虚拟DOM?**渲染时**react根据jsx函数生成了**VDOM**（ReactElement）,状态变化的时候：生成新的VDOM,Diff算法对比新旧VDOM
-  ### 1.实现jsx方法
+  ### 2.实现jsx方法
   - jsxDEV(dev环境)
   - jsx方法(prod环境)
   - React.createElement方法
@@ -54,15 +54,15 @@
 
       export const jsxDEV = jsx;
     ```
-  ### 2.实现打包流程：针对上述3个方法打包对应文件
+  ### 3.实现打包流程：针对上述3个方法打包对应文件
   - react/jsx-dev-runtime.js(dev环境)
   - react/jsx-runtime.js(prod环境)
   - react
-  ### 3.实现调试打包结果的环境
+  ### 4.实现调试打包结果的环境
 
 # 二：Fiber
-  - fiberNode是虚拟DOM在react中的实现方式。vue中叫VNode。
-  - 它介于React Element和真实UI节点之间，能够表达节点之间的关系，转换过程为JSX --> ReactElement --> FIberNode--> DomElement。
+  > fiberNode是虚拟DOM在react中的实现方式。vue中叫VNode。
+  > 它介于React Element和真实UI节点之间，能够表达节点之间的关系，转换过程为JSX --> ReactElement --> FIberNode--> DomElement。
   ### 1.ReactElement
   ReactElement如果作为核心模块操作的数据结构，存在以下问题：
    - 无法表达节点之间的关系
