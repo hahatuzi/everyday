@@ -98,9 +98,10 @@
       pendingProps:Props; // 新的props
       memoizedProps:Props | null; // 上一次渲染是使用的props
 
-      updateQueue:unknown; // 任务队列，存储更新的callback,比如createRoot,render或者setState的更新
+      updateQueue:unknown; // **UpdateQueue链表结构**，存储更新的callback,比如createRoot,render或者setState的更新
 
       memoizedState:{
+        // 对于FC对应的fiberNode，存在两层数据：memoizedState对应Hooks链表
         hooks: [state1, effectHook] // hooks状态（函数组件）
       }; // hook, state
       dependencies:any; // 依赖，比如context
@@ -190,6 +191,11 @@
     ```
 
 
+
+# 三：createRoot
+  createRoot --> createContainer --> createHostRootFiber --> initializeUpdateQueue(fiber.updateQueue = queue)fiber的任务更新队列
+
+
 # 三：Fiber协调流程
   ### 协调阶段（可中断）：
 增量构建 Fiber 树，标记副作用（effectTag）。
@@ -219,7 +225,7 @@
   - useState的dispatch
   ### 更新机制的组成部分
   - update：代表更新的数据结构
-  - UpdateQueue:消费update的数据结构,UpdateQueue队列中包含多个sharePending,sharePending又是由多个update组成。
+  - UpdateQueue:消费update的数据结构,**UpdateQueue链表结构**中包含多个sharePending,sharePending又是由多个update组成。
   ### 更新机制的工作流程
   - 实现mount时调用的API
   - 将该API接入上述更新机制中
