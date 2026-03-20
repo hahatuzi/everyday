@@ -72,9 +72,9 @@
       }
       BinarySearchTree.prototype.postOrderTraversalNode = function (node, handler) {
         if (node != null){
-          // 1.处理左子节点
+          // 1.处理右子节点
           this.postOrderTraversalNode(node.right, handler)
-          // 2.处理右子节点
+          // 2.处理左子节点
           this.postOrderTraversalNode(node.left, handler)
           handler(node.key)
         }

@@ -49,7 +49,6 @@ function BinarySearchTree () {
     let stack = [this.root]
     let arr = []
     while(stack.length !== 0) {
-      console.log([...stack])
       let node = stack.pop()
       arr.unshift(node.key)
       node.left && stack.push(node.left)
@@ -63,9 +62,9 @@ function BinarySearchTree () {
   BinarySearchTree.prototype.postOrderTraversalNode = function (node, handler) {
     if (node != null){
       // 1.处理左子节点
-      this.postOrderTraversalNode(node.right, handler)
       // 2.处理右子节点
       this.postOrderTraversalNode(node.left, handler)
+      this.postOrderTraversalNode(node.right, handler)
       handler(node.key)
     }
   }
@@ -106,6 +105,26 @@ function BinarySearchTree () {
       handler(node.key)
       // 1.处理右子节点
       this.midOrderTraversalNode(node.right, handler)
+    }
+  }
+  BinarySearchTree.prototype.minPath = function () {
+    if (this.root === null) return 0
+    let stack = [[this.root , 1]] // 栈
+    while(stack.length){
+      let [node, path] = stack.shift()
+      if(!node.left || !node.right) return path
+      if(node.left) stack.push([node.left, path+1])
+      if(node.right) stack.push([node.right, path+1])
+    }
+  }
+  BinarySearchTree.prototype.maxPath = function () {
+    if (this.root === null) return 0
+    let stack = [[this.root , 1]] // 栈
+    while(stack.length){
+      let [node, path] = stack.shift()
+      if(!node.left || !node.right) return path
+      if(node.left) stack.push([node.left, path+1])
+      if(node.right) stack.push([node.right, path+1])
     }
   }
 }
