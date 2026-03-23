@@ -62,17 +62,18 @@
 
 # 二：Fiber
   > fiberNode是虚拟DOM在react中的实现方式。vue中叫VNode。
+  > 旧版本react采用递归遍历虚拟DOM树，组件树庞大时比较好使，不能停止
   > 它介于React Element和真实UI节点之间，能够表达节点之间的关系，转换过程为JSX --> ReactElement --> FIberNode--> DomElement。
-  ### 1.ReactElement
+  ### 1.jsx和fiber的关系，ReactElement与fiber的关系对比
   ReactElement如果作为核心模块操作的数据结构，存在以下问题：
    - 无法表达节点之间的关系
    - 字段有限，不好扩展
   所以需要一种新的数据结构，也就是FiberNode。
 
   ### 2.Fiber的特点
-   - (1)**实现增量式渲染**：将渲染工作拆分成多个块，并分散在多个帧上进行处理
+   - (1)**实现增量式渲染**：将耗时渲染工作拆分成多个块，并分散在多个帧上进行处理
    - (2)**可中断任务**：支持暂停，中止，或者复用工作单元work
-   - (3)**优先级调度**：给不同类型的work赋予优先级，比如用户输入可以打断数据更新任务
+   - (3)**优先级调度**：Scheduler调度器：给不同类型的work赋予优先级，immediate,user-blocking,normal, low,idle比如用户输入可以打断数据更新任务
    - (4)**并发模式基础**：为Suspense,useTransition等特性提供底层支持
 
   ### 3.Fiber分类
@@ -190,7 +191,9 @@
       }
     ```
 
-
+  ### 8.fiber的创建与更新工作流程
+  - 创建流程
+  ReactDOM.render --> createRoot --> createContainer --> FiberRootNode -->  createHostRootFiber --> initializeUpdateQueue(fiber.updateQueue = queue)fiber的任务更新队列
 
 # 三：createRoot
   createRoot --> createContainer --> createHostRootFiber --> initializeUpdateQueue(fiber.updateQueue = queue)fiber的任务更新队列

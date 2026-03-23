@@ -13,6 +13,18 @@
   scheduleUpdateOnFiber(root,  fiber,  lane, eventTime),entangTransitionUpdate(root, queue, lane)
   ### useState分析
   mountWorkInProgressHook --> basicStateReducer --> 
+  ```js
+    const [age, setAge] = useState(1)
+    function increment () {
+      setAge(age + 1)
+    }
+    <button onClick={() => {
+      increment()
+      increment()
+      increment()
+    }}></button>
+    // 2,setAge多次调用，会进行合并，最终只触发一次更新，如果想要调用多次，可以改成setAge(age => age + 1)
+  ```
   ### useState和useReducer之间的关系
 
 # reconclier
