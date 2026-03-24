@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    function fn (n) {
+      let res = [0,1,1]
+      for (let i = res.length; i <= n; i++) {
+        res[i] = res[i - 1] + res[i - 2]
+      }
+      console.log(res)
+      return res[n]
+    }
+    console.log(fn(9))
+  </script>
+</body>
+</html>
