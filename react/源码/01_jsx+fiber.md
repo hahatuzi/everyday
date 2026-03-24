@@ -54,6 +54,7 @@
 
       export const jsxDEV = jsx;
     ```
+
   ### 3.实现打包流程：针对上述3个方法打包对应文件
   - react/jsx-dev-runtime.js(dev环境)
   - react/jsx-runtime.js(prod环境)
@@ -69,11 +70,22 @@
    - 无法表达节点之间的关系
    - 字段有限，不好扩展
   所以需要一种新的数据结构，也就是FiberNode。
+  - **mount**时通过jsx对象（调用createElement的结果）调用**createFiberFromElement**生成Fiber
+  - **update**时通过**reconcileChildFibers**或**reconcileChildrenArray**对比新jsx和老的Fiber（current Fiber）生成新的wip Fiber树
 
   ### 2.Fiber的特点
    - (1)**实现增量式渲染**：将耗时渲染工作拆分成多个块，并分散在多个帧上进行处理
    - (2)**可中断任务**：支持暂停，中止，或者复用工作单元work
    - (3)**优先级调度**：Scheduler调度器：给不同类型的work赋予优先级，immediate,user-blocking,normal, low,idle比如用户输入可以打断数据更新任务
+      ```js
+        // 用户输入触发高优先级更新
+        input.addEventListener('input', () => {
+          React.startTransition(() => {
+            setInputValue(e.target.value) // 低优先级
+          })
+          // 高优先级更新立即执行
+        })
+      ```
    - (4)**并发模式基础**：为Suspense,useTransition等特性提供底层支持
 
   ### 3.Fiber分类
@@ -111,7 +123,7 @@
       flags:Flags; // 当前组件的阶段：渲染，更新等，update,noflags,placement,,,
       subTreeFlags:Flags;
       deletions:Array<Fiber> | null; // 记录要删除的子节点
-      alternate:FiberNode | null; // 存储更新前的fiber
+      alternate:FiberNode | null; // 存储更新前的fiber,缓存fiber
 
       stateNode:any;
       ref:Ref;
@@ -171,17 +183,8 @@
         },
       }
     ```
-  ### 6.优先级调度
-    ```js
-      // 用户输入触发高优先级更新
-      input.addEventListener('input', () => {
-        React.startTransition(() => {
-          setInputValue(e.target.value) // 低优先级
-        })
-        // 高优先级更新立即执行
-      })
-    ```
-  ### 7.副作用批处理:
+
+  ### 6.副作用批处理:
     ```js
       // 提交阶段遍历 effectList
       let nextEffect = fiberRoot.firstEffect
@@ -191,12 +194,55 @@
       }
     ```
 
-  ### 8.fiber的创建与更新工作流程
-  - 创建流程
-  ReactDOM.render --> createRoot --> createContainer --> FiberRootNode -->  createHostRootFiber --> initializeUpdateQueue(fiber.updateQueue = queue)fiber的任务更新队列
+  ### 7.fiber的创建与更新工作流程
+  > 创建流程：ReactDOM.render --> createRoot --> createContainer --> FiberRootNode -->  createHostRootFiber --> initializeUpdateQueue(fiber.updateQueue = queue)fiber的任务更新队列
+  > 更新流程：createRoot --> updateContainer(处理优先级更新队列) --> createUpdate(lane,next,acion) --> updateQueue
+  ```js
+    /**
+     * createRoot,是页面渲染的入口函数，reactDOM.createRoot()内部执行createContainer，创建整个应用的根节点fiberrootNode
+    *
+    * @param {Container} container
+    * @param {CreateRootOptions} options
+    * @returns {RootType} reactDOMRoot的实例
+    */
+    function createRoot(container:Container, options?:CreateRootOptions): RootType{
+      const root = createContainer(container)
 
-# 三：createRoot
-  createRoot --> createContainer --> createHostRootFiber --> initializeUpdateQueue(fiber.updateQueue = queue)fiber的任务更新队列
+      return {
+        render(element:ReactElementType){
+          initEvent(container, 'click')
+          updateContainer(element,root)
+        },
+        unmount(),
+        _internalroot
+      }
+    }
+    // reactDOM.createRoot()内部执行createContainer，创建整个应用的根节点fiberrootNode
+    export function createContainer(container:Container){
+      const hostRootFiber= new FiberNode(HostRoot, {}, null)
+      const root = new FiberRootNode(container, hostRootFiber)
+      hostRootFiber.updateQueue = createUpdateQueue()
+      return root
+    }
+    // reactDOM.createRoot().render执行updateContainer,将首屏渲染和更新机制联系在一起
+    export function updateContainer(
+      element:ReactElementType | null,
+      root:FiberRootNode
+    ){
+      const hostRootFiber = root.current
+      const lane = requestUpdateLane() // 页面初次渲染，defaultLane
+      // 每一个update都会被分配一个或者多个lane,以确保他在更新队列中的优先级顺序
+      const update = createUpdate<ReactElementType | null>(element, lane)
+      enqueueUpdate(
+        hostRootFiber.updateQueue as UpdateQueue<ReactElementType | null>,
+        update
+      )
+      // 开始调度
+      scheduleUpdateOnFiber(hostRootFiber)
+      return element
+    }
+  ```
+
 
 
 # 三：Fiber协调流程
