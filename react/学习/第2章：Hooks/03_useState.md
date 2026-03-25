@@ -18,9 +18,8 @@
       }
     ```
   ### 4.假设setState执行了多次，比如以下场景
-    ```js------------------------------------------------------------------------+
+    ```js
       const [count, setCount] = useState(0)
-      -
       function handleClick () {
         setCount(count => {
           return count + 2

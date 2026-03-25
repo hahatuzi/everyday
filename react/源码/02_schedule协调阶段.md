@@ -1,7 +1,9 @@
 # schedule阶段：调度更新阶段
-  - 页面初次渲染，类组件setState,forceUpdate,函数组件的**setState**都会**调用scheduleUpdateOnFiber进行更新**。
-  - 标记根节点有一个pending update,即待处理的更新：markRootUpdated
-  - ensureRootIsScheduled： 每次root:FiberRoot接收update的时候都会调用它，确保有一个待处理的微任务来处理根调度
+  > 页面初次渲染，类组件setState,forceUpdate,函数组件的**setState**都会**调用scheduleUpdateOnFiber进行更新**。
+  > 标记根节点有一个pending update,即待处理的更新：markRootUpdated
+  > ensureRootIsScheduled： 每次root:FiberRoot接收update的时候都会调用它，确保有一个待处理的微任务来处理根调度
+  ### 工作流程
+  ReactDOM.render --> createRoot --> updateContainer --> scheduleUpdateOnFiber --> ensureRootIsScheduled --> performSyncWorkOnRoot --> prepareFreshStrack --> createWorkInProgress --> commitRoot --> commitMutationEffects --> commitMutationEffectsOnFiber --> commitPlacement/commitUpdate/commitDeletion/commitPassiveEffect
 
   ```js
     // 在fiebr中调度update
