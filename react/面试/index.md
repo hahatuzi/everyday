@@ -1,3 +1,5 @@
+# 
+
 # 1.HOC
 
 # 2.类组件和函数组件的区别
@@ -148,11 +150,6 @@ webpack rollup :import 和 react.lazy
 
 <Fragment> 通常使用 <>...</> 代替，它们都允许你在不添加额外节点的情况下将子元素组合。
 
-# 14.useEffect 和 useLayoutEffect 的区别
-
-useEffect:组件更新挂载完成后 VDOM --> DOM 更新 --> useEffect :造成页面闪动
-useLayoutEffect:组件更新挂载完成后 VDOM --> useLayoutEffect --> DOM 更新 : 造成页面卡顿
-useLayoutEffect **内部的代码和所有计划的状态更新阻塞了浏览器重新绘制屏幕**。如果过度使用，这会使你的应用程序变慢。如果可能的话，尽量选择 useEffect。
 
 # 15.useMemo 和 useCallback 的区别
 
