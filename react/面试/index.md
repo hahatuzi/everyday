@@ -27,18 +27,6 @@
 
 [!参考链接]https://blog.csdn.net/limuzhixing/article/details/129192016
 
-# 6.React 事件与 普通的 HTML 事件的不同
-
-- 1.事件名称
-- 原生：全小写
-- react:onClick
-- 2.事件函数处理
-  - 原生：字符串
-  - react:onClick={}
-- 3.阻止浏览器本身的默认行为
-  - 原生:return false
-  - react：preventDefault()
-    **VDOM 合成事件 模拟原生 DOM 的行为 cross platfomr react 所有事件全部存放在数组中方便后续操作**
 
 # 7.受控组件和非受控组件的区别
 
