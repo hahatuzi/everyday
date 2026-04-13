@@ -1,5 +1,5 @@
 # Hooks的原理：
-  > Hooks的底层机制其实就是使用**链表结构**存储hook
+  > Hooks的底层机制其实就是使用**链表结构**存储hook,挂载在fiber的memoizedState
   > React通过currentlyRenderingFIber和workInProgressHook来追踪Hook的调用顺序。
   > workInProgressHook:当前正在工作的hook,是hook链表中的一个节点。
   > currentlyRenderingFiber: "当前渲染组件"的指针

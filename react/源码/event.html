@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <div   id="parent">
+    handleparent
+    <div   id="child">handlechild</div>
+  </div>
+  <script>
+    const child = document.getElementById('child')
+    const parent = document.getElementById('parent')
+    child.addEventListener('click', handlechild)
+    parent.addEventListener('click', handleparent)
+    function handlechild (e) {
+      console.log('handlechild');
+      e.stopPropagation()
+    }
+    function handleparent () {
+      console.log('handleparent')
+    }
+  </script>
+</body>
+</html>

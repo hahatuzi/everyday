@@ -9,7 +9,7 @@
     axios.defaults.withCredentials = true
     // 指定请求数据的格式
     axios.post(url,data)
-    axios,defaults.header['Content-Type'] = 'application/x-www-form-urlencoded'
+    axios.defaults.header['Content-Type'] = 'application/x-www-form-urlencoded'
     axios.defaults.transformRequest = data => qs.stringify(data)
     // 设置请求拦截器,添加token校验(JWT校验),存储到vuex或者本地存储中，并且在每一次服务器请求数据时都要带上token
     axios.interceptors.request.use(() => {

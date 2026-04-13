@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    function renderList(list) {
+        if (list.length === 0) return;
+
+
+        // 每次取 20 条
+        const chunk = list.slice(0, 20); 
+        const remaining = list.slice(20);
+
+
+        // 渲染这 20 条
+        renderChunk(chunk);
+
+
+        // 关键：用 setTimeout 把剩下的放到下一帧（或之后的宏任务）去处理
+        // 这样浏览器就有机会在中间进行 UI 渲染，用户能看到列表慢慢变长，而不是卡死
+        setTimeout(() => {
+            renderList(remaining);
+        }, 0);
+    }
+
+    // 作者：豆苗学前端
+    // 链接：https://juejin.cn/post/7582110969200590886
+    // 来源：稀土掘金
+    // 著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。
+  </script>
+</body>
+</html>

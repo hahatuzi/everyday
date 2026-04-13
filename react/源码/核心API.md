@@ -1,37 +1,6 @@
-# 核心API
-  - useState
-  - useReducer
-  - useCallback
-  - useMemo
-  - useRef
-  - createContext,Provier
-  - createElement
-  
-# 代码分析
-  useState --> dispatcher.useState() --> resolveDispatcher() --> ReactCurentDispatcher.current --> HooksDispatcherOnmount/ HooksDispatcherOnUpdate
-  --> mountWorkInProgressHook() --> hook --> queue --> dispatchSetState --> requestUpdateLan(fiber) --> enqueueConCurrentHookUpdate() -->
-  scheduleUpdateOnFiber(root,  fiber,  lane, eventTime),entangTransitionUpdate(root, queue, lane)
-  ### useState分析
-  mountWorkInProgressHook --> basicStateReducer --> 
-  ```js
-    const [age, setAge] = useState(1)
-    function increment () {
-      setAge(age + 1)
-    }
-    <button onClick={() => {
-      increment()
-      increment()
-      increment()
-    }}></button>
-    // 2,setAge多次调用，会进行合并，最终只触发一次更新，如果想要调用多次，可以改成setAge(age => age + 1)
-  ```
   ### useState和useReducer之间的关系
 
 # reconclier
-  ### FiberRoot
-  dispatchSetState --> fiber --> mountState(无fiber) --
-  ### RootFiber
-  createHostRootFiber
 # React Hook
   ### completeWork需要解决的问题：
     - 对于Host类型fiberNode:构建离屏DOM树
@@ -74,10 +43,6 @@
   - 对于ChildDeletion,需要遍历被删除的子树
   ### useState：
   - 实现相对于mountState的updateState
-# 事件系统：
-  模拟浏览器事件捕获，实现合成事件对象
-  - 实现reactDOM和reconcoler对接：
-  将事件毁掉保存在DOM中，通过创建DOM和更新属性时对接
 
 # 实现多个原生标签子节点渲染的源码
   import type

@@ -1,3 +1,4 @@
+# schedule --> Reconciler --> render
 # schedule阶段：调度更新阶段
   > 页面初次渲染，类组件setState,forceUpdate,函数组件的**setState**都会**调用scheduleUpdateOnFiber进行更新**。
   > 标记根节点有一个pending update,即待处理的更新：markRootUpdated
@@ -59,3 +60,8 @@
         }
       }
     ```
+
+# 重点概念：
+实现调度requestIdealCallback
+  ### Heap
+  ###

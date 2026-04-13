@@ -1,4 +1,22 @@
 # useState
+  ### 1.工作流程：
+  useState --> dispatcher.useState() --> resolveDispatcher() --> ReactCurentDispatcher.current --> HooksDispatcherOnmount/ HooksDispatcherOnUpdate
+  --> mountWorkInProgressHook() --> hook --> queue --> dispatchSetState --> requestUpdateLan(fiber) --> enqueueConCurrentHookUpdate() -->
+  scheduleUpdateOnFiber(root,  fiber,  lane, eventTime),entangTransitionUpdate(root, queue, lane)
+  ### 2.代码分析：
+  mountWorkInProgressHook --> basicStateReducer --> 
+  ```js
+    const [age, setAge] = useState(1)
+    function increment () {
+      setAge(age + 1)
+    }
+    <button onClick={() => {
+      increment()
+      increment()
+      increment()
+    }}></button>
+    // 2,setAge多次调用，会进行合并，最终只触发一次更新，如果想要调用多次，可以改成setAge(age => age + 1)
+  ```
   ### 源码
   ```js
     function mountState<State>(initialState:(()=> State | State)):[State,Dispatch<State>]{

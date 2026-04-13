@@ -1,4 +1,5 @@
-# 语法
+# 一：语法
+  useReducer：适用于复杂状态（如对象、数组，或状态更新依赖 previous state），通过 dispatch 动作（action）触发状态更新，逻辑更清晰、可预测。
   ```js
     // 1.reducer:处理状态更新的reducer
     // 2.initialArg:状态初始值
