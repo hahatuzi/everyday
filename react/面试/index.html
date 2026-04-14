@@ -7,9 +7,32 @@
 </head>
 <body>
   <script>
-    let arr = ['daf','fd',123]
-    const [one,two, three] = arr
-    console.log(one, two, three)
+    let count = 0
+    window.addEventListener('click', () => {
+      count++
+    }, false)
+
+    // 调度器scheduler
+    const workLoop = () => {
+      // render() 直接render会导致无限刷新，而我们只想要在数据变化的时候再刷新页面，所以添加判断reconcile
+      reconcile()
+      requestIdleCallback(() => {
+        workLoop()
+      })
+    }
+    const render = () => {
+      console.log('🚀🚀render' + count)
+      document.body.innerHTML = count
+    }
+    let precount = count
+    const reconcile = () => {
+      if(precount !== count){
+        render()
+        precount = count
+      }
+    }
+    // render()
+    workLoop()
   </script>
 </body>
 </html>

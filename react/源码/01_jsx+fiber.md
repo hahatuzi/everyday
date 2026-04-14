@@ -1,5 +1,5 @@
 
-# 一：VDOM与jsx转换
+# 一：虚拟DOM与jsx转换
   ### 1.虚拟DOM的what,why,where,how
    - where:react中的哪里用到了虚拟DOM?**渲染时**react根据jsx函数生成了**VDOM**（ReactElement）,状态变化的时候：生成新的VDOM,Diff算法对比新旧VDOM
   ### 2.实现jsx方法
@@ -60,7 +60,8 @@
   - react/jsx-runtime.js(prod环境)
   - react
   ### 4.实现调试打包结果的环境
-
+  ### 5.jsx的本质是什么
+  ### 6.reactELement和FiberNode的关系
 
 
 

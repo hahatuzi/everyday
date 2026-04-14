@@ -250,3 +250,16 @@
       return [hook.memoizedState, dispatch];
     }
   ```
+
+```js
+const queue = []
+let index = 0
+const useState = (initialState) => {
+  queue.push(initialState)
+  const update = (0 => {
+    queue.push(state)
+    index++
+  })
+  return [queue[index], update]
+}
+```
