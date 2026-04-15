@@ -16,6 +16,7 @@
     const workLoop = () => {
       // render() 直接render会导致无限刷新，而我们只想要在数据变化的时候再刷新页面，所以添加判断reconcile
       reconcile()
+      // react 不使用requestIdleCallback或者scheduler.postTask，而是设计了scheduler包来处理优先级调度任务
       requestIdleCallback(() => {
         workLoop()
       })

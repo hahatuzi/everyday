@@ -199,7 +199,7 @@
           _internalroot
         }
       }
-      // reactDOM.createRoot()内部执行createContainer，创建整个应用的根节点fiberrootNode
+      // reactDOM.createRoot()内部执行createContainer，创建整个应用的根节点fiberRootNode
       export function createContainer(container:Container){
         const hostRootFiber= new FiberNode(HostRoot, {}, null)
         const root = new FiberRootNode(container, hostRootFiber)
