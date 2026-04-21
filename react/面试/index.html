@@ -20,6 +20,16 @@
       requestIdleCallback(() => {
         workLoop()
       })
+
+      // 或者
+      // 如果当前帧还有剩余时间，并且任务列表还有任务，那么执行任务
+      while(deadline.timeRemaining() > 1 && workList.length > 0) {
+        performUnitOfWork()
+      }
+    }
+    function performUnitOfWork(){
+      const work = workList.shift()
+      work()
     }
     const render = () => {
       console.log('🚀🚀render' + count)
