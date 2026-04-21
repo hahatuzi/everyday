@@ -178,7 +178,7 @@
     ```
 
   ### 2.工作流程
-  > 创建流程：ReactDOM.render --> createRoot --> createContainer --> FiberRootNode -->  createHostRootFiber --> 初始化更新队列initializeUpdateQueue(fiber.updateQueue = queue)fiber的任务更新队列。
+  > 创建流程：ReactDOM.render --> createRoot --> createContainer(初始化更新队列initializeUpdateQueue) --> FiberRootNode -->  createHostRootFiber --> 初始化更新队列initializeUpdateQueue(fiber.updateQueue = queue)fiber的任务更新队列。
   > 更新流程：createRoot --> updateContainer(处理优先级更新队列) --> 创建更新对象createUpdate(lane,next,acion) --> 更新入队updateQueue
     ```js
       /**
