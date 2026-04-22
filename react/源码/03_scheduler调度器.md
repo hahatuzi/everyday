@@ -1,3 +1,38 @@
+# 一：scheeduler调度器
+  ### 1.scheduler核心流程
+    ```js
+      // Scheduler核心工作流程示意
+      function workLoop(hasTimeRemaining, initialTime) {
+        let currentTime = initialTime;
+        return function performUnitOfWork(unitOfWork) {
+          // 执行单个工作单元
+          const next = unitOfWork.perform();
+          // 检查是否需要让出主线程
+          if (needsYieldToHost() || !hasTimeRemaining) {
+            return next;
+          }
+          // 继续处理下一个工作单元
+          return performUnitOfWork(next);
+        };
+      }
+    ```
+  ### 2.scheeduler调度器的优势
+  - (1)时间切片，解决UI卡顿问题
+    - useDeferredValue：延迟更新低优先级状态
+    - useTransition：标记状态更新为非阻塞过渡
+    - startTransition：将计算密集型任务标记为过渡任务
+  >  JS的单线程会导致长任务阻塞主线程，导致UI卡顿和用户交互延迟，所以出现了scheduler调度器，将任务分解成不超过浏览器一帧（通常16ms）的片段，每一帧结束后让出主线程，优先处理用户输入等优先级较高的任务
+  - (2)并发模式下的任务优先级调度
+    - ImmediatePriority：紧急任务，需立即执行（如**用户输入**）
+    - UserBlockingPriority：用户交互相关任务（如**动画**、滚动）
+    - NormalPriority：普通优先级（如**数据获取**）
+    - LowPriority：低优先级任务（如非紧急数据处理）
+    - IdlePriority：空闲时执行的任务（如**日志记录**）
+
+
+# scheduler的优先级处理策略：小顶堆,expirationTime(过期时间) + Lanes
+
+
 # schedule --> Reconciler --> render
 # schedule阶段：调度更新阶段
   > 页面初次渲染，类组件setState,forceUpdate,函数组件的**setState**都会**调用scheduleUpdateOnFiber进行更新**。

@@ -7,6 +7,7 @@
 </head>
 <body>
   <script>
+    // currentDispatcher --> resolvedDispatcher
     let count = 0
     window.addEventListener('click', () => {
       count++
@@ -31,16 +32,17 @@
       const work = workList.shift()
       work()
     }
-    const render = () => {
-      console.log('🚀🚀render' + count)
-      document.body.innerHTML = count
-    }
+    // 在数据变化的时候再刷新页面
     let precount = count
     const reconcile = () => {
       if(precount !== count){
         render()
         precount = count
       }
+    }
+    const render = () => {
+      console.log('🚀🚀render' + count)
+      document.body.innerHTML = count
     }
     // render()
     workLoop()

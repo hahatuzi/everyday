@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <div class="count"></div>
+  <!-- <script src="./react.js"></script> -->
+   <script>
+      // =========react-reconciler=================
+      let queue = []
+      let index = 0
+      const useState = (initialState) => {
+        queue.push(initialState)
+        const update = (state) => {
+          queue.push(state)
+          index++
+        }
+        return [queue[index], update]
+      }
+
+      const [count, setCount] = useState(0)
+
+      window.addEventListener('click', () => {
+          setCount(queue[index] + 1)
+          render()
+      })
+      // =========react-dom=================
+      const render = () => {
+          document.body.innerHTML = queue[index] + 1
+      }
+      // 视图初始化
+      render()
+      // =========fiber=================
+      let prevCount = count
+      const reconcile = () => {
+        if(prevCount !== queue[index]){
+          render()
+          prevCount = queue[index]
+        }
+      }
+
+      // =========scheduler=================
+      const workLoop = () => {
+        reconcile()
+        requestIdleCallback(() => {
+          workLoop()
+        })
+      }
+      workLoop()
+   </script>
+</body>
+</html>

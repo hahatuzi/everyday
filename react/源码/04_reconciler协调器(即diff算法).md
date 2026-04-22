@@ -1,3 +1,6 @@
+# 一：scheduler和reconciler工作流程
+  更新任务1,更新任务2(低优先级) -->  Scheduler(调度器)根据任务的优先级调度 --> Reconciler(协调器) --> Renderer(渲染器)
+
 # ChildReconciler：协调子节点
   - deletions:FiberNode的属性记录要删除的子节点
 

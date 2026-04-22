@@ -2,7 +2,7 @@
   > fiberNode是虚拟DOM在react中的实现方式。vue中叫VNode。
   > 旧版本react采用递归遍历虚拟DOM树，组件树庞大时比较好使，不能停止
   > 它介于React Element和真实UI节点之间，能够表达节点之间的关系，转换过程为JSX --> ReactElement --> FIberNode--> DomElement。
-  ### 1.jsx和fiber的关系，ReactElement与fiber的关系对比
+  ### 1.jsx和fiber的关系，ReactElement与fiber的关系对比,fiber的创建和更新
   ReactElement如果作为核心模块操作的数据结构，存在以下问题：
    - 无法表达节点之间的关系
    - 字段有限，不好扩展
@@ -25,10 +25,11 @@
       ```
    - (4)**并发模式基础**：为Suspense,useTransition等特性提供底层支持
 
-  ### 3.Fiber分类
+  ### 3.Fiber分类(双缓存机制)
   项目一共存在两棵fiberNode树：current，workProgress。
    - (1)current：对应真实UI的fiberNode树。
    - (2)workProgress:正在执行的fiber,触发更新后，正在reconclier中计算的fiberNode树
+
 
   ### 3.fiberNode结构解读:
   一个fiber指一个将要执行或者已经执行结束的工作单元work。**一个组件可以有一个或者多个fiber**。
@@ -130,7 +131,7 @@
         nextEffect = nextEffect.nextEffect
       }
     ```
-# 二：fiber的创建与更新，即reconciler协调
+# 二：fiber的创建与更新
   ### 1.FiberRoot和HostRootFiber的区别
   - **FiberRoot:应用根容器**
     - 1.createContainer --> createFiberRoot --> FiberRoot = new FiberRootNode()
@@ -224,5 +225,3 @@
         return element
       }
     ```
-
-  ### reconciler协调

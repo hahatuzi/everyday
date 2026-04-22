@@ -88,23 +88,3 @@
 # jsx消费的顺序:DFS深度优先遍历的顺序遍历ReactElement，所以组件销毁的时候子组件优先被销毁
 
 
-# 三：更新机制
-  ### 1.常见触发更新的方式：
-  - ReactDom.createRoot().render
-  - this.setState
-  - useState的dispatch
-  ### 更新机制的组成部分
-  - update：代表更新的数据结构
-  - UpdateQueue:消费update的数据结构,**UpdateQueue链表结构**中包含多个sharePending,sharePending又是由多个update组成。
-  ### 更新机制的工作流程
-  - 实现mount时调用的API
-  - 将该API接入上述更新机制中
-
-fiberRootNode ----current----> hostRootFiber ----child----> APP ----return----> hostRootFiber ----stateNode----> fiberRootNode
-
-# 四：首屏渲染的更新
-# 五：初探mount流程
-  更新流程的目的：生成wrip fiberNode树。
-  进入A的beginWork --> 对比B的currentfiberNode和B的reactElement --> 生成B对应的Wrip 
-  # multirepo和monorepo的区别
-# react项目结构
