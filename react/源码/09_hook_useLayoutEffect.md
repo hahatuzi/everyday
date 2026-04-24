@@ -76,3 +76,9 @@
   > useEffect:组件更新挂载完成后 VDOM --> DOM 更新 --> useEffect :造成页面闪动
   > useLayoutEffect:组件更新挂载完成后 VDOM --> useLayoutEffect --> DOM 更新 : 造成页面卡顿
   > useLayoutEffect **内部的代码和所有计划的状态更新阻塞了浏览器重新绘制屏幕**。如果过度使用，这会使你的应用程序变慢。如果可能的话，尽量选择 useEffect。
+|         阶段        |                       useEffect                | useLayoutEffect  |
+| :-----------------: | :---------------------------------------------:| :---------------:|
+| beforeMutation阶段  |                 调度flushPassiveEffects        |        无        |
+|    mutation阶段     |                           无                   |   执行destory    |
+|     layout阶段      |                 注册destory，create            |   执行create     |
+|  commit阶段完成后   |   注册flushPassiveEffects,内部执行注册的回调   |        无        |

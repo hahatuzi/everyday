@@ -1,23 +1,43 @@
-# useState
+# 一：useState
   ### 1.工作流程：
   useState --> dispatcher.useState() --> resolveDispatcher() --> ReactCurentDispatcher.current --> HooksDispatcherOnmount/ HooksDispatcherOnUpdate
   --> mountWorkInProgressHook() --> hook --> queue --> dispatchSetState --> requestUpdateLan(fiber) --> enqueueConCurrentHookUpdate() -->
   scheduleUpdateOnFiber(root,  fiber,  lane, eventTime),entangTransitionUpdate(root, queue, lane)
   ### 2.代码分析：
   mountWorkInProgressHook --> basicStateReducer --> 
-  ```js
-    const [age, setAge] = useState(1)
-    function increment () {
-      setAge(age + 1)
-    }
-    <button onClick={() => {
-      increment()
-      increment()
-      increment()
-    }}></button>
-    // 2,setAge多次调用，会进行合并，最终只触发一次更新，如果想要调用多次，可以改成setAge(age => age + 1)
-  ```
-  ### 源码
+  - (1)useState需要实现：
+    - 针对update的dispatcher
+    - 实现对标mountWorkInProgress的updateWorkInProgressHook
+    - 实现updateState中的计算新state的逻辑
+  - (2)其中updateWorkInProgress的实现需要考虑的问题：
+    - hook数据从哪里来？
+    - 交互阶段触发的更新
+    ```js
+      const [age, setAge] = useState(1)
+      function increment () {
+        setAge(age + 1)
+      }
+      <button onClick={() => {
+        increment()
+        increment()
+        increment()
+      }}></button>
+      // 2,setAge多次调用，会进行合并，最终只触发一次更新，如果想要调用多次，可以改成setAge(age => age + 1)
+    ```
+  
+# 二：useState的mount和update流程的区别
+  ### beginWork：
+  - 需要处理childDeletion的情况
+  - 需要处理节点移动的情况
+  ### completeWork：
+  - 需要处理HostText内容更新的情况
+  - 需要处理HostComponent属性变化的情况
+  ### commitWork:
+  - 对于ChildDeletion,需要遍历被删除的子树
+  ### useState：
+  - 实现相对于mountState的updateState
+
+# 三：源码
   ```js
     function mountState<State>(initialState:(()=> State | State)):[State,Dispatch<State>]{
       const hook = mountWorkInprogressHook()

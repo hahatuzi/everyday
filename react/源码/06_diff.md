@@ -1,7 +1,33 @@
 # diff
-  > 老节点还有，新节点没了，删除剩余老节点
-  > 新节点有，老节点没，新节点直接新增
-  > 新老节点都有
+  mount：mountChildFibers
+  update:reconcileChildFibers  --> fragment/object/string/number
+# 1.单一节点的diff
+    - 可复用条件：key相同，elementType相同
+# 2.多节点diff
+  ### 1.节点更新
+  > (1)节点属性变化
+  > (2)节点类型更新
+  ```js
+    <ul>
+      <li key="0"></li>
+      <li key="1"></li>
+    </ul>
+    // 节点属性变化
+    <ul>
+      <li key="0" className="active"></li>
+      <li key="1"></li>
+    </ul>
+    // 节点类型更新
+    <ul>
+      <div key="0"></div>
+      <li key="1"></li>
+    </ul>
+  ```
+  ### 2.节点新增或减少
+  > (1)新增节点:新节点有，老节点没，新节点直接新增
+  > (2)删除节点:老节点还有，新节点没了，删除剩余老节点
+  > (3)节点位置变化:新老节点都有
+
   ```js
     // old: 0 1 2 3 4 5
     // new: 1 3 2 4 5
@@ -16,7 +42,7 @@
         let previousNewFiber: Fiber | null = null;
 
         let oldFiber = currentFirstChild;
-        let lastPlacedIndex = 0;
+        let lastPlacedIndex = 0; // 本次要更新的节点在页面中的位置
         let newIdx = 0;
         let nextOldFiber = null;
         for (; oldFiber !== null && newIdx < newChildren.length; newIdx++) {

@@ -4,7 +4,7 @@
 # ChildReconciler：协调子节点
   - deletions:FiberNode的属性记录要删除的子节点
 
-  # reconcileSingleElement
+# reconcileSingleElement
   - 协调单个节点，对于页面初次渲染，创建fiber，不涉及对比复用老节点
     ```js
       function reconcileSingleElement(
