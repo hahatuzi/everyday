@@ -2,20 +2,10 @@
   
   ### 源码
     ```js
-      function mountLayoutEffect(
-        create: () => (() => void) | void,
-        deps: Array<mixed> | void | null,
-      ): void {
+      function mountLayoutEffect( create: () => (() => void) | void, deps: Array<mixed> | void | null,): void {
         let fiberFlags: Flags = UpdateEffect;
         if (enableSuspenseLayoutEffectSemantics) {
           fiberFlags |= LayoutStaticEffect;
-        }
-        if (
-          __DEV__ &&
-          enableStrictEffects &&
-          (currentlyRenderingFiber.mode & StrictEffectsMode) !== NoMode
-        ) {
-          fiberFlags |= MountLayoutDevEffect;
         }
         return mountEffectImpl(fiberFlags, HookLayout, create, deps);
       }
@@ -60,7 +50,7 @@
 
         currentlyRenderingFiber.flags |= fiberFlags;
         hook.memoizedState = pushEffect(
-          HookHasEffect | hookFlags,
+          HookHasEffect | hookFlags,// HookHasEffect的时候才需要执行hook
           create,
           destroy,
           nextDeps,
