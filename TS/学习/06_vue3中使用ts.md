@@ -142,15 +142,15 @@
     import {ExtractDefaultPropTypes, PropType} from 'vue'
 
     // 按钮组件
-    export type Size = 'small' | 'medium' | 'large'
-    export type Type = 'primary' | 'success' | ''
-    export type NativeType = 'primary' | 'success' | ''
+    export type Size = 'small' | 'medium' | 'large';
+    export type Type = 'primary' | 'success' | '';
+    export type NativeType = 'primary' | 'success' | '';
 
     export const buttonProps = {
       size:String as PropType<Size>,
       type: {
         type: String as PropType<Type>,
-        validatoe:(val:string) => {
+        validator:(val:string) => {
           return ['primary', 'success', 'warning']
         }
       },
