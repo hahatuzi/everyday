@@ -62,10 +62,12 @@
      
     ```
 
+  ### useInsertionEffect
+  useINsertionEffect比useLayoutEffect更早，useInsertionEffect执行时，DOM还没哟更新，本质上useInsertionEffect主要是解决CSS-in-js在渲染中注入样式的性能问题
 # 二：useEffect 和 useLayoutEffect 的区别
-  > useEffect:组件更新挂载完成后 VDOM --> DOM 更新 --> useEffect :造成页面闪动
-  > useLayoutEffect:组件更新挂载完成后 VDOM --> useLayoutEffect --> DOM 更新 : 造成页面卡顿
-  > useLayoutEffect **内部的代码和所有计划的状态更新阻塞了浏览器重新绘制屏幕**。如果过度使用，这会使你的应用程序变慢。如果可能的话，尽量选择 useEffect。
+  > useEffect callback:异步调用，主线程任务执行完成，DOM更新，JS执行完成，视图绘制完成后，才执行useEffect的callback
+  > useLayoutEffect:同步执行，DOM更新后，视图绘制完成之前，执行useLayoutEffect的callback,这个时候更方便修改DOM
+  > useLayoutEffect **内部的代码和所有计划的状态更新阻塞了浏览器重新绘制屏幕**。如果过度使用，这会使你的应用程序变慢。如果可能的话，尽量选择 useEffect。如果涉及DOM修改，用useLayoutEffect
 |         阶段        |                       useEffect                | useLayoutEffect  |
 | :-----------------: | :---------------------------------------------:| :---------------:|
 | beforeMutation阶段  |                 调度flushPassiveEffects        |        无        |
