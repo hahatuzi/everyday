@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    function DoublyLinkedList () {
+      // 属性
+      this.head = null
+      this.tail = null
+      this.length = 0
+      // 内部的节点类
+      function Node (val) {
+        this.data = val
+        this.next = null
+        this.prev = null
+      }
+      DoublyLinkedList.prototype.append = function (data) {
+        let newNode = new Node(data)
+        if(this.length === 0) {
+          this.head = newNode
+          this.tail = newNode
+        } else {
+          newNode.prev = this.tail
+          this.tail.next = newNode
+          this.tail = newNode
+        }
+        this.length += 1
+      }
+      DoublyLinkedList.prototype.toString = function (data) {
+      }
+      DoublyLinkedList.prototype.forwardString = function (data) {
+        let res = ''
+        if(this.length == 0){
+          return res
+        } else {
+          let current = this.head
+          while(current.next){
+            res += current.data + ' '
+            current = current.next
+          }
+          return res
+        }
+      }
+      DoublyLinkedList.prototype.backwordString = function (data) {
+      }
+      DoublyLinkedList.prototype.insert = function (position, data) {
+        if(this.length < position || position < 0)return false
+        let newNode = new Node(data)
+        if(this.length == 0){
+          this.head = newNode
+          this.tail = newNode
+          this.length = 1
+        } else {
+          if(position == 0){
+           this.head.prev = newNode
+           newNode.next = this.head
+           this.head = newNode
+          } else if (position == this.length) {
+            this.tail.next = newNode
+            newNode.prev = this.tail
+            this.tail = newNode
+          } else {
+            let current = this.head
+            let index = 0
+            if(index++ < position) {
+              current = current.next 
+            }
+            newNode.next = current
+            current.prev.next = newNode
+            newNode.prev = current.prev
+            current.next.prev = newNode
+          }
+          this.length += 1
+        }
+      }
+    }
+    DoublyLinkedList.prototype.get = function (position) {
+      if(this.length < position || position < 0)return null
+      let current = this.head
+      let index = 0
+      while(index++ < position){
+        current = current.next
+      }
+       return current.data
+    }
+    DoublyLinkedList.prototype.indexOf = function (data) {
+      let index = 0
+      let current = this.head
+      while (current) {
+        if(current.data == data) return index
+        current = current.next
+        index += 1
+      }
+      return index
+    }
+    // update
+    DoublyLinkedList.prototype.update = function (position, data) {
+      if (position < 0 || position > this.length) return false
+      let index = 0
+      let current = this.head
+      while (index++ < position) {
+        current = current.next
+      }
+      current.data = data
+      // return current
+    }
+    // removeAt
+    DoublyLinkedList.prototype.removeAt = function (position) {
+      if (position < 0 || position > this.length) return false
+      if (position == 0) {
+        this.head.next.prev = null
+        this.head = this.head.next
+      } else if (position == this.length - 1) {
+        this.tail.prev.next = null
+        this.tail = this.tail.prev
+      } else {
+        let index = 0
+        let current = this.head
+        while (index++ < position) {
+          current = current.next
+        }
+        current.prev.next = current.next
+        current.next.prev = current.prev
+      }
+      this.length--
+    }
+    let link = new DoublyLinkedList()
+    link.append('lisa')
+    link.append('jisoo')
+    link.append('rose')
+    link.append('jennie')
+    console.log(link.get(0))
+    console.log(link.get(1))
+    console.log(link.get(2))
+    console.log(link.get(3))
+    console.log(link.indexOf('rose'))
+    link.insert(2,'lili')
+    link.update(1,'lily')
+    console.log(link);
+  </script>
+</body>
+</html>
