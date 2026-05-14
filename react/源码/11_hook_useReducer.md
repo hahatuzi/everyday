@@ -84,7 +84,7 @@
       markUpdateInDevTools(fiber, lane, action);
     }
   ```
-  ### updateReducer
+  ## updateReducer
   ```js
     function updateReducer<S, I, A>(
       reducer: (S, A) => S,

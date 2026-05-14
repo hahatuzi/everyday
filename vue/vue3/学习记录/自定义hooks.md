@@ -36,7 +36,7 @@
     const { x, y } = useMousePosition();
     </script>
   ```
-### 2.useCout
+## 2.useCout
 ```js
 import {ref, moMounted, computed} from 'vue'
 export default function useCount {

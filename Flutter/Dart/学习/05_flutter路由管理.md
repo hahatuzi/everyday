@@ -104,8 +104,8 @@
   ```
 
 # 路由传递参数
-  ### 1.基础路由传参
-  ### 1.命名路由传参
+  ## 1.基础路由传参
+  ## 1.命名路由传参
   - 传递参数(命名路由)：**Navigator.pushNamed(context,地址，arguments:{参数})**
   - 传递参数(命名路由)**ModalRout.of(context)?.settings.arguments**
   - 接收实际：**initState获取不到路由参数**，放置在**Future.microtask(异步微任务)中**

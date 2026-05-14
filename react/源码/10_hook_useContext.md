@@ -67,7 +67,7 @@
     }
   ```
 
-  ### Consumer
+  ## Consumer
     ```js
       function updateContextConsumer(
         current: Fiber | null,

@@ -1,10 +1,10 @@
 # 函数和Function的关系
-  ###  1.Function和自定义构造函数
+  ##  1.Function和自定义构造函数
     - （1）.Function.prototype.prototype在使用function作为构造函数与new运算符一起使用时，用作新对象的原型
     - （2）.Function.prototype.toString()返回表示函数源代码的字符串。重写了 Object.prototype.toString 方法。
     - （3）.Function和自定义构造函数的关系
-  ### 2.new Foo和new Foo()的区别
-  ### 3.区别实例对象和Function对象
+  ## 2.new Foo和new Foo()的区别
+  ## 3.区别实例对象和Function对象
   - 在js中**每一个函数**其实**都是一个Function对象**，**Function对象**提供了用于处理**函数**的方法。
   - **Function()构造函数**创建了一个新的**Function实例对象**，直接调用**该构造函数**的话**可以动态创建函数**。
   - 而通过自定义名字的构造函数创建的实例则和Function无关。比如 f1 = new Foo()和f = new Function()，分别指向不同的构造函数
@@ -15,7 +15,7 @@
     ```
 
 # 一：函数的六种创建方式
-  ### （1）直接声明函数并调用
+  ## （1）直接声明函数并调用
     ```js
       function sayHello () {
         console.log('sayHello')
@@ -23,7 +23,7 @@
       sayHello()
     ```
 
-  ### （2）函数表达式，通过变量名来调用该函数
+  ## （2）函数表达式，通过变量名来调用该函数
     ```js
       const sayHello = function () {
         console.log('sayHello')
@@ -31,7 +31,7 @@
       sayHello()
     ```
 
-  ### （3）箭头函数
+  ## （3）箭头函数
     ```js
       const sayHello =() => {
         console.log('sayHello')
@@ -39,7 +39,7 @@
       sayHello()
     ```
 
-  ### （4）构造函数，通过new关键字来调用
+  ## （4）构造函数，通过new关键字来调用
     ```js
       function SayHello () {
         console.log('sayHello')
@@ -47,7 +47,7 @@
       const s = new SayHello()
     ```
   
-  ### （5）立即调用函数，就是当它被定义出来时就会自动执行的函数，不需要调用
+  ## （5）立即调用函数，就是当它被定义出来时就会自动执行的函数，不需要调用
     ```js
       (function  () {
         console.log('sayHello')
@@ -65,7 +65,7 @@
       // 注：自执行函数的内部可以访问全局变量，但是除了自执行函数自身内部，是无法访问到它的。
     ```
   
-  ### （6）Function构造函数
+  ## （6）Function构造函数
     ```js
       // var fn = new Function(形参列表， 函数体)
       const sum = new Function(a,b, 'return a + b')
@@ -73,7 +73,7 @@
       // function Foo(){}等于 var Foo = new Function()
     ```
 
-  ### 构造函数 VS 函数声明 VS 函数表达式
+  ## 构造函数 VS 函数声明 VS 函数表达式
     ```js
       // Function构造函数和函数声明的不同:Function构造函数创建的是全局环境，和函数声明不同
       var multiply = new Function("x", "y", "return x * y");
@@ -106,7 +106,7 @@
 
 # 二：函数调用的四种方法：作为对象方法调用，函数调用模式，构造器调用模式，apply,call调用模式
   **注**this指向问题的本质就是确定该函数的调用者，确定该函数所处的调用域
-  ### （1）作为对象方法调用,this指向该对象
+  ## （1）作为对象方法调用,this指向该对象
     ```js
       // 先定义一个对象，然后在对象的属性中定义方法，通过myobject.property来执行方法，this即指当前的myobject对象。
       var blogInfo = {
@@ -117,7 +117,7 @@
       blogInfo.showBlog(); // 函数的调用者为blogInfo,所以此处的this就是blogInfo的区域
     ```
 
-  ### （2）函数调用模式, ，this指向window或者node环境指向global对象
+  ## （2）函数调用模式, ，this指向window或者node环境指向global对象
     ```js
     // 箭头函数中的this指向它所在上下文中的this
       // 定义一个函数，设置一个变量名保存函数，这时this指向到window对象。
@@ -127,7 +127,7 @@
       alert(myfunc(3,4));// 无调用者，因为该函数没有调用者，所以this默认指向window，结果为7，但严格模式下结果为undefined
     ```
 
-  ### （3）构造器调用模式,在使用prototype的方法时，必须实例化该对象才能调用其方法。
+  ## （3）构造器调用模式,在使用prototype的方法时，必须实例化该对象才能调用其方法。
     ```js
       // 定义一个函数对象，在对象中定义属性，在其原型对象中定义方法。在使用prototype的方法时，必须实例化该对象才能调用其方法。
       var Myfunc = function(a){
@@ -141,7 +141,7 @@
       newfunc.show();
     ```
 
-  ### （4）间接调用模式，通过call，apply,bind方法可以显式指定this的绑定对象
+  ## （4）间接调用模式，通过call，apply,bind方法可以显式指定this的绑定对象
     ```js
       var myobject={};
       var sum = function(a,b){
@@ -190,7 +190,7 @@
     ```
 
 # 三：默认参数，默认参数的注意事项：
-  ### （1）默认位置：默认参数值的位置最好是最后一位。
+  ## （1）默认位置：默认参数值的位置最好是最后一位。
     ```js
       function fn (a,b = 1){
         console.log(a + b)
@@ -201,15 +201,15 @@
       }
       fn(undefined, 2)
     ```
-  ### （2）默认参数对函数的length属性的影响，**添加了默认参数后会导致函数的length只返回默认参数之前的形参个数**
+  ## （2）默认参数对函数的length属性的影响，**添加了默认参数后会导致函数的length只返回默认参数之前的形参个数**
     ```js
       function fn (a, b = 1, c){
         console.log(a + b +c)
       }
       console.log(fn.length)
     ```
-  ### （3）每次重新调用函数时默认参数都会重新赋值
-  ### （4）默认参数可以和形参一起结合使用
+  ## （3）每次重新调用函数时默认参数都会重新赋值
+  ## （4）默认参数可以和形参一起结合使用
     ```js
       function fn (a, b, c = (a + b)){
         console.log(a, b, c)
@@ -255,7 +255,7 @@
   ```
 
 # 六：函数的prototype原型,原型链，instanceof
-  ### （1）为什么只有函数有prototype
+  ## （1）为什么只有函数有prototype
   js通过new来创建对象，但是这样创建的对象每次都不一样，又因为js最初没有class的概念，为了能在不同对象之间共享属性，就使用了prototype来处理共享属性
   ```js
     function People (name) {this.name = name}
@@ -265,7 +265,7 @@
     console.log(p1.age, p2.age)
   ```
   [!参考链接]https://developer.aliyun.com/article/977147
-  ### （2）instanceof
+  ## （2）instanceof
    - 1.instanceof原理
      ```js
         // instanceOf原理
@@ -320,7 +320,7 @@
       let a2 = new A()
       console.log(a1.n, a1.m, a2.n, a2.m,)
     ```
-  ### (3)__proto__和Object.getPrototypeOf(target)
+  ## (3)__proto__和Object.getPrototypeOf(target)
    - 两者等价，后者是ES6的标准
 
 # 七：变量提升和函数提升,即预编译
@@ -358,19 +358,19 @@
 
 
 # 八：执行上下文和作用域
-  ### （1）全局执行上下文：在执行全局代码前将**window**作为全局执行上下文。
+  ## （1）全局执行上下文：在执行全局代码前将**window**作为全局执行上下文。
   - 对全局数据进行预处理：var定义的全局变量-->undefined,添加为window的属性
   - function声明的全局函数-->复制为fun,添加为window的方法
   - this --> window
   - 开始执行全局代码
-  ### （2）函数执行上下文，在调用函数且准备执行函数体之前，创建对应的函数执行上下文对象。
+  ## （2）函数执行上下文，在调用函数且准备执行函数体之前，创建对应的函数执行上下文对象。
    - 对局部数据进行预处理
    - 形参变量 --> 赋值（实参）--> 添加为执行上下文的属性
    - arguments --> 赋值（实参列表）-->添加为执行上下文的属性
    - var定义的局部变量 --> 赋值undefined-->添加为执行上下文的属性
    - function定义的函数 --> 赋值fun-->添加为执行上下文的属性
    - this --> 调用函数的对象
-  ### （3）作用域和执行上下文的区别
+  ## （3）作用域和执行上下文的区别
    - 1.**作用域是静态**的，只要函数定义了就会存在且不会再变化，**执行上下文**会随着函数的调用结束**被释放**
    - 2.上下文对象从属于所在的作用域，全局上下文环境-->全局作用域，函数上下文环境-->对应的函数作用域
     ```js

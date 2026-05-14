@@ -353,7 +353,7 @@
  
 
 # eslint相关问题
-  ### eslint和prettier概念
+  ## eslint和prettier概念
     - prettier代码格式化，
   - 是否了解eslint9,或者oxclint
   - voidzero为什么需要通过rust重构整个工具链：统一ast,建构，叫妖孽，格式化等所有环境共用一个ast

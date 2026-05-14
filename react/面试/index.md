@@ -13,15 +13,15 @@
 
 # 4.React.createClass VS extends React.Component
 
-### （1）语法使用区别
+## （1）语法使用区别
 
-### （2）propType 的不同：React.createClass 使用 getDefaultProps，React.Component 使用 defaultProps
+## （2）propType 的不同：React.createClass 使用 getDefaultProps，React.Component 使用 defaultProps
 
-### （3）createClass：getInitState()
+## （3）createClass：getInitState()
 
-### （4）Component:constructor
+## （4）Component:constructor
 
-### （5）mixin:createClass:mixins 添加属性，compoent 不能使用 mixin
+## （5）mixin:createClass:mixins 添加属性，compoent 不能使用 mixin
 
 # 5.组件封装案例
 

@@ -210,7 +210,7 @@ type Emits = {
   ```
 
 # 15.vue3中的ts类型工具函数
-  ### （1）PropType<T>,用于在props声明时给一个prop标注更复杂的类型定义
+  ## （1）PropType<T>,用于在props声明时给一个prop标注更复杂的类型定义
   ```js
     import type {propType} from 'vue'
     interface Book {
@@ -227,7 +227,7 @@ type Emits = {
       }
     }
   ```
-  ### extractPropTypes<T>,用于在props声明时给一个prop标注更复杂的类型定义
+  ## extractPropTypes<T>,用于在props声明时给一个prop标注更复杂的类型定义
   ```js
     import type {propType} from 'vue'
     interface Book {

@@ -1,5 +1,5 @@
 # props的相关信息
-  ### 1.props的children属性
+  ## 1.props的children属性
   - （1）表示组件标签的子节点，当组件标签有子节点时，props就会有该属性
   - （2）children属性与普通的props一样，值可以是任意值（文本，React元素，组件，甚至是函数）
     ```js
@@ -10,7 +10,7 @@
         )
       }
     ```
-  ### 2.props校验
+  ## 2.props校验
     ```js
       // 使用步骤
       // 1.安装包 prop-types
@@ -32,7 +32,7 @@
       // 特定结构的类型
       // propTypes.shape({name:string,age:number})
     ```
-  ### 3.props的默认值
+  ## 3.props的默认值
     ```js
       function App(props){
         return (

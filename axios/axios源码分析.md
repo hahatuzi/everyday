@@ -52,17 +52,17 @@
   - axios.create() --> createInstance() --> instance --> Axios.prototpe.request --> 处理config然后dispatchRequest --> adapter --> 报错cancel --> response interceports
   - 详细流程：axios/axios.create() ----Create an instance of Axios---> createInstance() ---Create the default instance to be exported--->  执行、别名执行axios()/axios.get()
 ---->  Axios.protoytpe.request()  --->  request interceptors  --->  处理参数，然后dispatchRequest()  ---> adapter()  ---> 报错cancel （cancel只有两种结果，rejected或者fullfilled）--->  response interceptors  ---> 请求的onResolved/onRejected
-  ### 1.**request(config)**
+  ## 1.**request(config)**
     将请求拦截器、dispatchRequest()、响应拦截器通过promise链串联起来，返回promise
-  ### 2.**dispatchRequest(config)**
+  ## 2.**dispatchRequest(config)**
     转换请求数据 --> 调用xhrAdapter()发送请求 --> 请求返回后转换响应数据，返回promise
-  ### 3.**xhrAdapter(config)**
+  ## 3.**xhrAdapter(config)**
     创建XHR对象，根据config进行相应设置，发送特定请求，bong接受响应数据，返回promise
 
 
 # 四.如何取消一个请求
-  ### (1)取消请求的场景一：在发送请求后点击按钮来取消请求
-  ### (2)取消请求的场景二：在连续发送多次请求时，取消前面的请求
+  ## (1)取消请求的场景一：在发送请求后点击按钮来取消请求
+  ## (2)取消请求的场景二：在连续发送多次请求时，取消前面的请求
   请求的配置对象中添加**cancel属性**，该属性会**暴露一个取消的回调函数**，可以**在外部直接使用该函数来取消请求**，同时在调用该函数时传递的参数会存在于请求error回调函数中。
   1.当配置了cancelToken对象时
   （1）创建一个用于未来取消请求的cancelPromise
@@ -103,7 +103,7 @@
 
 # 六：拦截器原理与执行流程分析
   axios拦截器的运行流程，**请求拦截器先添加后执行，响应拦截器后添加先执行**
-  ### （1）原理
+  ## （1）原理
     ```js
       function Axios() {
         this.interceptors = {
@@ -157,7 +157,7 @@
       })
 
     ```
-  ### （2）流程分析
+  ## （2）流程分析
     ```js
       var chain = [dispatchRequest, undefined]
       // 第一步：添加请求拦截器数组和响应拦截器数组

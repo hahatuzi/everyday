@@ -26,11 +26,11 @@
   ```
 # 三：常用插件
 
-  ### 1.rollup-plugin-visualizer：分析打包依赖
-  ### 2.@rollup/plugin-commonjs：支持commonJS规范
-  ### 3.unplugin-auto-import/vite: 自动导入
-  ### 4.unplugin-vue-components/resolvers: 自动导入elementPlus
-  ### 5.vite-plugin-px2rem
+  ## 1.rollup-plugin-visualizer：分析打包依赖
+  ## 2.@rollup/plugin-commonjs：支持commonJS规范
+  ## 3.unplugin-auto-import/vite: 自动导入
+  ## 4.unplugin-vue-components/resolvers: 自动导入elementPlus
+  ## 5.vite-plugin-px2rem
     ```js
       import { px2rem } from 'vite-plugin-px2rem'
       plugins:[

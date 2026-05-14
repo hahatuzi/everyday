@@ -1,5 +1,5 @@
 # http相关知识
-  ### content-Type
+  ## content-Type
   - application/x-www-form-urlencoded;charset=utf-8  -->  name=lisa&age=18
   - application/json;charset=utf-8 -->  {name:'lisa', age: 18}
   - multipart/form-data

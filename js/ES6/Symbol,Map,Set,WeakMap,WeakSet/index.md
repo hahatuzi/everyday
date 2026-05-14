@@ -2,15 +2,15 @@
 为了解决对象的属性名不能重复的问题，出现了Symbol,Symbol值是通过Symbol函数创建的。
  - 对象的属性名可以是**字符串**也可以是**Symbol**
  - symbol强调独一无二几个字，每个从Symbol()返回的Symbol值都是唯一的。因此可以作为对象的唯一属性名的标识符
- ### 1.Symbol()和Symbol.for()的区别
+ ## 1.Symbol()和Symbol.for()的区别
   - Symbol.for() 和 Symbol() 方法都会生成新的 symbol 类型的值.
   - 不同的是 Symbol.for() 方法会查找命名参数是否在全局中注册过，如果注册过的就不会创建新的值，而是会直接返回，所以我们可以使用到相同的 symbol 值
   - 使用 **Symbol() 方法每次都会创建一个新的值**，且不会注册到全局。
 
- ### 2.Symbol.keyFor()
+ ## 2.Symbol.keyFor()
  Symbol.keyFor() 方法表示获取一个 symbol 的值在全局中注册的命名参数 key，只有使用 Symbol.for() 创建的值才会有注册的命名参数，使用 Symbol() 生成的值则没有：
 
- ### 3.Symbol.toPrimitive
+ ## 3.Symbol.toPrimitive
   [OTC]https://blog.csdn.net/xcg132566/article/details/108109837
   对象的 Symbol.toPrimitive 属性，指向一个方法。该对象被转为原始类型的值时，会调用这个方法，返回该对象对应的原始类型值。
 
@@ -43,7 +43,7 @@ console.log([...arrset])
 # 四：Map
   map对象保存**键值对**，并且**能够记住键的原始插入顺序**，任何类型都可以作为一个键或者值
   一个map对象 在迭代时会根据元素的插入顺序进行一个**for of**循环,在每次迭代后返回一个形式为[key,value]的数组
-  ### 实例方法：
+  ## 实例方法：
     ```js
       Map.prototype.clear() // 移除map对象中所有的键值对
       Map.prototype.delete(key) // 移除指定键值对

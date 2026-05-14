@@ -1,12 +1,12 @@
 # eslint9,prettier,husky,commitlint
 # 全新搭建配置,采用github上antfu的方案
-  ### npm create vue
-  ### 不使用eslint,prettier相关插件,因为后面会使用antfu的prettier和eslint
-  ### stylelint使用
+  ## npm create vue
+  ## 不使用eslint,prettier相关插件,因为后面会使用antfu的prettier和eslint
+  ## stylelint使用
    - vscode安装stylelint插件
    - 安装stylelint相关插件，npm i sass postcss postcss-html postcss-scss stylelint stylelint-config-recess-order stylelint-config-standard -D
    - 配置stylelint.config.mjs文件
-  ### antfu组合prettier和eslint
+  ## antfu组合prettier和eslint
    - npx @antfu/eslint-config@latest
    - package.json添加脚本
      ```js
@@ -28,4 +28,4 @@
       *.sh
       *.md
      ```
-  ### 代码提交检查：Husky,lint-staged,commitlint,commitizen,cz-git配置git提交代码规范
+  ## 代码提交检查：Husky,lint-staged,commitlint,commitizen,cz-git配置git提交代码规范
