@@ -64,6 +64,7 @@
           }
           // 任务调度器的入口函数
           // [performSyncWorkOnRoot, performSyncWorkOnRoot, performSyncWorkOnRoot]
+          // scheduleSyncCallback就是一个宏任务执行器
           scheduleSyncCallback(performSyncWorkOnRoot.bind(null, root, updateLane))
           scheduleMicroTask(flushSyncCallbacks)
         } else {
@@ -82,3 +83,6 @@
       }
     ```
   ### 3.异步可中断更新和饥饿问题
+  ### 4.可中断更新：
+  高优先级任务可以中断低优先级任务
+  click --> workList任务列表添加任务 --> schedule调度取出优先级最高的任务  --> perform开始执行任务

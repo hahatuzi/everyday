@@ -23,6 +23,8 @@
     - 如果两个**setTimeout**的回调时间错开，React 会认为它们属于不同的批次，无法合并。
   - 并发特性：
     - react 18 的并发渲染引擎会尽量优化，但独立的异步任务仍可能触发多次渲染。
+  ### 3.批处理流程：
+  scheduleUpdateOnFiber --> ensureRootIsScheduled(同步优先级，用微任务调度,其他优先级，用宏任务调度)-->syncQueue中添加-->performSyncWorkOnRoot更新函数（该函数批处理时只会调用一次）
   ### 2.实例
   ```js
     function Dashboard() {
