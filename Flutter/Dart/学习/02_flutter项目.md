@@ -1,6 +1,6 @@
 # 一：项目搭建相关知识
-  ## (1)flutter项目创建
-  ## (2)flutter的启动文件说明：runApp和widget
+  ### (1)flutter项目创建
+  ### (2)flutter的启动文件说明：runApp和widget
   - runApp函数是Flutter内部提供的一个函数，启动应用的入口
   - widget表示空间的意思，flutter中万物皆widget
     ```js
@@ -8,7 +8,7 @@
         runApp(const MyApp())
       }
     ```
-  ## (2)flutter项目目录解析📚
+  ### (2)flutter项目目录解析📚
     ```text
       Flutter项目目录
       ├─ .vscode                # vscode推荐配置

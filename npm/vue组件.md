@@ -8,7 +8,7 @@ export default install
 ```
 
 # 流程，经过实验，个人将发布组建的过程分为三个步骤
-### 步骤一：注册组件
+#### 步骤一：注册组件
     ```js
     import tinymce from './tinyMce/index'
     const components = [ tinymce ]
@@ -30,13 +30,13 @@ export default install
         tinymce
     }
     ```
-### 步骤二：打包成js文件
+#### 步骤二：打包成js文件
     ```js
         "lib": "vue-cli-service build --target lib 要打包的文件路径，即步骤一中install所在的目录 --name 打包后的文件夹名字 --dest 打包后的文件夹名字"
         // 例如
         // "lib": "vue-cli-service build --target lib ./src/packages/index.js --name my-ui --dest my-ui"
     ```
-### 步骤三：npm发布
+#### 步骤三：npm发布
 (1)在我们**打包后的文件夹下**使用命令 **npm init -y**，大白话：使用npm init -y初始化我们打包后的文件夹，生成的pachage.json如下
 ```js
     {

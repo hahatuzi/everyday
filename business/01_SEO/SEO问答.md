@@ -48,8 +48,8 @@ SEM：搜索引擎营销
 # 28.白帽，灰帽，黑帽SEO的定义
 白帽没有风险的搜索引擎优化方法，最高职业道德，获取的搜索引擎和排名谁都比较稳定。
 # 一：SEO优化的相关措施
-  ## (1)SSR服务端渲染框架比如nuxt,next
-  ## (2)准确的TDK描述（title,description,keywords）
-  ## (3)语义化标签的使用，比如header,nav,article,footer,h1,h2,alt等
-  ## (4)编写合理的robots.txt文件，告诉搜索引擎忽略不重要的文件或者目录，让搜索引擎更专注于重要内容的抓取和索引，比如知乎https://www.zhihu.com/robots.txt
-  ## (5)站内链接和外部链接
+  ### (1)SSR服务端渲染框架比如nuxt,next
+  ### (2)准确的TDK描述（title,description,keywords）
+  ### (3)语义化标签的使用，比如header,nav,article,footer,h1,h2,alt等
+  ### (4)编写合理的robots.txt文件，告诉搜索引擎忽略不重要的文件或者目录，让搜索引擎更专注于重要内容的抓取和索引，比如知乎https://www.zhihu.com/robots.txt
+  ### (5)站内链接和外部链接

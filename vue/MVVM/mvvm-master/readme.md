@@ -1,4 +1,4 @@
-## 剖析Vue实现原理 - 如何实现双向绑定mvvm
+### 剖析Vue实现原理 - 如何实现双向绑定mvvm
 
 Update: [Vue3.0响应式原理精简代码](https://github.com/DMQ/mvvm/blob/vue3/reactivity/index.html)
 
@@ -8,7 +8,7 @@ Update: [Vue3.0响应式原理精简代码](https://github.com/DMQ/mvvm/blob/vue
 > 为了便于说明原理与实现，本文相关代码主要摘自[vue源码](https://github.com/vuejs/vue), 并进行了简化改造，相对较简陋，并未考虑到数组的处理、数据的循环依赖等，也难免存在一些问题，欢迎大家指正。不过这些并不会影响大家的阅读和理解，相信看完本文后对大家在阅读vue源码的时候会更有帮助<br>
 > 本文所有相关代码均在github上面可找到 [https://github.com/DMQ/mvvm](https://github.com/DMQ/mvvm)
 
-#### 相信大家对mvvm双向绑定应该都不陌生了，一言不合上代码，下面先看一个本文最终实现的效果吧，和vue一样的语法，如果还不了解双向绑定，猛戳[Google](https://www.google.com.hk/search?q=%E5%8F%8C%E5%90%91%E7%BB%91%E5%AE%9A)
+##### 相信大家对mvvm双向绑定应该都不陌生了，一言不合上代码，下面先看一个本文最终实现的效果吧，和vue一样的语法，如果还不了解双向绑定，猛戳[Google](https://www.google.com.hk/search?q=%E5%8F%8C%E5%90%91%E7%BB%91%E5%AE%9A)
 
 ```html
 <div id="mvvm-app">
@@ -40,7 +40,7 @@ var vm = new MVVM({
 ![img1][img1]
 
 
-## 几种实现双向绑定的做法
+### 几种实现双向绑定的做法
 目前几种主流的mvc(vm)框架都实现了单向数据绑定，而我所理解的双向数据绑定无非就是在单向绑定的基础上给可输入元素（input、textarea等）添加了change(input)事件，来动态修改model和 view，并没有多高深。所以无需太过介怀是实现的单向或双向绑定。
 
 实现数据绑定的做法有大致如下几种：
@@ -66,7 +66,7 @@ var vm = new MVVM({
 **数据劫持:** vue.js 则是采用数据劫持结合发布者-订阅者模式的方式，通过`Object.defineProperty()`来劫持各个属性的`setter`，`getter`，在数据变动时发布消息给订阅者，触发相应的监听回调。
 
 
-## 思路整理
+### 思路整理
 已经了解到vue是通过数据劫持的方式来做数据绑定的，其中最核心的方法便是通过`Object.defineProperty()`来实现对属性的劫持，达到监听数据变动的目的，无疑这个方法是本文中最重要、最基础的内容之一，如果不熟悉defineProperty，猛戳[这里](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Object/defineProperty)
 整理了一下，要实现mvvm的双向绑定，就必须要实现以下几点：
 1、实现一个数据监听器Observer，能够对数据对象的所有属性进行监听，如有变动可拿到最新值并通知订阅者
@@ -77,7 +77,7 @@ var vm = new MVVM({
 上述流程如图所示：
 ![img2][img2]
 
-## 1、实现Observer
+### 1、实现Observer
 ok, 思路已经整理完毕，也已经比较明确相关逻辑和模块功能了，let's do it
 我们知道可以利用`Obeject.defineProperty()`来监听属性变动
 那么将需要observe的数据对象进行递归遍历，包括子属性对象的属性，都加上	`setter`和`getter`
@@ -170,7 +170,7 @@ Watcher.prototype = {
 ```
 这里已经实现了一个Observer了，已经具备了监听数据和数据变化通知订阅者的功能，[完整代码](https://github.com/DMQ/mvvm/blob/master/js/observer.js)。那么接下来就是实现Compile了
 
-## 2、实现Compile
+### 2、实现Compile
 compile主要做的事情是解析模板指令，将模板中的变量替换成数据，然后初始化渲染页面视图，并将每个指令对应的节点绑定更新函数，添加监听数据的订阅者，一旦数据有变动，收到通知，更新视图，如图所示：
 ![img3][img3]
 
@@ -272,7 +272,7 @@ var updater = {
 
 至此，一个简单的Compile就完成了，[完整代码](https://github.com/DMQ/mvvm/blob/master/js/compile.js)。接下来要看看Watcher这个订阅者的具体实现了
 
-## 3、实现Watcher
+### 3、实现Watcher
 Watcher订阅者作为Observer和Compile之间通信的桥梁，主要做的事情是:
 1、在自身实例化时往属性订阅器(dep)里面添加自己
 2、自身必须有一个update()方法
@@ -329,7 +329,7 @@ ok, Watcher也已经实现了，[完整代码](https://github.com/DMQ/mvvm/blob/
 
 最后来讲讲MVVM入口文件的相关逻辑和实现吧，相对就比较简单了~
 
-## 4、实现MVVM
+### 4、实现MVVM
 MVVM作为数据绑定的入口，整合Observer、Compile和Watcher三者，通过Observer来监听自己的model数据变化，通过Compile来解析编译模板指令，最终利用Watcher搭起Observer和Compile之间的通信桥梁，达到数据变化 -> 视图更新；视图交互变化(input) -> 数据model变更的双向绑定效果。
 
 一个简单的MVVM构造器是这样子：
@@ -383,7 +383,7 @@ MVVM.prototype = {
 至此，全部模块和功能已经完成了，如本文开头所承诺的两点。一个简单的MVVM模块已经实现，其思想和原理大部分来自经过简化改造的vue[源码](https://github.com/vuejs/vue)，猛戳[这里](https://github.com/DMQ/mvvm)可以看到本文的所有相关代码。
 由于本文内容偏实践，所以代码量较多，且不宜列出大篇幅代码，所以建议想深入了解的童鞋可以再次结合本文源代码来进行阅读，这样会更加容易理解和掌握。
 
-## 总结
+### 总结
 本文主要围绕“几种实现双向绑定的做法”、“实现Observer”、“实现Compile”、“实现Watcher”、“实现MVVM”这几个模块来阐述了双向绑定的原理和实现。并根据思路流程渐进梳理讲解了一些细节思路和比较关键的内容点，以及通过展示部分关键代码讲述了怎样一步步实现一个双向绑定MVVM。文中肯定会有一些不够严谨的思考和错误，欢迎大家指正，有兴趣欢迎一起探讨和改进~
 
 最后，感谢您的阅读！

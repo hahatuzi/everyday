@@ -7,7 +7,7 @@
 * return:Boolean
 */
 ```
-## 特殊情况处理
+### 特殊情况处理
 使用 hasOwnProperty 作为属性名
 JavaScript 并没有保护 hasOwnProperty 这个属性名，因此，当某个对象可能自有一个占用该属性名的属性时，就需要使用外部的 hasOwnProperty 获得正确的结果：
 ```js

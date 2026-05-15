@@ -1,5 +1,5 @@
 # 一：案例一：
-  ## 第一步：
+  ### 第一步：
     ```js
       const { createSlice } = require("@reduxjs/toolkit");
       const userInfoSlice = createSlice({
@@ -19,7 +19,7 @@
       export const {reducer: userInfoReducer } = userInfoSlice
       export const {setName} = userInfoSlice.actions
     ```
-  ## 第二步，注册store：
+  ### 第二步，注册store：
     ```js
       import {userInfoReducer} from './userInfoSlice'
       const {configureStore} = require("@reduxjs/toolkit")
@@ -31,7 +31,7 @@
       })
       export default store
     ```
-  ## 第三步,在组件中使用：
+  ### 第三步,在组件中使用：
     ```js
       import { useDispatch, useSelector } from 'react-redux'
       import {setName} from './store/userInfoSlice'

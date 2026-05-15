@@ -4,7 +4,7 @@
     Dio().get(url).then().catchError()
   ```
 
-  ## dio封装
+  ### dio封装
     ```js
       void main (List<String> args) {
         Dio().get().then((res) {
@@ -42,7 +42,7 @@
         }
       }
     ```
-  ## 2.Dio使用案例
+  ### 2.Dio使用案例
     ```js
       @override initState(){
         super.initState()

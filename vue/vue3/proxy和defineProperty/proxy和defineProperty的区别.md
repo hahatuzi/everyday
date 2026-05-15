@@ -3,7 +3,7 @@
   - 1.性能问题，当潜逃层次比较深的时候就要通过递归实现监听属性变化
   - 2.无法监听新增和删除属性名的操作，因为它只有get,set方法，不像proxy有get,set,delete
   - 3.不支持ES6中的新特性
-## 1.可以监视到更多的对象操作，比如delete操作和对象中方法的调用
+### 1.可以监视到更多的对象操作，比如delete操作和对象中方法的调用
   ```js
     const person = {
       name:'lisa',
@@ -19,7 +19,7 @@
     console.log(proxy_person)
   ```
 
-## 2.proxy支持对数组的操作
+### 2.proxy支持对数组的操作
   ```js
     let arr = []
     let proxy_arr = new Proxy(arr,{
@@ -34,7 +34,7 @@
     console.log(proxy_arr)
     console.log(arr)
   ```
-## 3.不需要侵入对象就可以对它的内部进行读写
+### 3.不需要侵入对象就可以对它的内部进行读写
   ```js
     const person ={}
     const personProxy = new Proxy(person,{

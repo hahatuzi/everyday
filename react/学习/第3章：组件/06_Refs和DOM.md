@@ -4,7 +4,7 @@ ref, callback ref --> createRef --> useRef,forwardRef转发ref --> useRef
 [!ref最新使用]https://zhuanlan.zhihu.com/p/478532753
 
 # 二：使用：
-  ## (1)使用：单项数据流的原则：谁的状态数据由谁来更新，不应该有父组件或者子组件来更新,而我们ref的使用则打破了这一原则
+  ### (1)使用：单项数据流的原则：谁的状态数据由谁来更新，不应该有父组件或者子组件来更新,而我们ref的使用则打破了这一原则
     ```js
       function App () {
         const inputRef = useRef()
@@ -20,7 +20,7 @@ ref, callback ref --> createRef --> useRef,forwardRef转发ref --> useRef
       }
     ```
 
-  ## (2)forwardRef
+  ### (2)forwardRef
   useRef的特点：无法获取自定义组件的ref，需要借助**forwardRef**,但是借助forwarRef后通常获取到的ref是dom元素，通常只能用来修改视图等样式，无法修改state状态数据，所以又产生了**useImperativeHandle**,让函数组件想外部暴露一些操作方法
   ```js
     function Child1 (props, ref) {

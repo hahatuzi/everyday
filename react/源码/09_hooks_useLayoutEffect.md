@@ -1,6 +1,6 @@
 # 一：useLayoutEffect(create, )
   
-  ## 源码
+  ### 源码
     ```js
       function mountLayoutEffect( create: () => (() => void) | void, deps: Array<mixed> | void | null,): void {
         let fiberFlags: Flags = UpdateEffect;
@@ -57,12 +57,12 @@
         );
       }
     ```
-  ## 应用场景
+  ### 应用场景
     ```js
      
     ```
 
-  ## useInsertionEffect
+  ### useInsertionEffect
   useINsertionEffect比useLayoutEffect更早，useInsertionEffect执行时，DOM还没哟更新，本质上useInsertionEffect主要是解决CSS-in-js在渲染中注入样式的性能问题
 # 二：useEffect 和 useLayoutEffect 的区别
   > useEffect callback:异步调用，主线程任务执行完成，DOM更新，JS执行完成，视图绘制完成后，才执行useEffect的callback

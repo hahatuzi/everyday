@@ -1,5 +1,5 @@
 # 使用流程
-## 一：store文件夹--index.js文件
+### 一：store文件夹--index.js文件
   ```js
   import { createPinia } from "pinia";
   import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
@@ -9,7 +9,7 @@
 
   export default pinia
   ```
-## 二：store文件夹--user文件
+### 二：store文件夹--user文件
   ```js
   // 
   // 用户信息
@@ -40,7 +40,7 @@
   export default useUserStore
   // 可以将state视为商店的data，将getters视为商店的computed属性，将actions视为methods
   ```
-## 三：页面使用
+### 三：页面使用
   ```js
   import useUserStore from '@/store/modules/user'
   const userStore = useUserStore()

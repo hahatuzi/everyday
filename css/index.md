@@ -1,5 +1,5 @@
 # 一：元素定位的相关知识复习：
-  ## 1.relative的基本原理复习，以及relative定位的盒子给其他元素带来的影响
+  ### 1.relative的基本原理复习，以及relative定位的盒子给其他元素带来的影响
   - relative定位的盒子是相参照自身本来的位置来改变的，不影响后续其他的标准流的元素
     ```js
       <style>
@@ -11,9 +11,9 @@
       <div class="relative"></div>
       <div></div>
     ```
-  ## 2.absolute绝对定位到底依赖谁？
+  ### 2.absolute绝对定位到底依赖谁？
   - absolute定位的元素相对于自己有定位的最近祖先元素。只要祖先元素有定位即可(relitive,absolute均可),若父元素没有定位则以浏览器为准。
-  ## 3.fixed定位和sticky定位到底依赖谁。fixed固定定位的盒子，相对于浏览器的可视化窗口来说的
+  ### 3.fixed定位和sticky定位到底依赖谁。fixed固定定位的盒子，相对于浏览器的可视化窗口来说的
 
 # 二：伪类选择器：a:link; a:visited; a:hover; a:active
   - 为了符合浏览器解析CSS所遵循的就近原则，将一般的放在上面，将特殊的放在下面。**hover必须放在link和visited后面，active之前**
@@ -28,18 +28,18 @@
   - 7.利用定位：子绝父相，并给子元素left值为自身宽度。
 
 # 四：background的一些属性
-  ## 1.background-position:
+  ### 1.background-position:
   - 若想要背景图片在盒子的右下角20%处的写法：background-position: right 20% bottom 20%;
   -  超大背景图片的位置为：background-position: center top;
-  ## 2.background-size的cover和contain的区别
+  ### 2.background-size的cover和contain的区别
   - cover:缩放背景图片以完全覆盖背景区（当容器和背景图大小不同时，背景图的 左/右 或者 上/下 部分会被裁剪）。
   - contain:缩放图片完全装入背景区域内，（当背景图和容器的大小的不同时，容器的空白区域（上/下或者左/右）会显示空白）。
 
 # 五：CSS控制图片HTTP请求的情形实例解析：
-  ## 1.作为img标签
+  ### 1.作为img标签
   - （1）display：none属性控制，除opera外均会发生请求
   - （2）visibility:hidden，均产生请求
-  ## 2.作为背景图片，挂靠元素不存在的时候不发送请求，以下仅考虑存在的情况
+  ### 2.作为背景图片，挂靠元素不存在的时候不发送请求，以下仅考虑存在的情况
   - （1）display:none，Opera和Firefox对于用display: none隐藏的元素背景，不会产生HTTP请求
   - （2）visibility:hidden
   - （3）多重背景图时：CSS写法时：只会请求最后一次，前面的都会被覆盖
@@ -79,11 +79,11 @@
   - 产生原因，键盘弹起时会引起窗口高度html标签的高度的改变，而fixed定位是相对于html元素的，所以会被顶上去。
 
 # 九：flex:1和flex:auto的区别
-  ## 1.三个基本属性
+  ### 1.三个基本属性
    - **flex-grow**:项目的增长系数，项目在剩余空间的相对比例：默认为0，即如果存在剩余区域，该项目会放大。
    - **flex-shrink**:项目的收缩规则：默认为1，即如果可分配空间不足，会适当缩小项目。
    - **flex-basis**:在分配空间之前，项目的主轴空间，相当于我们设置的width
-  ## 2.flex的三种情况的区别
+  ### 2.flex的三种情况的区别
    - flex:none
    - flex:1
    - flex:auto
@@ -129,9 +129,9 @@
     ```
 
 # 十：image的属性大全
-  ## 1.pointer-events：auto/none
+  ### 1.pointer-events：auto/none
   指定情况下图形元素可以变成鼠标事件，为**防止在APP等内图片点击变成预览**效果，需要将pointer-events:none
-  ## 2.垂直居中div内的一张img
+  ### 2.垂直居中div内的一张img
     ```js
       div{
           line-height:200px;

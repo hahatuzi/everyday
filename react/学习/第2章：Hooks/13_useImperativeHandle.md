@@ -1,5 +1,5 @@
 # 父组件通过ref获取子元素的DOM和方法
-## 1.获取元素,通过useRef,// 此种方式有可能导致父组件修改了ref的值后，子组件的值仍然是旧的！！！所以出现了useImperativeHandle()
+### 1.获取元素,通过useRef,// 此种方式有可能导致父组件修改了ref的值后，子组件的值仍然是旧的！！！所以出现了useImperativeHandle()
 ```js
 // 子元素
 const FocusInput = forwardRef(function (props, ref) {
@@ -22,7 +22,7 @@ const App = function () {
 }
 export default App
 ```
-## 2.获取子元素的方法,通过useRef和useImperativeHandle的结合
+### 2.获取子元素的方法,通过useRef和useImperativeHandle的结合
 ```js
 const FocusInput1 = forwardRef(function (props, ref) {
   const sonRef1 = useRef(null)

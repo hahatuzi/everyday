@@ -1,9 +1,9 @@
 # 一：useState
-  ## 1.工作流程：
+  ### 1.工作流程：
   useState --> dispatcher.useState() --> resolveDispatcher() --> ReactCurentDispatcher.current --> HooksDispatcherOnmount/ HooksDispatcherOnUpdate
   --> mountWorkInProgressHook() --> hook --> queue --> dispatchSetState --> requestUpdateLan(fiber) --> enqueueConCurrentHookUpdate() -->
   scheduleUpdateOnFiber(root,  fiber,  lane, eventTime),entangTransitionUpdate(root, queue, lane)
-  ## 2.代码分析：
+  ### 2.代码分析：
   mountWorkInProgressHook --> basicStateReducer --> 
   - (1)useState需要实现：
     - 针对update的dispatcher
@@ -26,15 +26,15 @@
     ```
   
 # 二：useState的mount和update流程的区别
-  ## beginWork：
+  ### beginWork：
   - 需要处理childDeletion的情况
   - 需要处理节点移动的情况
-  ## completeWork：
+  ### completeWork：
   - 需要处理HostText内容更新的情况
   - 需要处理HostComponent属性变化的情况
-  ## commitWork:
+  ### commitWork:
   - 对于ChildDeletion,需要遍历被删除的子树
-  ## useState：
+  ### useState：
   - 实现相对于mountState的updateState
 
 # 三：源码

@@ -59,7 +59,7 @@
   |   支持范围   |       模块级更新，不影响页面状态      |     依赖链更新，可能导致整个页面刷新    |
   |   支持范围   |           需要手动重启 Vite           |          需要手动重启 Webpack           |
 
- ## vite更新示例
+ ### vite更新示例
   - 1.基于 ES Modules (import) 直接更新模块，不需要重新编译整个项目。
   - 22.利用 **WebSocket** 监听变更，局部更新文件，无需整个页面刷新。
   - 3.对于 CSS / Vue SFC（单文件组件），可以精准替换，不影响页面状态。
@@ -69,7 +69,7 @@
       updateComponent(newModule.default)
     })
   ```
-  ## webpack更新示例
+  ### webpack更新示例
   - 1.使用 Webpack Dev Server + HMR 插件，监听文件变化。
   - 2.通过 Webpack **module.hot.accept()** 处理模块更新。
   - 3.模块更新时，需要重新构建依赖树，部分依赖可能会影响整个项目。

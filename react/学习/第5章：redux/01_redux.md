@@ -4,12 +4,12 @@
   - 3.使用纯函数来执行修改，为了描述action是如何改变state tree 的需要编写reducer
 
 # redux三大概念：
-  ## 1.state
+  ### 1.state
    - 1.DomainDate:可以理解为服务器端的数据，比如token
    - 2.UI State:决定当前UI展示的状态
    - 3.App State: APP级别的状态，比如路由状态信息
-  ## 2.action
-  ## 3.reducer
+  ### 2.action
+  ### 3.reducer
     ```js
       const initialState = {
         value: 0
@@ -32,11 +32,11 @@
         store.dispatch({type:'incream'})
       })
     ```
-  ## 4：Store:对象，将action和reducer联系在一起
+  ### 4：Store:对象，将action和reducer联系在一起
   - 维护应用的状态，获取状态**getState()**获取state
   - 状态更新时:需要分发action，**dispatch()**发送action
 
-  ## 5：immutability不可变，redux希望所有状态都是使用不可变的方式
+  ### 5：immutability不可变，redux希望所有状态都是使用不可变的方式
 
 # redux工具包
   - configureStore

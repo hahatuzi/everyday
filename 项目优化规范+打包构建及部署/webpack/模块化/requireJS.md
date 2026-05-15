@@ -1,10 +1,10 @@
 # requireJS
-## 一：为什么要使用requireJS
+### 一：为什么要使用requireJS
 为了解决一次加载多个js文件时网页停止渲染的问题。而且当js文件间互相依赖时还要保证相互之间的加载顺序的问题。
 所以它实现了以下两个功能：
 (1)实现了js文件的异步加载，避免网页失去响应
 (2)管理模块之间的依赖性，便于代码的编写和维护。
-## 二：主模块和依赖模块
+### 二：主模块和依赖模块
 **主模块**
 我们在引入require.js后使用data-main属性来指定网页的主模块,比如
 ```js
@@ -21,7 +21,7 @@
 require(['moduleA','moduleB']),function(moduleA,moduleB){})
 ```
 
-## 三：应用场景：vue异步组件
+### 三：应用场景：vue异步组件
 ```js
 Vue.component('async-example', function (resolve, reject) {
   setTimeout(function () {
@@ -48,6 +48,6 @@ Vue.component(
 )
 // 那么我们的模块写法和动态写法的区别在哪里呢？我们将在四中探讨一下
 ```
-## 四：异步组件和动态组件的区别
+### 四：异步组件和动态组件的区别
 （1）使用动态import导入的话，项目打包会将所有component打包在一个js文件中，从而导致首页加载内容太多，时间较长。
 （2）require导入的时候会分别打包成不同的js，加载也是按需加载。

@@ -1,13 +1,13 @@
 # jenkins三大概念：
-  ### 一：Job(任务)
+  #### 一：Job(任务)
   在jenkins平台中，都是以job任务的形式完成一件事情。
-  ### 二：plugins(插件)
-  ### 三：workspace(工作空间)
+  #### 二：plugins(插件)
+  #### 三：workspace(工作空间)
   jenkins是通过本地文件的形式来存储和管理数据的。jenkins下的每一个job都有属于自己的workspace,用来存放本任务涉及到的数据和文件
 # jenkins创建job
 
 # jenkins pipeline,包括声明式pipeline和脚本式pipeline
-### pipeline包括声明式脚本和脚本式语法
+#### pipeline包括声明式脚本和脚本式语法
 概念：pipeline是一套运行在jenkins上的工作流框架，将原来独立运行于单个或者多个节点的任务连接起来，实现单个任务难以完成的复杂流程编排和可视化的工作。
 pipeline脚本是有groovy语言实现的。
 声明式：

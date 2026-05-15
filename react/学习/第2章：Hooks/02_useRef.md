@@ -1,7 +1,7 @@
 # 一：使用步骤
-  ## 第一步：调用useRef(初始值)函数，得到引用对象
-  ## 第二步：将引用对象通过ref属性添加给任意元素
-  ## 第三步：通过引用对象.current获取值
+  ### 第一步：调用useRef(初始值)函数，得到引用对象
+  ### 第二步：将引用对象通过ref属性添加给任意元素
+  ### 第三步：通过引用对象.current获取值
     ```js
       import {useRef, RefObject} from 'react'
       const ref:refObject<number> = useRef<number>(0)
@@ -21,7 +21,7 @@
 
 
 # 二：使用场景
-  ## 场景一：倒计时
+  ### 场景一：倒计时
     ```js
       const timer = useRef()
       const [cout, setCount] = useState()
@@ -32,14 +32,14 @@
         return clearInterval(timer)
       })
     ```
-  ## 场景二：在多次渲染之间共享数据
+  ### 场景二：在多次渲染之间共享数据
     ```js
       const nameRef =  useRef()
       function fn () {
         nameRef.current = 'lisa'
       }
     ```
-  ## 场景三：监听div滚动事件
+  ### 场景三：监听div滚动事件
    ```js
     const peopleRef = useRef<HTMLDivElement>(null);
     function handleScroll (e: any) {

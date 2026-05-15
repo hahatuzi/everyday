@@ -54,7 +54,7 @@
       }
     ```
 
-  ## deleteChild:删除子节点
+  ### deleteChild:删除子节点
     ```js
       function deleteChild (returnFiber:FiberNode, childToDelete:FiberNode) {
         if(!shouldTrackEffects){

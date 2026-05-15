@@ -2,7 +2,7 @@
   > fiberNode是虚拟DOM在react中的实现方式。vue中叫VNode。
   > 旧版本react采用递归遍历虚拟DOM树，组件树庞大时比较好使，不能停止
   > 它介于React Element和真实UI节点之间，能够表达节点之间的关系，转换过程为JSX --> ReactElement --> FIberNode--> DomElement。
-  ## 1.jsx和fiber的关系，ReactElement与fiber的关系对比,fiber的创建和更新
+  ### 1.jsx和fiber的关系，ReactElement与fiber的关系对比,fiber的创建和更新
   ReactElement如果作为核心模块操作的数据结构，存在以下问题：
    - 无法表达节点之间的关系
    - 字段有限，不好扩展
@@ -10,7 +10,7 @@
   - **mount**时通过jsx对象（调用createElement的结果）调用**createFiberFromElement**生成Fiber
   - **update**时通过**reconcileChildFibers**或**reconcileChildrenArray**对比新jsx和老的Fiber（current Fiber）生成新的wip Fiber树
 
-  ## 2.Fiber的特点
+  ### 2.Fiber的特点
    - (1)**实现增量式渲染**：将耗时渲染工作拆分成多个块，并分散在多个帧上进行处理
    - (2)**可中断任务**：支持暂停，中止，或者复用工作单元work
    - (3)**优先级调度**：Scheduler调度器：给不同类型的work赋予优先级，immediate,user-blocking,normal, low,idle比如用户输入可以打断数据更新任务
@@ -25,13 +25,13 @@
       ```
    - (4)**并发模式基础**：为Suspense,useTransition等特性提供底层支持
 
-  ## 3.Fiber分类(双缓存机制)
+  ### 3.Fiber分类(双缓存机制)
   项目一共存在两棵fiberNode树：current，workProgress。
    - (1)current：对应真实UI的fiberNode树。
    - (2)workProgress:正在执行的fiber,触发更新后，正在reconclier中计算的fiberNode树
 
 
-  ## 3.fiberNode结构解读:
+  ### 3.fiberNode结构解读:
   一个fiber指一个将要执行或者已经执行结束的工作单元work。**一个组件可以有一个或者多个fiber**。
   ```js
     // fiber节点是链表结构
@@ -68,7 +68,7 @@
     }
   ```
 
-  ## 4.FiberNode和VNode的区别
+  ### 4.FiberNode和VNode的区别
 |     纬度     |                  FiberNode                   |                 VNode                        |
 | :----------: | :-------------------------------------------:| :-------------------------------------------:|
 |   设计目的   |   实现可中断的异步渲染 + 优先级调度lanes     |       减少真实 DOM 操作，提升渲染性能        |
@@ -109,7 +109,7 @@
       nextEffect: nextEffectFiber, // 副作用链表指针
     }
   ```
-  ## 5.FiberNode的Hooks状态管理
+  ### 5.FiberNode的Hooks状态管理
     ```js
       // 函数组件的 Hooks 链表
       fiberNode.memoizedState = {
@@ -122,7 +122,7 @@
       }
     ```
 
-  ## 6.副作用批处理:
+  ### 6.副作用批处理:
     ```js
       // 提交阶段遍历 effectList
       let nextEffect = fiberRoot.firstEffect
@@ -132,7 +132,7 @@
       }
     ```
 # 二：fiber的创建与更新
-  ## 1.FiberRoot和HostRootFiber的区别
+  ### 1.FiberRoot和HostRootFiber的区别
   - **FiberRoot:应用根容器**
     - 1.createContainer --> createFiberRoot --> FiberRoot = new FiberRootNode()
     - 2.接收所有更新（如 setState、root.render()
