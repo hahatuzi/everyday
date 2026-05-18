@@ -11,3 +11,5 @@
   getHighestPriontyLane获取最高优先级的任务-->如果是同步优先级，向微任务中添加performSyncWorkOnRoot任务，传入root和优先级，V18默认是同步渲染，并发需要单独开启
   ### 第六步：进入performSyncWorkOnRoot
   获取最高优先级-->（如果不是当前优先级，进入ensureRootISScheduled）优先符合同步优先级要求-->进入render阶段prepareFreshStack进行初始化
+  ### 第七步：commit流程
+  

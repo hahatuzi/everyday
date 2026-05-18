@@ -23,6 +23,12 @@
      - 3.减少重复性工作
      - 4.持续部署，提供可不是单元包
      - 5.持续交付可供使用的版本
+  ### 5.常用组合
+    - Level 1：GitHub Actions + 静态页部署到 GitHub Pages
+    - Level 2：GitHub Actions + 前端构建 + 部署到云服务器 (Nginx)
+    - Level 3：GitHub Actions + Docker 镜像构建 + Docker Compose 部署
+    - Level 4：GitLab CI + K8s 滚动发布 + 蓝绿切换
+    - Level 5：多环境（dev/staging/prod）+ 审批 gates + 回滚自动化
 
 
 # 三：Docker
