@@ -1,6 +1,6 @@
 # npm_comp_test
 
-## Project setup
+### Project setup
 ```
 npm install
 ```

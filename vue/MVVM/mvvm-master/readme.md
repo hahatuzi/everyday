@@ -1,4 +1,4 @@
-## 剖析Vue实现原理 - 如何实现双向绑定mvvm
+### 剖析Vue实现原理 - 如何实现双向绑定mvvm
 
 Update: [Vue3.0响应式原理精简代码](https://github.com/DMQ/mvvm/blob/vue3/reactivity/index.html)
 

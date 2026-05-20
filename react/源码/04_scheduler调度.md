@@ -34,13 +34,15 @@
   - timerQueue：保存未过期任务，timerQueue中任务过期时取出放在taskQueue中
   - taskQueue:保存已过期任务
   ### 2.小顶堆：实现优先级队列，为了能找到任务队列中最早的那个任务
-
+  
 
 # 三：schedule阶段：调度更新阶段
   > 页面初次渲染，类组件setState,forceUpdate,函数组件的**setState**都会**调用scheduleUpdateOnFiber进行更新**。
   > 标记根节点有一个pending update,即待处理的更新：markRootUpdated
   > ensureRootIsScheduled： 每次root:FiberRoot接收update的时候都会调用它，确保有一个待处理的微任务来处理根调度
   ### 1.协调的目的：构建新的子fiber结构，检查是否有老fiber,如果有，检查是否可以复用
+  ### 2.并发实际流程
+  用户调用事件触发更新-->调用schedule-->找到任务列表中优先级最高的任务-->调用scheduleCallback在宏任务中异步执行perform-->通过while循环执行任务，while的结束条件为shouldYield-->shouldYield的时间间隔默认5ms-->执行5ms任务之后，退出while循环
   ### 2.工作流程
   ReactDOM.render --> createRoot --> updateContainer --> scheduleUpdateOnFiber --> ensureRootIsScheduled --> performSyncWorkOnRoot --> prepareFreshStrack --> createWorkInProgress(处理节点) --> commitRoot --> commitMutationEffects --> commitMutationEffectsOnFiber --> commitPlacement/commitUpdate/commitDeletion/commitPassiveEffect
 
@@ -64,6 +66,7 @@
           }
           // 任务调度器的入口函数
           // [performSyncWorkOnRoot, performSyncWorkOnRoot, performSyncWorkOnRoot]
+          // scheduleSyncCallback就是一个宏任务执行器
           scheduleSyncCallback(performSyncWorkOnRoot.bind(null, root, updateLane))
           scheduleMicroTask(flushSyncCallbacks)
         } else {
@@ -82,3 +85,6 @@
       }
     ```
   ### 3.异步可中断更新和饥饿问题
+  ### 4.可中断更新：
+  高优先级任务可以中断低优先级任务
+  click --> workList任务列表添加任务 --> schedule调度取出优先级最高的任务  --> perform开始执行任务

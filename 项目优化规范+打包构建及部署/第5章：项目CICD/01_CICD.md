@@ -23,6 +23,10 @@
      - 3.减少重复性工作
      - 4.持续部署，提供可不是单元包
      - 5.持续交付可供使用的版本
+  ### 5.常用组合
+    - GitHub Actions + 静态页部署到 GitHub Pages
+    - GitHub Actions + 前端构建 + 部署到云服务器 (Nginx)
+    - GitHub Actions/Jenkins/	GitLab C  + Docker + Nginx/K8s
 
 
 # 三：Docker
@@ -97,6 +101,44 @@
   - 6.灵活的管道
   - 7.版本管道：一个gitlab-ci.yml文件包含测试，整个过程的步骤
 
+Jenkins 基础
+├── 安装与配置（Linux/Docker/K8s）
+├── 插件管理
+├── Freestyle 项目
+├── 流水线 Pipeline 语法
+└── 凭证与权限管理
+
+Jenkins 进阶
+├── Jenkinsfile 结构化编写
+├── 共享库（Shared Library）
+├── 分布式构建（Master-Slave）
+├── 自动化测试集成
+└── 制品管理（Nexus/Artifactory）
+GitLab CI
+├── .gitlab-ci.yml 语法
+├── Stages/Jobs/Runner
+├── 缓存与依赖
+└── 集成 Kubernetes
+
+GitHub Actions
+├── workflow 编写
+├── Marketplace Actions
+├── 环境变量与密钥
+└── 自托管 Runner
+
+K8s 基础
+├── 核心概念：Pod/Deployment/Service/Ingress
+├── YAML 编写与 kubectl 使用
+├── Namespace/ConfigMap/Secret
+├── 持久化存储 PV/PVC
+└── Helm 包管理
+
+K8s 进阶
+├── 自动扩缩容 HPA/VPA
+├── 网络策略与安全
+├── RBAC 权限控制
+├── 调度与亲和性
+└── 集群运维与监控
 # 五：Jenkins
   ### 1.jenkins三大概念：
   - 1.Job(任务):在jenkins平台中，都是以job任务的形式完成一件事情。
