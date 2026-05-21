@@ -37,15 +37,14 @@ try_files $url $url /index.html
 # nginx的证书配置
 # http自动跳转到https
 ## return网址跳转
-## rewrite网址跳转
-
-```js
-  server {
-    location / {
-      return https://www.XXXX
+## rewrite伪静态配置，网址跳转
+  ```js
+    server {
+      location / {
+        rewrite ^/2.html$   /index.jsp?pageNum=2 break;
+      }
     }
-  }
-```
+  ```
 # nginx的访问控制allow和deny
 ## gzip压缩
 # nginx开启限流
@@ -66,12 +65,5 @@ try_files $url $url /index.html
   - $host:主机头，域名或者ip地址
   - $http_user_agent:客户端的详细信息，浏览器标识
   - $http_cookie:客户端的cookie信息
-  ### $http_referer:客户端请求的referer键值对，可以用来防盗链
-  ```js
-    // html文件中添加<meta name="referer" content="no-referer">可以用来反防盗链
-    location ~* .*\.(gif|png|jpg)$ {
-      if ( $http_referer !~* *a.baidu.com*) { // !~*为不包含的意思，代表访问图片网址只要不是a.baidu.com都不允许访问图片资源
-        return 403
-      }
-    }
-  ```
+  - $http_referer:客户端请求的referer键值对，可以用来防盗链
+  - valid_referers:none：检测不存在Referer的情况/blocked/server_names单个或者多个URL,检测Referer头域的值是否是其中之一/strings
