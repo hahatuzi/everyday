@@ -1,6 +1,6 @@
 # nginx
 ## 一：nginx工作原理
-  nginx  -->  一个master进程 --> 开启n个worker进程  --> n个client(一个worker进程对应n个client连接)
+  nginx  -->  一个master进程 --> 开启n个worker进程，一般设置为CPU核数  --> n个client(一个worker进程对应n个client连接)
   worker如何进行工作的？
   worker进行争强式的方式来抢夺mster发布的任务
     **1.一个master和多个worker的好处**
@@ -27,7 +27,7 @@
         listen 80
         location / {
           proxy_pass 想要访问的url地址
-        }.
+        }
       }
     ```
   ### 2.反向代理："代理服务器"代理了"目标服务器"，去和"客户端"进行交互。暴露的是代理服务器地址，隐藏了真实的服务器IP地址。
@@ -48,7 +48,7 @@
   - backup：备用机，当所有机器都不能用时才会启用
   - fair(第三方插件)：按照服务器的响应时间分配，响应时间短的优先
   ```js
-    http {-
+    http {
       upstream myserver {
         ip_hash;
         server 115.28.52.63:8080 weight=1;
@@ -70,11 +70,38 @@
 
 ## 四：动静分离
   > 为了加快网站的解析速度，可以把动态页面和静态页面由不同的服务器来解析，加快解析速度，降低单个服务器的压力
-
-## 五：伪静态
+## 五：伪静态，rewrite伪静态配置，网址跳转
+  ```js
+    server {
+      location / {
+        rewrite ^/2.html$   /index.jsp?pageNum=2 break;
+      }
+    }
+  ```
+## return网址跳转，http自动跳转到https
+## nginx多站点配置
+  ### 1.方式一：多端口
+  ```js
+    server {
+      8080;
+      location / {
+        /web/firstWeb
+        index index.html index.htm;
+      }
+    }
+    server {
+      8081;
+      location / {
+        /web/secondWeb
+        index index.html index.htm;
+      }
+    }
+  ```
+  ### 2.方式二：多ip
+  ### 3.方式三：多域名
 ## 六：防盗链
   > $http_referer:客户端请求的referer键值对，可以用来防盗链
-   ```js
+  ```js
     // html文件中添加<meta name="referer" content="no-referer">可以用来反防盗链
     location ~* .*\.(gif|png|jpg)$ {
       if ( $http_referer !~* *a.baidu.com*) { // !~*为不包含的意思，代表访问图片网址只要不是a.baidu.com都不允许访问图片资源
@@ -91,18 +118,27 @@
 
 ## 七：nginx日志
   ### 1.访问日志
-  ### 2.错误日志
+  ### 2.错误日志error log
+  日志级别有：debug,info,notice,warn,error,crit,alert,emerg
 
 ## 八：nginx高可用配置
   > 发生前提当nginx服务挂机时服务就会中断，所以才会出现高可用模式。需要多台nginx服务器和keepalived脚本检测服务是否可用前提 
 
 ## nginx配置项
+  ### user:用来配置nginx服务器的worker进程的用户和用户组，默认nobody
+  ### work
+  ps -ef | grep nginx查看开启了几个进程和线程
+  ### event
+  涉及nginx和用户之间的网络连接，比如worker_connection,常用的配置包括是否开启对多worker process下的网络连接进行序列化，是否允许同时接收多个网络连接，选取哪种事件驱动模型来处理连接请求，每个worker process可以同时支持的最大连接数等。
+  ### http
+  http全局块配置的指令包括文件引入，日志自定义，连接超时时间，MIME-TYPE定义，单链接请求数上限等
+  ### server
   ### (1)root:定义了资源的根目录，server的服务根目录
   ```js
     server {
       location /static/ {
         root  /var/www/html
-      } 
+      }
       location / {
         root /html/zhenlin
         alias /html/zhelin/
@@ -110,10 +146,137 @@
     }
     // 用户访问/static/images/logo.png  --->  root地址 + location + 访问地址--->  /var/www/html/static/images/logo.png
   ```
-  ### worker_processes：
+  ### worker_processes：worker_process值越大，可以支持的并发处理量也越大，但是会收到硬件，软件等设备的制约
   ### worker_connections：每个worker可以支持的最大连接数
+  ### include:用来引入其他配置文件，使nginx配置更加灵活
+
+
+## nginx常用变量
+  - $args:请求参数
+  - $content_length:http响应信息里面的COntent-Length
+  - $content_type:http响应信息里面的Content-type
+  - $document_root:nginx虚拟主机配置文件中的root站点根目录
+  - $document_url:当前请求中不包含指令的URI,
+  - $host:主机头，域名或者ip地址
+  - $http_user_agent:客户端的详细信息，浏览器标识
+  - $http_cookie:客户端的cookie信息
+  - $http_referer:客户端请求的referer键值对，可以用来防盗链
+  - valid_referers:none：检测不存在Referer的情况/blocked/server_names单个或者多个URL,检测Referer头域的值是否是其中之一/strings
+
 ## nginx安装
   ### (1)ubuntu
   - apt-get update
   - apt install nginx
   - systemctl status nginx
+
+## 附录
+```js
+    // user  nobody;
+    worker_processes  1; // nginx服务器兵法处理服务的关键配置，worker_process值越大，可以支持的并发处理量也越大，但是会收到硬件，软件等设备的制约
+    // error_log  logs/error.log;
+    // error_log  logs/error.log  notice;
+    // error_log  logs/error.log  info;
+    // pid        logs/nginx.pid;
+    events {
+        worker_connections  1024; // 每个worker可以支持的最大连接数
+    }
+    http {
+        include       mime.types;
+        default_type  application/octet-stream; // 传递给客户端的数据类型
+
+        // log_format  main  '$remote_addr - $remote_user [$time_local] "$request" '
+        //                   '$status $body_bytes_sent "$http_referer" '
+        //                   '"$http_user_agent" "$http_x_forwarded_for"';
+
+        //access_log  logs/access.log  main;
+
+        sendfile        on;// nginx应用内存发送信号sendfile给网络接口，网络接口直接读取服务器文件内容
+        // tcp_nopush     on;
+
+        // keepalive_timeout  0;
+        keepalive_timeout  65;
+
+        // gzip  on;
+
+        server {
+            listen       90; // nginx监听的端口号，一般该端口会被占用
+            server_name  localhost; //
+
+            // charset koi8-r;
+
+            // access_log  logs/host.access.log  main;
+
+            location / {
+                root   home/www/dist;
+                index  index.html index.htm;
+                try_files $uri $uri/ /index.html;
+                proxy_pass http://127.0.0.1:8080;
+            }
+            location /house/ {
+                root   home/house;
+                index  index.html index.htm;
+                try_files $uri $uri/ /house/index.html;
+                proxy_pass http://127.0.0.1:8080;
+            }
+            // error_page  404              /404.html;
+
+            // redirect server error pages to the static page /50x.html
+            #
+            error_page   500 502 503 504  /50x.html;
+            location = /50x.html {
+                root   html;
+            }
+
+            //  proxy the PHP scripts to Apache listening on 127.0.0.1:80
+            // 
+            // location ~ \.php$ {
+            //     proxy_pass   http://127.0.0.1;
+            // }
+
+            //  pass the PHP scripts to FastCGI server listening on 127.0.0.1:9000
+            // 
+            // location ~ \.php$ {
+            //     root           html;
+            //     fastcgi_pass   127.0.0.1:9000;
+            //     fastcgi_index  index.php;
+            //     fastcgi_param  SCRIPT_FILENAME  /scripts$fastcgi_script_name;
+            //     include        fastcgi_params;
+            // }
+
+            //  deny access to .htaccess files, if Apache's document root
+            //  concurs with nginx's one
+            // 
+            // location ~ /\.ht {
+            //     deny  all;
+            // }
+        }
+        //  another virtual host using mix of IP-, name-, and port-based configuration
+        // 
+        // server {
+        //     listen       8000;
+        //     listen       somename:8080;
+        //     server_name  somename  alias  another.alias;// 
+        //     location / {
+        //         root   html;
+        //         index  index.html index.htm;
+        //     }
+        // }// 
+        //  HTTPS server
+        // 
+        // server {
+        //     listen       443 ssl;
+        //     server_name  localhost;// 
+        //     ssl_certificate      cert.pem;
+        //     ssl_certificate_key  cert.key;
+
+        //     ssl_session_cache    shared:SSL:1m;
+        //     ssl_session_timeout  5m;// 
+        //     ssl_ciphers  HIGH:!aNULL:!MD5;
+        //     ssl_prefer_server_ciphers  on;// 
+        //     location / {
+        //         root   html;
+        //         index  index.html index.htm;
+        //     }
+        // }
+    }
+  ```
