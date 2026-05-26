@@ -1,5 +1,7 @@
 # nginx
 ## 一：nginx工作原理
+  ### master
+  ### worker
   nginx  -->  一个master进程 --> 开启n个worker进程，一般设置为CPU核数  --> n个client(一个worker进程对应n个client连接)
   worker如何进行工作的？
   worker进行争强式的方式来抢夺mster发布的任务
@@ -43,10 +45,10 @@
   - (2)权重策略：
   - (3)源地址哈希：ip_hash,定向分发，保持会话，每个请求按照访问ip的hash结果分配，这样每个访客固定访问一个后端服务器，比如某个请求上次访问的是80下次继续访问该端口
   ### 2.配置关键字：
-  - weight:weight代表权重，权重越高被分配的客户端越多
-  - down:该服务器不参与负载均衡
-  - backup：备用机，当所有机器都不能用时才会启用
-  - fair(第三方插件)：按照服务器的响应时间分配，响应时间短的优先
+  - **weight**:weight代表权重，权重越高被分配的客户端越多
+  - **down**:该服务器不参与负载均衡
+  - **backup**：备用机，当所有机器都不能用时才会启用
+  - **fair(第三方插件)**：按照服务器的响应时间分配，响应时间短的优先
   ```js
     http {
       upstream myserver {
@@ -71,6 +73,11 @@
 ## 四：动静分离
   > 为了加快网站的解析速度，可以把动态页面和静态页面由不同的服务器来解析，加快解析速度，降低单个服务器的压力
 ## 五：伪静态，rewrite伪静态配置，网址跳转
+  - $args：请求URL的请求参数
+  - $host:访问服务器的server_name的值
+  - $document_uri
+  - $request_uri
+  - $http_user_agent:用户访问读物的代理信息
   ```js
     server {
       location / {
@@ -78,8 +85,8 @@
       }
     }
   ```
-## return网址跳转，http自动跳转到https
-## nginx多站点配置
+## 六：return网址跳转，http自动跳转到https
+## 七：nginx多站点配置
   ### 1.方式一：多端口
   ```js
     server {
@@ -99,7 +106,7 @@
   ```
   ### 2.方式二：多ip
   ### 3.方式三：多域名
-## 六：防盗链
+## 八：防盗链
   > $http_referer:客户端请求的referer键值对，可以用来防盗链
   ```js
     // html文件中添加<meta name="referer" content="no-referer">可以用来反防盗链
@@ -116,38 +123,62 @@
     }
   ```
 
-## 七：nginx日志
-  ### 1.访问日志
-  ### 2.错误日志error log
+## 九：nginx日志
+  ### 1.访问日志access.log
+  ### 2.错误日志error.log记录nginx本身运行时的错误信息
   日志级别有：debug,info,notice,warn,error,crit,alert,emerg
 
-## 八：nginx高可用配置
+## 十：nginx高可用配置
   > 发生前提当nginx服务挂机时服务就会中断，所以才会出现高可用模式。需要多台nginx服务器和keepalived脚本检测服务是否可用前提 
 
-## nginx配置项
-  ### user:用来配置nginx服务器的worker进程的用户和用户组，默认nobody
-  ### work
+## 十一：nginx配置项
+  ### 1.user:用来配置nginx服务器的worker进程的用户和用户组，默认nobody
+  ### 2.work
   ps -ef | grep nginx查看开启了几个进程和线程
-  ### event
-  涉及nginx和用户之间的网络连接，比如worker_connection,常用的配置包括是否开启对多worker process下的网络连接进行序列化，是否允许同时接收多个网络连接，选取哪种事件驱动模型来处理连接请求，每个worker process可以同时支持的最大连接数等。
-  ### http
-  http全局块配置的指令包括文件引入，日志自定义，连接超时时间，MIME-TYPE定义，单链接请求数上限等
-  ### server
-  ### (1)root:定义了资源的根目录，server的服务根目录
+  ### 3.events块
+  涉及nginx和用户之间的网络连接，比如worker_connection.常用的配置包括是否开启对多worker process下的网络连接进行序列化，是否允许同时接收多个网络连接，选取哪种事件驱动模型来处理连接请求，每个worker process可以同时支持的最大连接数等。
+  - **accept_mutex**:用来设置nginx网络连接序列化
+  - **multi_accpet**:用来设置是否允许同事接收多个网络连接
+  - **work_connections**:用来配置单个worker进程最大的连接数
+  - **use**:值有select/poll/epoll/kquue,用来设置nginx服务器选择哪种事件驱动来处理网络消息
+  ### 4.http
+  http全局块配置的指令包括文件引入，日志自定义，连接超时时间，MIME-TYPE定义，单链接请求数上限等。默认有两行配置include，default_type
+  - **default_type**：位置可以在http,server,location中
+  - **sendfile**:on|off
+    - 设置nginx服务器是否使用sendfile传输文件，可以提高nginx处理静态资源的性能。
+    - sendfile使用前：应用程序缓冲区 ---->  请求读取内核缓冲区的index.html资源 --> index.html资源先copy到内核缓冲区 ---> 内核缓冲区再将资源copy给应用程序缓冲区--->应用缓存区再copy给socket缓冲区 --> socket缓冲区发送给客户端
+    - 使用sendfile后：应用程序缓冲区sendfile ---->  请求读取内核缓冲区的index.html资源 --> index.html资源先copy到内核缓冲区 --->内核缓冲区直接将数据发送给socket缓冲区 --> socket缓冲区发送给客户端
+  - **tcp_nopush**:前提是sendfile开启，用来提升网络包的传输效率
+  - **tcp_nodelay**:前提是keep-alive开启时才生效，提高网络包传输的实时性
+  - **keepalive_timeout**:用来设置长连接的超时时间
+  - **keepalive_requests**:用来设置一个keepalive连接使用的次数
+  ### 5.server
+  - server_name,匹配顺序，精准<通配符在前面<通配符在后面<正则<default_server
+  ### 6.location
+  - **try_files**：用于处理静态文件请求,$uri是请求的原始URI
+  - **root**:定义了资源的根目录，server的服务根目录。
+    - root path,path为nginx服务器接收到请求后查找资源的根目录，root的处理结果是：root路径+locatin路径
+  - **alias**:用来更改location的URI。
+    - alias path为修改后的根路径,alias的处理结果是：alias路径替换location路径。
+    - 如果location路径是以/结尾，alias也必须以/结尾，root无要求
   ```js
     server {
-      location /static/ {
-        root  /var/www/html
+      location /images {
+        root  /usr/local/nginx/html // 处理结果：/usr/local/nginx/html/images/XXX.png
+        index  index.html index.htm;
+        try_files $uri $uri/ /index.html; // 解决vue项目history的路由刷新问题
+        error_page  404              /404.html;
+        error_page 404 =200 /idnex.html;//将404转成200返回index.html
+        error_page   500 502 503 504  /50x.html;
       }
-      location / {
-        root /html/zhenlin
-        alias /html/zhelin/
+      location /images/ {
+        alias /usr/local/nginx/html/images/ // 处理结果：/usr/local/nginx/html/images/xxx.png
       }
     }
-    // 用户访问/static/images/logo.png  --->  root地址 + location + 访问地址--->  /var/www/html/static/images/logo.png
   ```
+  - **index**:设置网站的默认首页,可以是ip+port
+  - **error_page**:设置网站的错误页面
   ### worker_processes：worker_process值越大，可以支持的并发处理量也越大，但是会收到硬件，软件等设备的制约
-  ### worker_connections：每个worker可以支持的最大连接数
   ### include:用来引入其他配置文件，使nginx配置更加灵活
 
 
@@ -163,11 +194,45 @@
   - $http_referer:客户端请求的referer键值对，可以用来防盗链
   - valid_referers:none：检测不存在Referer的情况/blocked/server_names单个或者多个URL,检测Referer头域的值是否是其中之一/strings
 
+## nginx常用操作命令：
+  ```js
+    start nginx // 启动服务
+    nginx -s stop // 停止服务
+    nginx -s reload //nginx重启服务
+    nginx -s restart
+    nginx -t // 语法检查
+  ```
+## gzip压缩
+  - gzip：on|off
+  - gzip_types:压缩源文件类型
+  - gzip_comp_level:gzip压缩级别
+  - gzip_min_length:压缩的最小大小
+  - gzip_buffers:用于处理请求压缩的缓冲区数据和大小
+  - gzip_vary:响应头添加vary信息，告诉客户端使用了gzip压缩
+  - gzip_disabled
+  - gzip_proxied:nginx作为反向代理压缩服务端返回数据的条件
+## 缓存
+  ### 服务端缓存:nginx/redis
+  ### 客户端缓存：浏览器缓存
 ## nginx安装
   ### (1)ubuntu
   - apt-get update
   - apt install nginx
   - systemctl status nginx
+
+# nginx的basic认证
+# nginx的证书配置
+
+# nginx的访问控制allow和deny
+# nginx开启限流
+  ### 漏桶算法
+  ### 令牌算法
+  ```js
+    // 请求限流
+    limit_req_zone $binary_remote_addr zone=conn_limit:10m;
+    limit_conn conn_limit 1;// 限制连接数为1个
+    limt_req zone=ip_limit burst=2 nodelay
+  ```
 
 ## 附录
 ```js
@@ -280,3 +345,23 @@
         // }
     }
   ```
+## 配置实例
+/home/www
+|__conf.d
+|__mweb
+  |__404.html
+  |__server1
+  |  |__location1
+  |  |  |__index_src1_location2.html
+  |  |__location2
+  |  |  |__index_src1_location2.html
+  |  |__log
+  |__server2
+  |  |__location1
+  |  |  |__index_src1_location2.html
+  |  |__location2
+  |  |  |__index_src1_location2.html
+  |  |__log
+```js
+  
+```
