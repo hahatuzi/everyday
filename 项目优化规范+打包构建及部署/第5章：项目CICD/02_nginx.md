@@ -2,8 +2,8 @@
 ## 一：nginx工作原理
   > nginx  -->  一个master进程 --> 开启n个worker进程，一般设置为CPU核数  --> n个client(一个worker进程对应n个client连接)
   ### 1.概念:
-  - master
-  - worker
+  - master:负责读取配置文件，管理worker进程
+  - worker：处理网络请求，并发处理连接
   ### 2.worker如何进行工作的？
   - worker进行争强式的方式来抢夺mster发布的任务
   ### 3.一个master和多个worker的好处:
@@ -65,7 +65,7 @@
   ### 1.分配服务器策略：
   - (1)轮训策略：upsteam模块负载均衡的默认策略，每个请求按照时间顺序逐一分配到不同的后端服务器，如果某个服务器down掉能自动剔除
   - (2)权重策略：weight
-  - (3)源地址哈希：ip_hash,定向分发，保持会话，每个请求按照访问ip的hash结果分配，这样每个访客固定访问一个后端服务器，比如某个请求上次访问的是80下次继续访问该端口
+  - (3)源地址哈希：ip_hash,定向分发，保持会话，每个请求按照访问ip的hash结果分配，这样每个访客固定访问一个后端服务器，比如某个请求上次访问的是80下次继续访问该端口。
   - (4)least_conn
   ### 2.四层均衡与七层均衡
 
@@ -258,7 +258,7 @@
   ### include:用来引入其他配置文件，使nginx配置更加灵活
 
 
-## nginx常用变量
+## 十二：nginx常用变量
   - $args:请求参数
   - $content_length:http响应信息里面的COntent-Length
   - $content_type:http响应信息里面的Content-type
@@ -270,7 +270,7 @@
   - $http_referer:客户端请求的referer键值对，可以用来防盗链
   - valid_referers:none：检测不存在Referer的情况/blocked/server_names单个或者多个URL,检测Referer头域的值是否是其中之一/strings
 
-## nginx常用操作命令：
+## 十三：nginx常用操作命令：
   ```js
     start nginx // 启动服务
     nginx -s stop // 停止服务
@@ -278,7 +278,7 @@
     nginx -s restart
     nginx -t // 语法检查
   ```
-## gzip压缩
+## 十四：gzip压缩
   - gzip：on|off
   - gzip_types:压缩源文件类型
   - gzip_comp_level:gzip压缩级别
@@ -288,7 +288,7 @@
   - gzip_disabled
   - gzip_proxied:nginx作为反向代理压缩服务端返回数据的条件
 
-## nginx安装
+## 十五：nginx安装
   ### (1)ubuntu
   - apt-get update
   - apt install nginx
@@ -297,7 +297,11 @@
   ### nginx的basic认证
   ### nginx的证书配置
   ### nginx的访问控制allow和deny
-# nginx开启限流
+  ### nginx目录：
+  - 主配置文件/etc/nginx/nginx.conf
+  - 站点配置目录：/etc/nginx/conf.d
+  - 默认网页根目录:/usr/share/nginx/html
+# 十六：nginx开启限流
   ### 漏桶算法
   ### 令牌算法
   ```js
@@ -307,6 +311,26 @@
     limt_req zone=ip_limit burst=2 nodelay
   ```
 
+## 十七：nginx制作下载站点：ngx_http_autoindex
+  - autoindex_exact_size:对应HTML格式
+  - autoindex_format:设置目录列表的格式
+  ```js
+    location /download {
+      root /root/local;
+      autoindex on;
+      autoindex_exact_size on;
+      autoidnex_localtime 
+    }
+  ```
+## 十八：nginx扩容
+  ### 1.扩容方式：
+  - (1)单机垂直扩容：硬件资源增加
+    - 服务器资源增加
+    - CPU,网卡，磁盘
+  - (2)水平扩容：集群化(负载均衡)
+  - (3)颗粒化拆分：数据分区，SOA化，入口细分
+  - (4)数据异构化：多级缓存（客户端缓存，CDN缓存，nginx缓存）
+  - (5)服务异步化：拆分请求，消息中间件
 ## 附录
 ```js
     // user  nobody;
@@ -321,13 +345,10 @@
     http {
         include       mime.types;
         default_type  application/octet-stream; // 传递给客户端的数据类型
-
         // log_format  main  '$remote_addr - $remote_user [$time_local] "$request" '
         //                   '$status $body_bytes_sent "$http_referer" '
         //                   '"$http_user_agent" "$http_x_forwarded_for"';
-
         //access_log  logs/access.log  main;
-
         sendfile        on;// nginx应用内存发送信号sendfile给网络接口，网络接口直接读取服务器文件内容
         // tcp_nopush     on;
 
@@ -339,11 +360,8 @@
         server {
             listen       90; // nginx监听的端口号，一般该端口会被占用
             server_name  localhost; //
-
             // charset koi8-r;
-
             // access_log  logs/host.access.log  main;
-
             location / {
                 root   home/www/dist;
                 index  index.html index.htm;
@@ -418,23 +436,3 @@
         // }
     }
   ```
-## 配置实例
-/home/www
-|__conf.d
-|__mweb
-  |__404.html
-  |__server1
-  |  |__location1
-  |  |  |__index_src1_location2.html
-  |  |__location2
-  |  |  |__index_src1_location2.html
-  |  |__log
-  |__server2
-  |  |__location1
-  |  |  |__index_src1_location2.html
-  |  |__location2
-  |  |  |__index_src1_location2.html
-  |  |__log
-```js
-  
-```
