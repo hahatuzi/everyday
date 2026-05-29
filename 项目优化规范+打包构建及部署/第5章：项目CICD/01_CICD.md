@@ -26,7 +26,7 @@
   ### 5.常用组合
     - GitHub Actions + 静态页部署到 GitHub Pages
     - GitHub Actions + 前端构建 + 部署到云服务器 (Nginx)
-    - GitHub Actions/Jenkins/	GitLab C  + Docker + Nginx/K8s
+    - GitHub Actions/Jenkins/	GitLab CI  + Docker + Nginx/K8s
 
 
 # 三：Docker

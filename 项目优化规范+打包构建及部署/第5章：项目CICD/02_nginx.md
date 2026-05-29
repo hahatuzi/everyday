@@ -11,12 +11,30 @@
     - （2）每个worker都是独立的进程，如果有其中饿一个worker出现问题，其他worker独立的继续进行争强，实现请求过程，不会造成服务中断
   ### 4.设置多少个worker合适?
     - worker数和服务器的cpu数相等是最为适合的，不会造成cpu资源闲置，也不会导致cpu过忙。
-  **连接数worker_connection相关问题**
+    - 连接数worker_connection相关问题
   ### 5.发送一个请求占用了worker几个连接数?
     - 静态资源2个，使用tomcat访问数据库时4个
   ### 6.nginx有一个master，有四个worker，每个worker支持最大的连接数据1024，支持的最大并发数是多少？
     - 普通的静态访问最大并发数是：worker_connections * worker_process / 2
     - 如果是作为反向代理来说，最大的并发数量应该是worker_connection * worker_process / 4
+  ### 7.nginx惊群效应
+    - ngx_use_accept_mutex是配置nginx是否利用ngx_accept_mutex锁的方式解决惊群问题
+    - ngx_accept_disable用于处理负载均衡
+  ```js
+    if(ngx_use_accept_mutex){
+      if(ngx_accept_disabled > 0) {
+        ngx_accept_disabled--
+      } else{
+        if(ngx_trylock_accept_mutex(cycle) == NGX_ERROR){
+          return
+        } else {
+          if(timer == NGX_TIME_INFINITE || timer > ngx_accept_mutex_delay){
+            timer = ngx_accept_mutex_delay
+          }
+        }
+      }
+    }
+  ```
 ## 二：nginx代理
   > 正向代理和反向代理的作用和目的不同。**正向代理主要是用来解决访问限制问题**。而**反向代理则是提供负载均衡、安全防护等作用**。二者均能提高访问速度。
   ### 1.正向代理：**代理IP**代理了**客户端**，去和**目标服务器**进行交互。
@@ -27,7 +45,7 @@
   - **（1）隐藏服务器真实IP**： 使用反向代理，可以对客户端隐藏服务器的IP地址。
   - **（2）负载均衡**：反向代理服务器可以做负载均衡，根据所有真实服务器的负载情况，将客户端请求分发到不同的真实服务器上。
   - **（3）提高访问速度**:反向代理服务器可以对于静态内容及短时间内有大量访问请求的动态内容提供缓存服务，提高访问速度。
-  - **（4）提供安全保障**：反向代理服务器可以作为应用层防火墙，为网站提供对基于Web的攻击行为（例如DoS/DDoS）的防护，更容易排查恶意软件等。还可以为后端服务器统一提供加密和SSL加速（如SSL终端代理），提供HTTP访问认证等。
+  - **（4）提供安全保障**：反向代理服务器可以作为应用层防f火墙，为网站提供对基于Web的攻击行为（例如DoS/DDoS）的防护，更容易排查恶意软件等。还可以为后端服务器统一提供加密和SSL加速（如SSL终端代理），提供HTTP访问认证等。
   - 例如：在访问www.123.com(该域名不存在，纯粹是window的host文件配置映射的虚拟地址)时我们通过nginx代理服务器(192.168.17.129:80)访问到tomcat服务（127.0.0.1:8080）
   - **proxy_set_header**:更改nginx服务器接收到的客户端请求的请求头信息，然后将新的请求头发送到代理的服务器
   - **proxy_redirect**:用来重置头信息中的location和refresh,default|off|redirect(目标) replacement(要替换的值)
@@ -209,7 +227,7 @@
 
 ## 十一：nginx配置项
   ### 1.user:用来配置nginx服务器的worker进程的用户和用户组，默认nobody
-  ### 2.work
+  ### 2.work块
   ps -ef | grep nginx查看开启了几个进程和线程
   ### 3.events块
   涉及nginx和用户之间的网络连接，比如worker_connection.常用的配置包括是否开启对多worker process下的网络连接进行序列化，是否允许同时接收多个网络连接，选取哪种事件驱动模型来处理连接请求，每个worker process可以同时支持的最大连接数等。
@@ -217,7 +235,7 @@
   - **multi_accpet**:用来设置是否允许同事接收多个网络连接
   - **work_connections**:用来配置单个worker进程最大的连接数
   - **use**:值有select/poll/epoll/kquue,用来设置nginx服务器选择哪种事件驱动来处理网络消息
-  ### 4.http
+  ### 4.http块
   http全局块配置的指令包括文件引入，日志自定义，连接超时时间，MIME-TYPE定义，单链接请求数上限等。默认有两行配置include，default_type
   - **default_type**：位置可以在http,server,location中
   - **sendfile**:on|off
@@ -228,9 +246,9 @@
   - **tcp_nodelay**:前提是keep-alive开启时才生效，提高网络包传输的实时性
   - **keepalive_timeout**:用来设置长连接的超时时间
   - **keepalive_requests**:用来设置一个keepalive连接使用的次数
-  ### 5.server
+  ### 5.server块
   - server_name,匹配顺序，精准<通配符在前面<通配符在后面<正则<default_server
-  ### 6.location
+  ### 6.location块
   - **try_files**：用于处理静态文件请求,$uri是请求的原始URI
   - **root**:定义了资源的根目录，server的服务根目录。
     - root path,path为nginx服务器接收到请求后查找资源的根目录，root的处理结果是：root路径+locatin路径
@@ -303,12 +321,16 @@
   - 默认网页根目录:/usr/share/nginx/html
 # 十六：nginx开启限流
   ### 漏桶算法
-  ### 令牌算法
+  ### 令牌桶算法：一个请求如果想要被执行，必须持有令牌
+  ### burst用来处理突发流量，burst=20，意味着如果有21个请求，nginx会处理第一个请求，将剩下的20个放入队列。
+  ### nodelay：表示进入等待队列的请求优先处理，必须配合burst使用
   ```js
-    // 请求限流
-    limit_req_zone $binary_remote_addr zone=conn_limit:10m;
-    limit_conn conn_limit 1;// 限制连接数为1个
-    limt_req zone=ip_limit burst=2 nodelay
+    http {
+      // 请求限流，控制速度
+      limit_req_zone $binary_remote_addr zone=conn_limit:10m rate=10r/s;// 大小为10M,每100毫秒处理一个请求
+      limit_conn conn_limit 1;// 限制连接数为1个
+      limt_req zone=ip_limit burst=2 nodelay
+    }
   ```
 
 ## 十七：nginx制作下载站点：ngx_http_autoindex
@@ -331,6 +353,7 @@
   - (3)颗粒化拆分：数据分区，SOA化，入口细分
   - (4)数据异构化：多级缓存（客户端缓存，CDN缓存，nginx缓存）
   - (5)服务异步化：拆分请求，消息中间件
+## 十九：nginx事件驱动模型
 ## 附录
 ```js
     // user  nobody;
