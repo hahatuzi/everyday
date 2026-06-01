@@ -29,57 +29,7 @@
     - GitHub Actions/Jenkins/	GitLab CI  + Docker + Nginx/K8s
 
 
-# 三：Docker
-  ### docker的优势
-  - 环境一致性
-  - 高效利用，方便快捷使用轻量化容器
-  - 服务于微服务架构
-  ### 核心概念
-  - 镜像
-  - 容器
-  - 仓库
-  ### docker命令
-  - docker ps:查看当前docker在跑哪些容器进程
-  - docker container ls
-  - docker container ls -a:查看所有的容器
-  - docker images查看镜像
-  - docker run --name miaoma-nginx-server -d -p 8080:80 nginx
-  ### dockerfile文件解读
-    ```js
-      // 第一步：指定镜像
-      FROM XXX // docker官网有node可以使用镜像列表
-      // 第二步：指定工作区
-      WORKDIR /application
-      // 第三步：将自己打包后的产物都copy到application工作区下
-      COPY ..
-      RUN npm install
-      EXPOSE 3000
-      CMD ['npm', 'start']
 
-      // docker build -t XXX
-      // docker run -d --name XXX
-      // 举例：
-      FROM nginx:apline
-      COPY /dist /user/share/nginx/html
-      EXPOSE 80
-    ```
-  ### docker compose服务编排
-    - 前端静态资源托管服务，nginx
-    - 服务端服务。node,pm3
-    - 基础服务redis,postgresql
-  ```js
-  version '3.8'
-  include:
-   - ./docker-compose.infra.yml
-   services:
-    frontend:
-    build:
-    context:./frontend
-    ports:
-    -"5173:80"
-    networks:
-    app-network
-  ```
 
 # 四：gitlab CICD
   ### 1.组成
