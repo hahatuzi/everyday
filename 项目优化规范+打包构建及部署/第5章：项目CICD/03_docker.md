@@ -55,6 +55,16 @@
       ]
     }
     EOF
+
+    sudo tee /etc/docker/daemon.json <<-'EOF'
+    {
+      "registry-mirrors": [
+        "https://mirror.ccs.tencentyun.com",
+        "https://docker.m.daocloud.io",
+        "https://docker.nju.edu.cn"
+      ]
+    }
+    EOF
   ```
   - sudo systemctl daemon-reload
   - sudo systemctl restart docker
@@ -84,6 +94,11 @@
   - docker exec -it [镜像名] /bin/bash,进入镜像,或者docker attach [容器id],attach不会启动新的进程,exec进入容器后开启一个新的终端，可以直接操作
   - docker cp 容器id,拷贝
   - docker stop [镜像id],停止镜像
+  - -d:后台运行
+  - -p,端口映射
+  - -v，卷挂载
+  - -e,环境配置
+  - --name,容器名字
 
 # 七：docker镜像加载原理
   ## UnionFS（联合文件系统）
@@ -92,13 +107,66 @@
   - root fs在boot fs之上，包含的就是典型的linux系统中的/dev,/proc,/bin,/etc等标准目录和文件
   ## 镜像的特点：
   - docker镜像都是只读的，当容器启动的时候，一个新的可写层被加载到镜像的顶部，这一层就是通常说的容器层，容器之下都是镜像层
+# 八：提交镜像docker commit:
+  ## 实战：将tomcat从webapps/dist中copy到webapps下
 
 
+# 九：容器数据卷
+  > 正常情况下，容器删除时容器内的数据也会丢失，我们希望的就是Docker容器内的数据同步到本地，这就是容器卷
+  ## 1.使用方式：
+  ### (1)方式一：docker run -it -v 主机目录，容器内目录
+    ```js
+      cd /home //进入服务器的home目录
+      docker run -it -v /home/test:/home centos
+    ```
+  ## 2.实战：mysql数据持久化问题
+    ```js
+      docker run -it -d -p 3310:3306 -v /home/mysql/conf.d -v /home/mysql/data:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=自己的密码 --name 自己的名字 mysql
+      // sqlyog连接到服务器3310
+      cd /home/mysql/data
+      ls
 
-# 思考：每次修改nginx配置文件，都要进入容器内部，能不能在容器外部提供一个映射路径，达到修改它的时候，容器内部自动修改的目的？
-# Docker可视化管理工具:portainer
-# 实例：
-  ## nginx安装
+    ```
+  ## 3.具名挂载和匿名挂载
+  ### (1)匿名挂载：-v只写了容器内的路径，没有写容器外的路径
+  ### (2)具名挂载
+  docker run -d -P --name nginx02 -v jumming-nginx:/etc/nginx nginx
+
+# 十：Dockerfile
+  > dockerfile就是构建docker镜像的文件
+  ## 1.创建dockerfile文件：
+  - cd /home
+  - mkdir docker-test-volume
+  - cd docker-test-volume
+  - vim dockerfile ，在docker-test-volume文件夹下创建dockerfile文件
+  - cat dockerfile
+  - docker build -f dockerfile -t /hahatuzi/centos:1.0 . ，根据dockerfile生成一个镜像,.!!!不能忘记.
+  - docker run -it --name docker02 --volumes-from docker01 hahatuzi/centos:1.0
+  ## 2.dockerfile的构建过程
+  - 构建过程中关键字必须是大写
+  - 从上到下执行
+  - 每一个指令都会创建提交一个新的镜像层，并提交
+  ## 3.dockerfile的指令
+  - FROM:镜像使用的基础镜像，docker官网有node可以使用镜像列表
+  - MAINTAINER:维护人信息
+  - RUM:运行命令
+  - ADD:COPY文件，会自动解压
+  - WORKDIR:设置当前工作目录
+  - VOLUME:设置卷，挂载主机目录
+  - EXPOSE:保留端口配置
+  - CMD:指定容器启动的时候要运行的命令，只有最后一个会生效，可被替代
+  - ENTERPOINT:指定容器启动的时候要运行的命令,可以追加命令
+  - ONBUILD:当构建一个被继承Dockerfile这个时候就会运行ONBUILD的指令，触发指令
+  - COPY:类似ADD,将文件拷贝到镜像中
+  - ENV:构建的时候设置环境变量
+  ## 4.创建自己的centos
+  - 创建自己的dockerfile
+  - docker build -f dockerfile -t mycentos:0.1 . ，dockerfile为自己创建的dockerfile文件名
+  - 
+  ## 5.CMD和ENTERPOINT的区别
+
+# 十一：实例：
+  ## 1.nginx安装
   ```js
     // docker pull nginx
     // docker images
@@ -108,7 +176,7 @@
     // docker stop 51f5b9d0c0f8
     // curl localhost:8888
   ```
-  ## tomcat安装
+  ## 2.tomcat安装
   ```js
     // docker pull tomcat
     // docker images
@@ -116,8 +184,53 @@
     // docker exec -it tomcat01 /bin/bash
     // cd webapps
     // ls，发现tomcat是阉割版本
+    // cp -r webapps.dist/* webapps
   ```
-  ## 部署ES+Kibana
+  ## 3.部署ES+Kibana
+  ## 4.Dockerfile制作tomcat镜像
+    ```js
+      FROM centos
+      MAINTAINENT hahatuzi
+      COPY readme.txt /usr/local/readme.txt
+      ADD jdk-8ull-linux-x64.tar.gz /usr/local/
+      ADD apache-tomcat-9.0.22.tar.gz /usr/local/
+      RUN yum -y install vim
+      ENV MYPATH /usr/local
+      WORKDIR $MYPATH
+
+      ENV JAVA_HOME /usr/local/jdk1.8.0_11
+      ENV CLASSPATH $JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar
+      ENV CATALINA_HOME /usr/local/apache-tomcat-9.0.22
+      ENV CATALINA_BASH /usr/local/apache-tomcat-9.0.22
+      ENV PATH $PATH:$JAVA_HOME/bin:$CATALINE_HOME/lib:$CATALINE_HOME/bin
+
+      EXPOSE 8080
+      CMD /usr/local/apache-tomcat-9.0.22/bin/startup.sh && tail -F /usr/local/apache-tomcat-9.0.22/bin/logs/cataline.out
+    ```
+    - 编写dockerfile，内容如上
+    - 构建镜像：docker build -t diytomcat .
+    - docker run -d -p 9090:8080 --name hahatuzitomcat -v /home/hahatuzi/build/tomcat/test:/usr/local/apache-tomcat-9.0.22/webapps/test -v /home/hahatuzi/build/tomcat/tomcatlogs/:/usr/local/apache-tomcat-9.0.22/logs diytomcat
+    - docker exec -it 镜像id /bin/bash
+    - 发布项目，由于做了卷挂载，我们直接在本地编写项目就可以发布了，cd test
+    - mkdir WEB-INF
+    - cd WEB-INF/
+    - vim web.xml
+
+# 十二：发布镜像：
+  ## 1.发布自己的镜像到dockerhub：
+  - 第一步：dockerhub上注册账号
+  - 第二步：在我们的服务器上提交自己的镜像，docker login -u hahatuzi
+  - 第三步：提交惊喜那个，尽量带上版本号和作者信息，docker push hahatuzi/diytomcat:1.0
+  ## 2.发布到阿里云容器服务
+  - 第一步：在阿里云上创建**命名空间**和**容器镜像**
+
+# 十三：docker容器
+  ## docker是如何处理容器网络访问的？
+  - docker run -d -P --name tomcat01 tomcat
+  - docker exec -it tomcat ip addr
+  - tomcat01和tomcat02是公用的一个路由器docker0,docker会给你一个容器分配一个ip
+# Docker可视化管理工具:portainer
+# 思考：每次修改nginx配置文件，都要进入容器内部，能不能在容器外部提供一个映射路径，达到修改它的时候，容器内部自动修改的目的？
 # dockerfile文件解读
     ```js
       // 第一步：指定镜像
