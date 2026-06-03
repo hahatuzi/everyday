@@ -1,6 +1,12 @@
 # Docker
-# 一：历史：dcoker比虚拟机轻巧，核心环境只要4M
-# 二优势：
+
+# 一：Docker原理
+  > 开始-->docker在本机寻找镜像-->判断本机是否存在镜像-->不存在就去Docker Hub上下载，找到并使用
+  ## 1.docker为什么比VM快
+  - docker有着比虚拟机更少的抽象层
+  - docker利用的宿主机的内核，vm需要的是Guest OS
+  - dcoker比虚拟机轻巧，核心环境只要4M
+# 二:Docker优势：
   - 1.更快速的交付和部署：
     - 传统的需要一堆帮助文档，安装程序
     - docker：打包镜像发布测试，一键运行
@@ -69,16 +75,55 @@
   - sudo systemctl daemon-reload
   - sudo systemctl restart docker
 
-# 五：Docker原理
-  > 开始-->docker在本机寻找镜像-->判断本机是否存在镜像-->不存在就去Docker Hub上下载，找到并使用
-  ## 1.docker为什么比VM快
-  - docker有着比虚拟机更少的抽象层
-  - docker利用的宿主机的内核，vm需要的是Guest OS
+# 五：Docker Compose
+  - up启动
+  - down下线
+  - docker compose -f compose.yaml up -d
+  ```js
+    name: myblog
+    services:
+      mysql:
+      image: mysql:8.0
+      ports:
+        - "3306:3306"
+      environment:
+        - MYSQL_ROOT_PASSWORD=XXX
+        - MYSQL_DATABASE=wordpress
+      volumes:
+        - mysql-data:/var/lib/mysql
+        - /app/myconf:/etc/mysql/conf.d
+      restart:always
+      networks:
+        - blog
+
+    workpress:
+      image:wordpress
+      ports:
+        - "8080:80"
+      environment:
+        WORKPRESS_DB_HOST:mysql
+        WORKPRESS_DB_USER:XXX
+        WORKPRESS_DB_PASSWORD:XXX
+        WORKPRESS_DB_NAME:workpress
+      volumes:
+        - wordpress:/var/www/html
+      restart:always
+      networks:
+        - blog
+      depends_on:
+        - mysql
+    volumes:
+      mysql:
+      wordpress:
+    networks:
+    blog:
+
+  ```
 # 六：Docker命令
   - docker ps [命令]:查看当前docker在跑哪些容器进程
   - docker container ls
   - docker container ls -a:查看所有的容器
-  - docker images查看镜像
+  - docker images,查看镜像
   - docker run --name miaoma-nginx-server -d -p 8080:80 nginx
   - docker search:搜索，比如docker search mysql
   - docker pull [镜像名],下载镜像，比如docker pull mysql
@@ -89,13 +134,15 @@
   - docker run -it centos /bin/bash,测试，启动并进入容器
   - exit,退出容器到主机
   - docker run -d 镜像名，后台启动容器，docker run -d centos
+  - docker start，启动
   - docker logs --help，查看日志
   - docker inspect [镜像id],查看镜像元数据
+  - docker exec,进入
   - docker exec -it [镜像名] /bin/bash,进入镜像,或者docker attach [容器id],attach不会启动新的进程,exec进入容器后开启一个新的终端，可以直接操作
   - docker cp 容器id,拷贝
   - docker stop [镜像id],停止镜像
   - -d:后台运行
-  - -p,端口映射
+  - -p 端口1：端口2,端口映射，比如docker run -it -d -p 3310:3306 -v /home/mysql/conf.d -v /home/mysql/data:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=812a1998D --name hahatuzi mysql
   - -v，卷挂载
   - -e,环境配置
   - --name,容器名字
@@ -229,6 +276,8 @@
   - docker run -d -P --name tomcat01 tomcat
   - docker exec -it tomcat ip addr
   - tomcat01和tomcat02是公用的一个路由器docker0,docker会给你一个容器分配一个ip
+
+
 # Docker可视化管理工具:portainer
 # 思考：每次修改nginx配置文件，都要进入容器内部，能不能在容器外部提供一个映射路径，达到修改它的时候，容器内部自动修改的目的？
 # dockerfile文件解读
@@ -250,20 +299,6 @@
       COPY /dist /user/share/nginx/html
       EXPOSE 80
     ```
-  ### docker compose服务编排
-    - 前端静态资源托管服务，nginx
-    - 服务端服务。node,pm3
-    - 基础服务redis,postgresql
-  ```js
-  version '3.8'
-  include:
-   - ./docker-compose.infra.yml
-   services:
-    frontend:
-    build:
-    context:./frontend
-    ports:
-    -"5173:80"
-    networks:
-    app-network
-  ```
+
+  ### docker swarm
+  - docker swarm init --advertise-addr 172.24.82.149
