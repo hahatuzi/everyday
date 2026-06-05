@@ -43,8 +43,8 @@
 # 第九部份：运维部分
   ### 1.github Actions❌
   ### 2.gitlab CI❌
-  ### 3.nginx❌
-  ### 4.docker❌
+  ### 3.nginx✅
+  ### 4.docker✅
   ### 5.k8s❌
 # 第八部份：AI Agent
   ### 1.框架：langChain+langGraph+DeepAgents❌

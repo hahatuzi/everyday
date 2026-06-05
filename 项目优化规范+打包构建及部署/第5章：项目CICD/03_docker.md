@@ -77,9 +77,9 @@
 
 # 五：Docker Compose
   ## 1.概念
-   - dockerCOmpose是用来定义和运行一个或者多个容器的工具，现在无需安装
+   - dockerCompose是用来定义和运行一个或者多个容器的工具，现在无需安装
   ## 2.命令
-    - docker compose up,启动
+    - docker compose up,启动,比如docker compose up -d --build
     - docker compose down,下线
     - docker compose version
     - docker compose -f compose.yaml up -d
@@ -246,6 +246,25 @@
   - docker build -f dockerfile -t mycentos:0.1 . ，dockerfile为自己创建的dockerfile文件名
   - 
   ## 5.CMD和ENTERPOINT的区别
+  ## 6.dockerfile文件解读
+    ```js
+      // 第一步：指定镜像
+      FROM XXX // docker官网有node可以使用镜像列表
+      // 第二步：指定工作区
+      WORKDIR /application
+      // 第三步：将自己打包后的产物都copy到application工作区下
+      COPY ..
+      RUN npm install
+      EXPOSE 3000
+      CMD ['npm', 'start']
+
+      // docker build -t XXX
+      // docker run -d --name XXX
+      // 举例：
+      FROM nginx:apline
+      COPY /dist /user/share/nginx/html
+      EXPOSE 80
+    ```
 
 # 十一：实例：
   ## 1.nginx安装
@@ -316,34 +335,30 @@
   - docker run -d -P --name tomcat01 tomcat
   - docker exec -it tomcat ip addr
   - tomcat01和tomcat02是公用的一个路由器docker0,docker会给你一个容器分配一个ip
+  ## 思考：每次修改nginx配置文件，都要进入容器内部，能不能在容器外部提供一个映射路径，达到修改它的时候，容器内部自动修改的目的？
 
 
-# Docker可视化管理工具:portainer
-# 思考：每次修改nginx配置文件，都要进入容器内部，能不能在容器外部提供一个映射路径，达到修改它的时候，容器内部自动修改的目的？
-# dockerfile文件解读
-    ```js
-      // 第一步：指定镜像
-      FROM XXX // docker官网有node可以使用镜像列表
-      // 第二步：指定工作区
-      WORKDIR /application
-      // 第三步：将自己打包后的产物都copy到application工作区下
-      COPY ..
-      RUN npm install
-      EXPOSE 3000
-      CMD ['npm', 'start']
+# 十四：Docker Swarm
+  ## 1.概念
+  - Swarm集群中的每一个docker主机都称为节点node
+    - **manager节点**：管理节点，Swarmm集群中允许多个Manager节点，多个manager节点有唯一一个**Leader**
+    - **Worker节点**：工作节点，负责接收来自Manager节点的任务分配，并执行容器操作
+    - **Raft协议**：用于选举Manager节点的Leader，并确保Manager节点之间的状态信息同步
+  ## 2.工作流程：
+  - 第一步:docker swarm init,集群初始化,执行该命令的主机会默认为manager主机的Leader
+  - 第二步：节点加入：其他docker主机加入集群
+  - 第三步：服务定义：用户定义服务，定义完成后交给Manager节点去分配
+  - 调度策略：Leader节点根据策略，来选择合适的节点来部署容器实例
+  - 容器编排：Leader节点负责对容器进行编排和管理，包括创建，启动，停止， 重启容器实例等操作
+  ## 3.命令
+  - docker swarm init --advertise-addr=172.24.82.149 ， 多网卡主机需要指定主机ip
+  - docker swarm join --token XXX
+  - docker swarm leave --force,集群解散
+  - docker swarm leave
+  - docker node ls,查看所有节点
 
-      // docker build -t XXX
-      // docker run -d --name XXX
-      // 举例：
-      FROM nginx:apline
-      COPY /dist /user/share/nginx/html
-      EXPOSE 80
-    ```
 
-  ### docker swarm
-  - docker swarm init --advertise-addr 172.24.82.149
-
-# docker部署前端实例：
+# 十五：docker部署前端实例：
   ## 1.方式一：开发本地打包 + docker run：前端页面文件放在宿主机上，通过 Docker 挂载给 Nginx 容器
   - 第一步:开发本地打包
   - 第二步：配置nginx
@@ -355,14 +370,55 @@
   │  前端源码   │ →   │  Dockerfile │ →   │  docker     │ →   │  docker  │
   │             │     │  构建定义   │     │  build      │     │  run     │
   └─────────────┘     └─────────────┘     └─────────────┘     └──────────┘
-  - docker build -t everyday .
-  - docker run -d -p 8888:80 everyday
+  - 第一步：在项目根目录下添加Dockerfile文件和.dockerignore文件
+  - 第二步：docker build -t everyday_doc .
+  - 第三步：docker run -d -p 8888:80 everyday_doc everyday_doc
   ## 2.方式二：Dockerfile + Docker Compose（推荐）
-  Dockerfile + docker-compose.yml → docker compose up -d --build
+  - 第一步：在项目根目录下添加Dockerfile文件和.dockerignore文件，RUN npm install生成一层镜像缓存
+  - 第二步：在项目根目录下添加docker-compose.yml文件
+  - 第三步：docker compose up -d --build
   ## 3.方式三：只用 Docker Compose（用现成镜像）
   docker-compose.yml（全部用 image，不写 build）→ docker compose up
+    ```js
+      version: '3.8'
+      services:
+        vitepress:
+          image: node:20-alpine // 启动 node:20-alpine 容器
+          container_name: everyday_doc
+          working_dir: /app
+          ports:
+            - "8888:80"
+          volumes:
+            - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+          environment:
+            - NPM_REGISTRY=https://registry.npmmirror.com
+          //  安装 git → 装依赖 → 构建 → 启动 nginx
+          command: >
+            sh -c "
+            apk add --no-cache git nginx &&
+            npm install --registry=https://registry.npmmirror.com && // 每次都在容器中跑
+            npm run docs:build &&
+            cp -r /app/docs/.vitepress/dist/* /usr/share/nginx/html/ &&
+            nginx -g 'daemon off;'
+            "
+          restart: always
+    ```
   ## 4.方式四：Docker Compose 构建推送到仓库
   docker compose build → docker compose push
-  
+  ## 5.Dockerfile + Docker Compose方式和纯Docker Compose的区别对比
+|     纬度     |            Dockerfile + Compose           |         纯 Compose         |
+| :----------: | : ---------------------------------------:| :-------------------------:|
+|   执行位置   |             构建阶段，在临时容器中        |         容器启动时         |
+|   缓存机制   |  Docker 层缓存,package.json 不变则跳过    |       无缓存，每次都跑     |
+| node_modules |             存储	打包进镜像层             |  在容器文件系统或挂载卷    |
+|   启动时间   |             秒级（镜像已构建好）          |  分钟级，每次都npm install |
+|   磁盘占用   |             镜像 ~20MB（多阶段）          |   镜像 ~150MB（含 node）   |
+|   依赖变更   |    改了 package.json 才重新 install       |      每次都install         |
+  ## codeBuddy:Dockerfile + Compose和纯COmpose在npm install方面的具体详细区别，以及如何验证查看这些区别
 
-  
+  		
+		
+ 	
+		
+		
+		
