@@ -40,7 +40,7 @@
   - docker run hello-world
   ## 7.查看镜像
   - docker images
-  ## 8卸载docker
+  ## 8.卸载docker
   - yum remove docker-ce docker-ce-cli containerd.io
   - rm -rf /var/lib/docker
   ## 阿里云镜像加速，也可以使用别的镜像
@@ -76,49 +76,62 @@
   - sudo systemctl restart docker
 
 # 五：Docker Compose
-  - up启动
-  - down下线
-  - docker compose -f compose.yaml up -d
-  ```js
-    name: myblog
-    services:
-      mysql:
-      image: mysql:8.0
-      ports:
-        - "3306:3306"
-      environment:
-        - MYSQL_ROOT_PASSWORD=XXX
-        - MYSQL_DATABASE=wordpress
-      volumes:
-        - mysql-data:/var/lib/mysql
-        - /app/myconf:/etc/mysql/conf.d
-      restart:always
-      networks:
-        - blog
+  ## 1.概念
+   - dockerCOmpose是用来定义和运行一个或者多个容器的工具，现在无需安装
+  ## 2.命令
+    - docker compose up,启动
+    - docker compose down,下线
+    - docker compose version
+    - docker compose -f compose.yaml up -d
+  ## 3.元素
+    - command：覆盖容器启动后的命令
+    - environment：指定环境变量
+    - image:指定镜像
+    - networks:指定网络
+    - ports：指定要发布的端口
+    - volumes：指定数据卷
+    - restart：指定重启策略
+  ## 3.文件实例：
+    ```js
+      name: myblog
+      services:
+        mysql:
+        image: mysql:8.0
+        ports:
+          - "3306:3306"
+        environment:
+          - MYSQL_ROOT_PASSWORD=XXX
+          - MYSQL_DATABASE=wordpress
+        volumes:
+          - mysql-data:/var/lib/mysql
+          - /app/myconf:/etc/mysql/conf.d
+        restart:always
+        networks:
+          - blog
 
-    workpress:
-      image:wordpress
-      ports:
-        - "8080:80"
-      environment:
-        WORKPRESS_DB_HOST:mysql
-        WORKPRESS_DB_USER:XXX
-        WORKPRESS_DB_PASSWORD:XXX
-        WORKPRESS_DB_NAME:workpress
+      workpress:
+        image:wordpress
+        ports:
+          - "8080:80"
+        environment:
+          WORKPRESS_DB_HOST:mysql
+          WORKPRESS_DB_USER:XXX
+          WORKPRESS_DB_PASSWORD:XXX
+          WORKPRESS_DB_NAME:workpress
+        volumes:
+          - wordpress:/var/www/html
+        restart:always
+        networks:
+          - blog
+        depends_on:
+          - mysql
       volumes:
-        - wordpress:/var/www/html
-      restart:always
+        mysql:
+        wordpress:
       networks:
-        - blog
-      depends_on:
-        - mysql
-    volumes:
-      mysql:
-      wordpress:
-    networks:
-    blog:
+      blog:
+    ```
 
-  ```
 # 六：Docker命令
   - docker ps [命令]:查看当前docker在跑哪些容器进程
   - docker container ls
@@ -127,7 +140,7 @@
   - docker run --name miaoma-nginx-server -d -p 8080:80 nginx
   - docker search:搜索，比如docker search mysql
   - docker pull [镜像名],下载镜像，比如docker pull mysql
-  - docker rmi -f 容器id,删除指定容器
+  - docker rmi -f 容器id,删除指定容器,docker rm -f everyday
   - docker rmi -f 容器id 容器id 容器id,删除多个容器
   - docker rmi -f $(docker images -aq),删除所有容器
   - docker run [可选参数] images,新建容器并启动
@@ -137,8 +150,6 @@
   - docker start，启动
   - docker logs --help，查看日志
   - docker inspect [镜像id],查看镜像元数据
-  - docker exec,进入
-  - docker exec -it [镜像名] /bin/bash,进入镜像,或者docker attach [容器id],attach不会启动新的进程,exec进入容器后开启一个新的终端，可以直接操作
   - docker cp 容器id,拷贝
   - docker stop [镜像id],停止镜像
   - -d:后台运行
@@ -146,6 +157,12 @@
   - -v，卷挂载
   - -e,环境配置
   - --name,容器名字
+  - docker exec,进入
+  - docker exec -it [镜像名] /bin/bash,进入镜像,或者docker attach [容器id],attach不会启动新的进程,exec进入容器后开启一个新的终端，可以直接操作
+  - docker exec my-frontend ls /usr/share/nginx/html，检查挂载是否生效
+  - docker exec my-frontend nginx -t，检查配置文件是否正确
+  - docker logs my-frontend，查看错误日志
+  - docker exec my-frontend cat /etc/nginx/conf.d/default.conf，查看Nginx实际使用的配置
 
 # 七：docker镜像加载原理
   ## UnionFS（联合文件系统）
@@ -158,13 +175,26 @@
   ## 实战：将tomcat从webapps/dist中copy到webapps下
 
 
-# 九：容器数据卷
+# 九：容器数据卷： -v
   > 正常情况下，容器删除时容器内的数据也会丢失，我们希望的就是Docker容器内的数据同步到本地，这就是容器卷
   ## 1.使用方式：
-  ### (1)方式一：docker run -it -v 主机目录，容器内目录
+  ### (1)方式一:挂载在宿主机目录：docker run -it -v 主机目录，容器内目录
     ```js
+      // 前端挂载在宿主机
+      -v D:/my-project/dist:/usr/share/nginx/html
+      // centos挂载在宿主机
       cd /home //进入服务器的home目录
       docker run -it -v /home/test:/home centos
+    ```
+  ### (2)方式二:挂载在数据卷目录： named volume
+    ```js
+      // 前端挂载在数据卷目录
+      -v frontend-data:/usr/share/nginx/html
+    ```
+  ### (3)方式三：匿名卷
+    ```js
+      // 前端挂载在数据卷目录
+      -v /usr/share/nginx/html
     ```
   ## 2.实战：mysql数据持久化问题
     ```js
@@ -172,12 +202,17 @@
       // sqlyog连接到服务器3310
       cd /home/mysql/data
       ls
-
     ```
   ## 3.具名挂载和匿名挂载
   ### (1)匿名挂载：-v只写了容器内的路径，没有写容器外的路径
   ### (2)具名挂载
   docker run -d -P --name nginx02 -v jumming-nginx:/etc/nginx nginx
+  ## 4.命令：
+  - docker run -v 数据卷别名:容器目录 镜像名，设置数据卷
+  - docker volume ls,查看所有数据卷
+  - docker volume inspect 数据卷名,查看数据卷详情
+  - docker volume create数据卷名,创建数据卷
+  - docker volume rm 数据卷名，删除数据卷
 
 # 十：Dockerfile
   > dockerfile就是构建docker镜像的文件
@@ -262,7 +297,6 @@
     - mkdir WEB-INF
     - cd WEB-INF/
     - vim web.xml
-
 # 十二：发布镜像：
   ## 1.发布自己的镜像到dockerhub：
   - 第一步：dockerhub上注册账号
@@ -273,6 +307,12 @@
 
 # 十三：docker容器
   ## docker是如何处理容器网络访问的？
+  - docker network create XXX,创建网络
+  - docker network ls:列出网络
+  - docker run --network 网络名 镜像名，加入网络
+  - docker netwoek connect 网络名 容器名，创建后新加网络
+  - docker network inspect网络名/id，查看网络详情
+  - docker network inspect 网络名/id,删除网络
   - docker run -d -P --name tomcat01 tomcat
   - docker exec -it tomcat ip addr
   - tomcat01和tomcat02是公用的一个路由器docker0,docker会给你一个容器分配一个ip
@@ -302,3 +342,27 @@
 
   ### docker swarm
   - docker swarm init --advertise-addr 172.24.82.149
+
+# docker部署前端实例：
+  ## 1.方式一：开发本地打包 + docker run：前端页面文件放在宿主机上，通过 Docker 挂载给 Nginx 容器
+  - 第一步:开发本地打包
+  - 第二步：配置nginx
+  - 第三步：docker run 容器运行，docker run -p 8888:80 -v /usr/web/everyday/dist:/usr/share/nginx/html/everyday_doc --restart always -d --name everyday nginx
+    - 前端页面宿主机地址：/usr/web/everyday/dist
+    - Docker 挂载给 Nginx 容器/usr/share/nginx/html/everyday_doc
+  ## 1.方式一：只用 Dockerfile（单服务）
+  ┌─────────────┐     ┌─────────────┐     ┌─────────────┐     ┌──────────┐
+  │  前端源码   │ →   │  Dockerfile │ →   │  docker     │ →   │  docker  │
+  │             │     │  构建定义   │     │  build      │     │  run     │
+  └─────────────┘     └─────────────┘     └─────────────┘     └──────────┘
+  - docker build -t everyday .
+  - docker run -d -p 8888:80 everyday
+  ## 2.方式二：Dockerfile + Docker Compose（推荐）
+  Dockerfile + docker-compose.yml → docker compose up -d --build
+  ## 3.方式三：只用 Docker Compose（用现成镜像）
+  docker-compose.yml（全部用 image，不写 build）→ docker compose up
+  ## 4.方式四：Docker Compose 构建推送到仓库
+  docker compose build → docker compose push
+  
+
+  
