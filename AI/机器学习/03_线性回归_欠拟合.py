@@ -2,6 +2,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
 from sklearn.linear_model import LinearRegression
+from sklearn.linear_model import Ridge
+from sklearn.linear_model import Lasso
 from sklearn.metrics import mean_squared_error
 from sklearn.tree import plot_tree
 
@@ -15,7 +17,9 @@ def under_fitting():
 
     X = x.reshape(-1,1)
     print(f'处理后的数据为{X[:5]}')
+    # 正规方程，线性回归模型
     estimator = LinearRegression()
+    # estimator = Lasso(alpha=0.1)
     estimator.fit(X,y)
     y_predict = estimator.predict(X)
     print(f'均方误差为{mean_squared_error(y,y_predict)}')
@@ -56,7 +60,8 @@ def over_fitting():
     X3 = np.hstack([X , X ** 2, X ** 3, X ** 4, X ** 5, X ** 6, X ** 7, X ** 8, X ** 9])
     print(f'处理后的数据为{X3[:5]}')
 
-    estimator = LinearRegression()
+    # estimator = LinearRegression()
+    estimator = Ridge(alpha=0.1)
     estimator.fit(X3, y)
     y_predict = estimator.predict(X3)
     print(f'均方误差为{mean_squared_error(y, y_predict)}')
