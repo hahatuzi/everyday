@@ -129,14 +129,98 @@
   - 定向调度：NodeName,NodeSelector'
   - 亲和性调度：NodeAffinity,PodAffinity,PodAffinity
   - 污点调度:Taints,Toleration
----
+
+## pod
+  ### pod控制器
+  > k8s中按照创建方式可以分为自主式pod和控制器创建的pod两种，自主式pod删除后就没有了，也不会重建，控制器pod删除后还能重建。
+    常见的pod控制器如下：
+  - replicationController
+  - Deployment
+  ### ReplicaSet
+  >主要作用是保证一定数量的pod能够正常运行，它会持续监听这些pod的运行状态 ，一旦pod发生故障，就会重启或者重建，同时它还支持对POD数量的扩容缩容和镜像升级
+  - 扩容缩容
+  ```js
+    // 方式一：
+    kubectl edit rs pc-replicaset -n dev
+    kubectl get pods -n dev //  查看pod
+    // 方式二：
+    kubectl scale rs pc-replicaset --replicaas=2 -n dev
+  ```
+  - 镜像升级
+  ```js
+    // 方式一：
+    kubectl edit rs pc-replicaset -n dev
+    kubuctl get rs pc-replicaset
+    // 方式二：
+    kubectl set image rs pc-replicaset --image=nginx:1.30.1 -n dev
+  ```
+  - 删除ReplicaSet
+  ```js
+    // 删除RS以及它管理的pod
+    kubectl delete rs pc-replicaset
+  ```
+  ### Deployment
+  >Deployment控制器是k8sV1.2引入的，Deployment管理replicaSet,replicaset管理pod
+  主要功能包括：
+  - 支持replicaset的所有功能
+  - 支持发布的停止和继续
+  - 支持版本滚动更新和版本回退
+  #### 金丝雀发布
+  ```js
+
+  ```
+  ### HPA
+  - 准备deployment和service
+  ```js
+    kubectl run nginx --image=nginx:1.17.1 --request=cpu=100m -n dev
+    kubectl expose deployment nginx --type=NodePort --port=80 -n dev
+    kubectl get deployment,pod,svc -n dev
+  ```
+  - 部署HPA
+  ### DaemonSet
+  >
 ## 七、Controller
   >控制器，通过它来实现pod的管理，比如启动，停止pod，伸缩pod的数量等
   ### 7.1 Deployment
   >Deployment是pod控制器的其中之一,k8s很少直接控制pod,都是通过pod控制器操作
 ---
 ## 八、Service
-  >pod对外服务的统一入口
+  >Service是pod对外服务的统一入口,真正起作用的是kube-proxy服务进程，每个Node节点上都运行着一个kube-proxy服务进程
+  ```js
+    ipvsadm -Ln
+  ```
+---
+  ### 8.1 kube-proxy的三种工作模式：
+  - userspace模式
+  kube-proxy为每个service创建一个监听度哪款，发往cluster IP的请求被iptables规则重定向到kube-porxy监听的端口上。kube-proxy根据LB算法选择一个提供服务的pod并和其建立链接，以将请求转发到pod上
+  - iptables模式
+  kube-proxy为service后端的每个pod创建对应的iptables规则，直接将发往cluster IP的请求重定向到一个pod ip
+  - ipvs模式
+  ipvs模式相对于iptables转发效率更高，且支持更多的LB算法
+  ```js
+    kubectl edit cm kube-proxy -n kubesystem
+    kubectl delete pod -l k8s-app=kube-proxy -n kube-system
+    ipvsadm -Ln
+  ```
+---
+  ### 8.2 Service的资源清单文件
+  - **ClusterIP**: 它是k8s系统自动分配的虚拟IP，只能在集群内访问
+  - **NodePort**: 将Service通过指定的Node上的端口暴露给外部，通过此方法，就可以在集群外部访问服务。将**service的端口映射到Node的一个端口上**，然后就可以通过`NodeIp:NodePort`来访问service了
+  - **LoadBalancer**: 使用外接负载均衡器完成到服务的负载分发，注意此模式需要外部云环境支持
+  - **ExternalName**: 把集群外部的服务引入集群内部，直接使用
+  ```
+    kubectl create -f service-externalname.yaml
+    dig @xx.xx.xx.xx service-externalname.dev.svc.cluster.local
+  ```
+  - **EndPoint**: 用来记录一个sercie对应的所有pod的访问地址
+  ```
+    /*
+    * 步骤：
+    * 第一步：vim service-clusterip.yaml
+    * 第二步：编辑文件
+    */
+
+  ```
 ---
 ## 九、Label
   >label用于对pod进行分类，实现对资源的分组，方便进行资源分配，调度，部署等工作
@@ -148,8 +232,86 @@
   - 环境标签:"environment":"dev"/"test"/"prod"
   - 架构标签："tier":"frontend"/"backend"
 ---
-  
+## 十、Ingress
+  ### 10.1 工作原理：
+  - 用户编写Ingress规则，说明哪个域名对应kubernetes集群中的哪个Service
+  - Ingress控制器动态感知Ingress服务规则的变化，然后生成一段对应的Nginx反向代理配置
+  - Ingress控制器会将生成的Nginx配置写入到一个运行着的Nginx服务中，并动态更新
+  - 到此为止，其实真正在工作的就是一个Nginx了，内部配置了用户定义的请求转发规则
+  ### 10.2 搭建
+  - mkdir ingress-controller
+  - cd ingress-controller
+  - wget https://raw.githubusercontent.com/kubernetes/ingress-nginx/nginx-0.30.0/deploy/static/mandatory.yaml
+  - wget https://raw.githubusercontent.com/kubernetes/ingress-nginx/nginx-0.30.0/deploy/static/provider/baremetal/service-nodeport.yaml
+  - kubectl apply -f./
+  - kubectl get pod -n ingress-nginx
+  - kubectl get svc -n ingress-nginx
+  - 创建tomcat-nginx.yaml
+  - 创建ingress-http.yaml
+  - kubectl create -f ingress-http.yaml
+  ### 10.4 https代理
+  - 创建证书
+    - openssl req -x589 -sha256 -nodes -days 365 -newkey rsa:2048 -keyout t1s.key -out t1s.crt -subj "/C=CN/ST=BJ/L=BJ/0=nginx/CN=itheima.com"
+  - 生成密钥
+    - kubectl create secret tls tls-secret --key tls.key --cert tls.crt
+---
 
+## 十一、数据存储Volume
+
+---
+k8s的volumes支持多种类型,比较常见的有下面几个
+- **简单存储**：EmptyDir,HostPath,NFS
+- **高级存储**：PV,PVC
+- **配置存储**：ConfigMap,Secret
+---
+## 11.1 EmptyDir
+  > EmptyDir是最基础的eVolume类型，一个EmptyDir就是Host上的一个空目录
+  ### EmptyDir用途
+  - 多容器共享目录：比如nginx和
+  ### HostPath
+  将Node主机中的一个时间目录挂载到Pod中，供容器使用，保证了pod销毁的时候单数据仍存储在Node主机上
+  - 创建volume-hostpath.yaml
+  ```js
+    apiversion: v1
+    kind: Pod
+    metadata:
+      name:volume-hostpath
+      namespace:dev
+    spec:
+      containers:
+      name:nginx
+      image: nginx:1.17.1
+      ports:
+      - containerPort: 80
+      volumeMounts:
+      - name: logs-volume
+        mountPath: /var/log/nginx
+      - name:busybox
+        image: busybox:1.30
+        command: ["/bin/sh","-c","tail -f /logs/access.log"]
+        volumeMounts:
+        - name: logs-volume
+          mountPath:/logs
+      volumes:
+      - name: logs-volume
+      hostPath:
+        path:/root/logs
+        type:DirectoryorCreate #目录存在就使用，不存在就先创建后使用
+  ```
+  - type值
+  ### nfs
+  - yum install nfs-utils -y
+  - mkdir /root/data/nfs -pv
+  - vim /etc/exports
+  - more /etc/exports
+  - systemctl start nfs
+  - vim volume-nfs.yaml
+  ### PV
+  persistent volume:持久化卷
+  有了PV,PVC后，工作可以得到进一步细分：
+  - 存储：存储工程师维护
+  - PV:k8s管理员维护
+  - PVC:k8s用户维护
 # 三：集群环境搭建
   ## 1.集群类型：
   - 一主多从:
