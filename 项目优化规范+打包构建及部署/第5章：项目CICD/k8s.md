@@ -4,9 +4,9 @@
 
 ## 目录
 
-1. [容器化部署分析](#一容器化部署分析)
-2. [k8s概念](#二k8s概念)
-3. [master](#三master)
+1. [容器化部署分析](#一、容器化部署分析)
+2. [k8s概念](#二、k8s概念)
+3. [集群安装](#三、集群安装)
 4. [node](#四node)
 5. [NameSpace](#五NameSpace)
 6. [Pod](#六Pod)
@@ -26,27 +26,43 @@
 ---
 
 ## 二、k8s概念
-  >K8s本质是一组服务器集群。一个k8s集群主要由**控制节点master**,**工作节点node**构成。目的是实现资源管理的自动化，主要提供以下功能：
+  >K8s本质是一组服务器集群。一个k8s集群主要由**控制节点master**,**工作节点node**构成。目的是实现资源管理的自动化。
+  ### 2.1 k8s主要功能：
   - 自我修复:一旦某个容器崩溃，能够在1s左右启动新的容器
   - 弹性伸缩：可以对正在运行的容器数量进行调整
   - 服务发现：通过自动发现的形式找到它依赖的服务
-  - 负载均衡：如果一个服务启动了多个容器，能够自动实现请求的负载均衡
+  - 负载均衡：如果一个服务·启动了多个容器，能够自动实现请求的负载均衡
   - 版本回退：如果新版本有问题，可以立即回退
   - 存储编排：可以根据容器自身的需求自动创建存储卷
 ---
-## 三、master
+  ### 2.2 master
   >集群控制节点，每一个k8s都至少要有一个master节点，集群的控制平面，负责集群的决策：
-  - Apiserver:资源操作的唯一入口，接收用户输入的命令，提供认证，授权，API注册和发现等机制
-  - Scheduler:负责调度集群资源
-  - ControllerManager：负责维护集群的状态，比如程序的更新，销毁等
-  - Etcd:负责村出纳集群中各种资源的信息
+  - **Apiserver**:资源操作的唯一入口，接收用户输入的命令，提供认证，授权，API注册和发现等机制
+  - **Scheduler**:负责调度集群资源
+  - **ControllerManager**：负责维护集群的状态，比如程序的更新，销毁等
+  - **Etcd**:负责村出纳集群中各种资源的信息
 ---
-## 四、node
+  ### 2.3 node
   >工作负载节点，集群的数据平面，负责为容器提供运行环境（干活）
-  - Kubelet：负责维护容器的生命周期，即通过docker，来创建，更新，销毁容器
-  - KubeProxy：负责提供集群内部的服务发现和负载均衡
-  - Docker：负责节点上容器的各种操作
+  - **Kubelet**：负责维护容器的生命周期，即通过docker，来创建，更新，销毁容器
+  - **KubeProxy**：负责提供集群内部的服务发现和负载均衡
+  - **Docker**：负责节点上容器的各种操作
+  ### 2.4 k8s微观架构
+  #### 组件：Kubernetes API Server,kubernetes Scheduler,Controller Manager,Kube-proxy
+  #### 插件:Docker,CoreDNS,ImgressController
+  #### 附件:Prometheus,Dahsboard,Federation
+  ```
+                   ┌──────────────────┐
+    web UI ──────→ │                  │
+                   │                  │←──── replication controller
+   kubectl ──────→ │    api server    │
+                   │                  │
+    etcd ──────→   │                  │
+                   │                  │←──── scheduler
+                   └──────────────────┘
+  ```
 ---
+## 三、集群安装
 ## 五、NameSpace
   >命名空间，用来隔离pod的运行环境,Namespace是kubernetes系统中一种非常重要的资源，它的主要作用是实现**多套环境的资源隔离或者多租户的资源隔离**。比如将两个pod划分到不同的Namespace中。
   ### 5.1 kubernetes在集群启动后会默认创建几个namespace
@@ -268,7 +284,7 @@ k8s的volumes支持多种类型,比较常见的有下面几个
   > EmptyDir是最基础的eVolume类型，一个EmptyDir就是Host上的一个空目录
   ### EmptyDir用途
   - 多容器共享目录：比如nginx和
-  ### HostPath
+  ### (1) HostPath
   将Node主机中的一个时间目录挂载到Pod中，供容器使用，保证了pod销毁的时候单数据仍存储在Node主机上
   - 创建volume-hostpath.yaml
   ```js
@@ -299,19 +315,117 @@ k8s的volumes支持多种类型,比较常见的有下面几个
         type:DirectoryorCreate #目录存在就使用，不存在就先创建后使用
   ```
   - type值
-  ### nfs
+  ### (2) nfs
   - yum install nfs-utils -y
   - mkdir /root/data/nfs -pv
   - vim /etc/exports
   - more /etc/exports
   - systemctl start nfs
   - vim volume-nfs.yaml
-  ### PV
+  ### (3) PV
   persistent volume:持久化卷
   有了PV,PVC后，工作可以得到进一步细分：
   - 存储：存储工程师维护
   - PV:k8s管理员维护
   - PVC:k8s用户维护
+  #### 回收策略：
+  - retain:保留
+  - recycle:回收
+  - delete:删除
+  #### PV生命周期的4个状态：
+  - available:
+---
+  
+  ### (4) PVC
+---
+  ### (5)configmap
+---
+  ### (6)secret
+---
+## 十二、安全认证
+  常见的安全认证方案：
+  >用户名+密码
+  
+  >token
+  
+  > CA证书
+  ### 12.1 API Server支持的授权策略
+  - AllwaysDeny:拒绝一切请求，一般用于测试
+  - AlwaysAllow:允许所有请求，相当于集群不需要授权流程
+  - ABAC:基于属性的访问控制
+  - Webhook:通过调用外部REST服务对用户进行授权
+  - Mode:专用模式，用于对k8s发出的请求进行访问控制
+  - RBAC:基于角色的访问控制，k8s的默认选项
+  ### 12.2 概念
+  - 对象：Users,Groups,serviceAccount
+  - 角色：代表一组定义在资源上的可操作动作
+  - 绑定：将定义好的角色和用户绑定
+  ### 12.3 RBAC的4个顶级资源对象
+  - Role,ClusterRole:角色用于指定一组权限
+    - role:只能对命名空间内的资源进行授权
+    - clusterRole:可以对集群内的资源进行
+  - RoleBinding,ClusterRoleBinding:角色绑定
+    - RoleBinding将容易namespace中的subject绑定到某个role下
+    - ClusterRoleBinding：用于集群内的绑定
+  ```js
+    kind：RoleBinding
+
+  ```
+  ### 12.4 创建只能管理DEV空间下Pod资源的账号
+  ```js
+    // cd /etc/kubernetes/pki/
+
+    // 第二步：用apiserver的证书签署
+    // 申请签名，用户为devman,组是group
+    //  openssl req -new -key devman.key -out devman.csr -subj "/CN=devman/0=devgroup'
+    // 签署证书
+    // openssl x509 -req -in devman.csr -CA ca.crt -CAkey ca.key -CAcreateserial -out devman.crt -days 3650
+
+    // 第三步： 设置集群、用户、上下文信息
+    //  kubectl config set-cluster kubernetes --embed-certs=true --certificate-authority=/etc/kubernetes/pki/ca.crt --server=https://192.168.109.100:6443
+    // kubectl config set-credentials devman --embed-certs=true --client-certificate-/etc/kubernetes/pki/devman.crt --client-key=/etc/kubernetes/pki/devman.key
+
+    //  kubectl config set-context devmanekubernetes --cluster-kubernetes --user=devman
+    // 切换账户到devman
+    // kubectl config use-context devman@kubernetes
+
+    // 查看dev下pod，
+    //  kubectl get pods -n dev
+  ```
+  ```js
+    kind: Role
+    apiVersion: rbac.authorization.k8s.io/v1betal
+    metadata:
+      namespace:dev
+      name: dev-role
+    rules:
+      - apiGroups:[""]
+      resources:["pods"]
+      verbs:["get", "watch", "list"]
+    kind: RoleBinding
+    apiVersion: rbac.authorization.k8s.io/v1betal
+    metadata:
+      name: authorization-role-binding
+      namespace: dev
+    subjects:
+      - kind:User
+      name:devman
+      apiGroup: rbac.authorization.k8s.io
+    roleRef:
+      kind: Role
+      name: dev-role
+      apiGroup: rbac.authorization.k8s.io
+  ```
+---
+
+## 十三：DashBoard
+  - wget https://raw.githubusercontent.com/kubernetes/dashboard/v2.0.0/aio/deploy/recommended.yaml
+  - kubectl create -f recommented.yaml
+  - 创建访问账户，获取token
+  -  kubeptl create serviceaccount dashboard-admin -n kubernetes-dashboard
+  -  kubectl create clusterrolebinding dashboard-admin-rb --clusterrole=cluster-admin --serviceaccount=kubernetes-dashboard:dashboard-admin
+  -  kubectl get secrets -n kubernetes-dashboard I grep dashboard-admin
+  -   kubectl describe secrets dashboard-admin-token-xbghh -n kubernetes-dashboard
 # 三：集群环境搭建
   ## 1.集群类型：
   - 一主多从:

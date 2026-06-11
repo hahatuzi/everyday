@@ -1,12 +1,30 @@
 # Docker
 
-# 一：Docker原理
+---
+
+## 目录
+
+1. [Docker原理](#一Docker原理)
+2. [Docker优势](#二Docker优势)
+3. [核心概念](#三核心概念)
+4. [Docker安装](#四Docker安装)
+5. [Docker Compose](#五Docker Compose)
+6. [Docker命令](#六Docker命令)
+7. [Controller](#七Controller)
+8. [Service](#八Service)
+9. [Label](#九Label)
+
+---
+
+
+## 一、Docker原理
   > 开始-->docker在本机寻找镜像-->判断本机是否存在镜像-->不存在就去Docker Hub上下载，找到并使用
-  ## 1.docker为什么比VM快
+  ### 1.1 docker为什么比VM快
   - docker有着比虚拟机更少的抽象层
-  - docker利用的宿主机的内核，vm需要的是Guest OS
+  - docker利用的**宿主机的内核**，vm需要的是Guest OS
   - dcoker比虚拟机轻巧，核心环境只要4M
-# 二:Docker优势：
+---
+## 二、Docker优势
   - 1.更快速的交付和部署：
     - 传统的需要一堆帮助文档，安装程序
     - docker：打包镜像发布测试，一键运行
@@ -17,35 +35,42 @@
   - 4.更高效的计算资源利用：
     - DOcker是内核级的虚拟化，一个物理机上可以运行很多的容器实例
 
-# 三：核心概念
-  ## 1.镜像：
-    docker镜像就是一个模版，可以通过这个模版来创建容器服务！！tomcat镜像-->run-->tocat01容器
-  ## 2.容器container:
-    DOcker利用容器，独立运行一个或者一组应用，可以将容器理解为一个简易版的linux系统
-  ## 3.仓库：
-    仓库就是存放镜像的地方
+---
+##  三、核心概念
+  ### 3.1 镜像
+  docker镜像就是一个模版，可以通过这个模版来创建容器服务！！tomcat镜像-->run-->tocat01容器
+  ### 3.2 容器container
+  DOcker利用容器，独立运行一个或者一组应用，可以将容器理解为一个简易版的linux系统
+  ### 3.3 仓库
+  仓库就是存放镜像的地方
 
-# 四：Docker安装
+---
+## 四、Docker安装
+  ### 4.1 安装步骤
+  ```
   ## 1.安装包
-  - yum install -y yum-utils
+    - yum install -y yum-utils
   ## 2.设置镜像仓库
-  - yum-config-manager --add-repo http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo 
+    - yum-config-manager --add-repo http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo 
   ## 3.安装包
-  -  yum install docker-ce docker-ce-cli containerd.io
+    -  yum install docker-ce docker-ce-cli containerd.io
   ## 4.启动docker
-  - systemctl start docker
+    - systemctl start docker
   ## 5.查看是否安装成功
-  - docker --version
+    - docker --version
   ## 6.查看hello-world镜像
-  - docker run hello-world
+    - docker run hello-world
   ## 7.查看镜像
-  - docker images
+    - docker images
   ## 8.卸载docker
-  - yum remove docker-ce docker-ce-cli containerd.io
-  - rm -rf /var/lib/docker
-  ## 阿里云镜像加速，也可以使用别的镜像
-  -  sudo  mkdir -p /etc/docker
+    - yum remove docker-ce docker-ce-cli containerd.io
+    - rm -rf /var/lib/docker
+  ```
+  ### 4.2 阿里云镜像加速，也可以使用别的镜像
   ```js
+  ## 第一步：
+    -  sudo  mkdir -p /etc/docker
+  ## 第二步：
     sudo  tee /etc/docker/daemon.jsn <<-'EOF' 
     {
       "registry-mirrors": ["https://qiyb9988.mirror.aliyuncs.com"]
@@ -61,7 +86,7 @@
       ]
     }
     EOF
-
+    // 或者---------------
     sudo tee /etc/docker/daemon.json <<-'EOF'
     {
       "registry-mirrors": [
@@ -71,19 +96,21 @@
       ]
     }
     EOF
+  ## 第三步：
+    - sudo systemctl daemon-reload
+  ## 第四步：
+    - sudo systemctl restart docker
   ```
-  - sudo systemctl daemon-reload
-  - sudo systemctl restart docker
-
-# 五：Docker Compose
-  ## 1.概念
+---
+## 五、Docker Compose
+  ### 5.1 概念
    - dockerCompose是用来定义和运行一个或者多个容器的工具，现在无需安装
-  ## 2.命令
+  ### 5.2 命令
     - docker compose up,启动,比如docker compose up -d --build
     - docker compose down,下线
     - docker compose version
     - docker compose -f compose.yaml up -d
-  ## 3.元素
+  ### 5.3 元素
     - command：覆盖容器启动后的命令
     - environment：指定环境变量
     - image:指定镜像
@@ -91,7 +118,7 @@
     - ports：指定要发布的端口
     - volumes：指定数据卷
     - restart：指定重启策略
-  ## 3.文件实例：
+  ### 5.4 文件实例
     ```js
       name: myblog
       services:
@@ -132,7 +159,7 @@
       blog:
     ```
 
-# 六：Docker命令
+## 六、Docker命令
   - docker ps [命令]:查看当前docker在跑哪些容器进程
   - docker container ls
   - docker container ls -a:查看所有的容器
@@ -164,12 +191,12 @@
   - docker logs my-frontend，查看错误日志
   - docker exec my-frontend cat /etc/nginx/conf.d/default.conf，查看Nginx实际使用的配置
 
-# 七：docker镜像加载原理
-  ## UnionFS（联合文件系统）
+## 七、docker镜像加载原理
+  ### UnionFS（联合文件系统）
   - UnionFS是一层一层的文件系统，包含boot fs(boot)和root fs，它支持对文件系统的修改，作为一次提交来层层叠加
   - Union文件系统是Docker镜像的基础，在下载镜像的时候，已经存在的文件部分可以复用
   - root fs在boot fs之上，包含的就是典型的linux系统中的/dev,/proc,/bin,/etc等标准目录和文件
-  ## 镜像的特点：
+  ### 镜像的特点：
   - docker镜像都是只读的，当容器启动的时候，一个新的可写层被加载到镜像的顶部，这一层就是通常说的容器层，容器之下都是镜像层
 # 八：提交镜像docker commit:
   ## 实战：将tomcat从webapps/dist中copy到webapps下
