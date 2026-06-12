@@ -165,7 +165,7 @@
   - docker container ls -a:查看所有的容器
   - docker images,查看镜像
   - docker run --name miaoma-nginx-server -d -p 8080:80 nginx
-  - docker search:搜索，比如docker search mysql
+  - docker search:搜索镜像，比如docker search mysql
   - docker pull [镜像名],下载镜像，比如docker pull mysql
   - docker rmi -f 容器id,删除指定容器,docker rm -f everyday
   - docker rmi -f 容器id 容器id 容器id,删除多个容器

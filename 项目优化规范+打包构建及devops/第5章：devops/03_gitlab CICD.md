@@ -48,6 +48,36 @@
     ```
   ### 2.安装方式二：使用docker安装
     ```js
+      第一步：创建目录
+        cd /usr/local
+        mkdir docker
+        mkdir gitlab_docker
+        vi docker-compose.yml
+      第二步：搜索gitblab镜像
+        docker search gitlab 
+      第三步：拉取镜像
+        docker pull gitlab/gitlab-ce:latest
+      第四步：配置docker-compose.yml文件
+        version: '3.1'
+        services:
+          gitlab:
+            image: gitlab/gitlab-ce:latest
+            container_name: gitlab
+            restart: always
+            environment:
+              GITLAB_OMNIBUS_CONFIG:
+                 external_url 'http://192. 168. 11. 11:8929' // 自己的服务器ip
+                 gitlab_rails[' gitlab_shell_ssh_port' ] = 2224
+            ports:
+              - '8929:8929'
+              - '2224:2224'
+            volumes:
+              - './config:/etc/gitlab'
+              - './logs:/var/log/gitlab'
+              -  './data:/var/opt/gitlab'
+      第五步：启动容器
+        docker-compose up -d
+      // 旧===============
       mkdir -p ~/data/gitlub/config ~/data/gitlab/logs ~/data/gitlab/data
       docker pull gitlab/gitlab-ce:12.9.0-ce.0
     ```
