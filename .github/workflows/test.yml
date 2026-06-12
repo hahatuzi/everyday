@@ -1,4 +1,8 @@
 on: push
 jobs:
   job1:
+    steps:
+    - run: ls
   job2:
+    steps:
+    - run: node --version
