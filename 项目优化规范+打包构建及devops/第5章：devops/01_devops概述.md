@@ -78,3 +78,12 @@
   ### 6.插件管理
   - （1）gitlab是开放式的，任何人都可以直接向代码库做贡献
   - （2）jenkins是通过插件完成扩展功能的，但是插件的维护保护和升级成本很高
+
+
+# 七：jitlab CI/CD + docker
+  ```
+    docker run -d --name gitlab-runner --restart always \
+    -v /srv/gitlab-runner/config:/etc/gitlab-runner \
+    -v/var/run/docker.sock:/var/run/docker.sock \
+    gitlab/gitlab-runner:latest
+  ```
