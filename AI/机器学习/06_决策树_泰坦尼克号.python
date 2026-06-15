@@ -1,0 +1,40 @@
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+from sklearn.linear_model import LogisticRegression
+from sklearn.preprocessing import StandardScaler
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score, classification_report
+from sklearn.tree import DecisionTreeRegressor, DecisionTreeClassifier, plot_tree
+# from sklearn.utils._repr_html import estimator
+
+# 1.加载数据
+data = pd.read_csv('./data/titannic.csv')
+# data.info()
+# print(data.head())
+
+# 2.数据预处理
+x = data[['Pclass','Sex','Age']]
+y = data['Survived']
+
+print(x)
+print(y)
+x = x.copy()
+x['Age'] = x['Age'].fillna(x['Age'].mean())
+x = pd.get_dummies(x, columns=['Sex'])
+
+# // 查看处理后的数据集
+x.info()
+x_train, x_test, y_train, y_test = train_test_split(x,y,test_size= 2,random_state=23)
+# 模型训练
+estimator = DecisionTreeClassifier(max_depth= 18)
+estimator.fit(x_train, y_train)
+# 模型预测
+y_pred = estimator.predict(x_test)
+print(f'预测值为{y_pred}')
+print(f'分类评估报告\n{classification_report(y_test, y_pred)}')
+
+# 绘制决策树图
+plt.figure(figsize=(30, 20))
+plot_tree(estimator, filled=True,max_depth = 18)
+plt.show()
