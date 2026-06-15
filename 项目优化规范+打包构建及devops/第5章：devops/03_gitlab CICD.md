@@ -1,15 +1,36 @@
-# 一：gitlab CICD
-  ### 1.组成
+# gitlab CICD
+
+---
+
+## 目录
+
+1. [gitlab CICD](#一、gitlab CICD)
+2. [gitlab安装及使用](#二、gitlab安装及使用)
+3. [gitlab runner的安装与使用](#三、gitlab runner的安装与使用)
+4. [node](#四node)
+5. [NameSpace](#五NameSpace)
+6. [Pod](#六Pod)
+7. [Controller](#七Controller)
+8. [Service](#八Service)
+9. [Label](#九Label)
+
+---
+
+
+# 一、gitlab CICD
+  ## 1.1 组成
   - gitlab CI/CD
-  - gitlab runner:是一个单独处理构建的应用程序，它可以单独部署，并通过API与gitlab CI/CD一起使用。**gitlab-runner可以在不同的主机上部署，也可以在同一个主机上设置多个gitlab-runner ,还可以根据不同的环境设置不同的环境，比如我们需要区分研发环境，测试环境以及正式环境等。**
+  - gitlab runner
   - gitlab-ci.yaml
-  ### 2.工作流程
+  > gitlab runner是一个单独处理构建的应用程序，它可以单独部署，并通过API与gitlab CI/CD一起使用
+  > **gitlab-runner可以在不同的主机上部署，也可以在同一个主机上设置多个gitlab-runner ,还可以根据不同的环境设置不同的环境，比如我们需要区分研发环境，测试环境以及正式环境等。**
+  ### 1.2 工作流程
   push code --> trigger a pipeline --> gitlab-ci.yml --> gitlab CI pipelineCI pipeline(preparation -- build -- tests) --> Deploy对应多个gitlab runner(gitlab runner 可以是服务器或者docker容器)
   - 1.代码托管到git仓库
   - 2.项目根目录创建ci文件,gitlab-ci.yml,在文件中指定构建，测试和部署脚本
   - 3.gitlab检测到gitlab-ci.yml并使用gitlab runner 的工具运行脚本
   - 4.根据预定义的gitlab-ci.yml脚本分组成作业，并共同组成管道
-  ### 3.gitlab CI/CD的特点
+  ### 1.3 gitlab CI/CD的特点
   - 1.多平台
   - 2.多语言
   - 3.稳定构建：构建与gitlab在不同的机器上运行
@@ -17,18 +38,18 @@
   - 5.实时日志记录
   - 6.灵活的管道
   - 7.版本管道：一个gitlab-ci.yml文件包含测试，整个过程的步骤
-  ### 4.gitlab CI的完整流程
+  ### 1.4 gitlab CI的完整流程
   - 第一步：阿里云服务器安装gitlab
   - 第二步：阿里云服务器安装gitlab-runner
   - 第三步：将本地推送到gitlab并自动部署
-  ### 5.前端pipeline中需要的操作
+  ### 1.5 前端pipeline中需要的操作
   - 第一步：install阶段：就是执行npm install 命令，根据package.json安装node_modules依赖包
   - 第二步：eslint阶段: 执行eslint检查，判断代码格式是否符合规范，如果不符合停止pipeline
   - 第三步：build阶段: 编译成生产代码，可以通过webpack之类的打包工具执行编译，也可以通过脚手架自身提供的编译命令进行编译,如npm run build
   - 第四步：deploy阶段：部署阶段，将刚才的build阶端生成的生产代码部署到生产访问的服务器上，
 
-# 二：gitlab安装及使用
-  ### 1.安装方式一：使用rpm包安装
+# 二、gitlab安装及使用
+  ### 2.1 安装方式一：使用rpm包安装
     ```js
       // CentOS7系统GitLab官方安装教程： https://about.gitlab.com/install/#centos-7
       // 第一步：下载gitlab镜像,低版本centos7用清华园镜像，centos8用packages.gitlab.com
@@ -46,7 +67,7 @@
       // 第五步：重启
       gitlab-ctl restart
     ```
-  ### 2.安装方式二：使用docker安装
+  ### 2.2 安装方式二：使用docker安装
     ```js
       第一步：创建目录
         cd /usr/local
@@ -81,8 +102,8 @@
       mkdir -p ~/data/gitlub/config ~/data/gitlab/logs ~/data/gitlab/data
       docker pull gitlab/gitlab-ce:12.9.0-ce.0
     ```
-  ### 3.gitlab常见命令
-    ```js
+  ### 2.3 gitlab常见命令
+    ```
       // 运行
       gitlab-runner run
       // 启动
@@ -94,7 +115,7 @@
       // 删除所有注册runner
       gitlab-runner unregister --all-runners
     ```
-  ### 4.gitlab安装的前置条件，可不做！！
+  ### 2.4 gitlab安装的前置条件，可不做！！
   - （1）启动sshd服务
     ```js
       // 设置开机自启动sshd服务
@@ -133,7 +154,7 @@
       systemctl status postfix
     ```
 
-# 三：gitlab runner的安装与使用
+# 三、gitlab runner的安装与使用
   支持运行在目前常用的平台上，例如：Linux/Unix、Windows、MacOS、Docker容器内、Kubernetes。
   ### 1.概念
    - (1)gitlab Runner是一个开源项目，用于运行作业并将结果发送回gitlab。
