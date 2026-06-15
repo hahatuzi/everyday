@@ -4,7 +4,7 @@
 
 ## 目录
 
-1. [gitlab CICD](#一、gitlab CICD)
+1. [gitlab CICD](#一、gitlab_CICD)
 2. [gitlab安装及使用](#二、gitlab安装及使用)
 3. [gitlab runner的安装与使用](#三、gitlab runner的安装与使用)
 4. [node](#四node)
@@ -17,15 +17,21 @@
 ---
 
 
-# 一、gitlab CICD
+# 一、gitlab_CICD
   ## 1.1 组成
   - gitlab CI/CD
   - gitlab runner
-  - gitlab-ci.yaml
+  - gitlab-ci.yml
   > gitlab runner是一个单独处理构建的应用程序，它可以单独部署，并通过API与gitlab CI/CD一起使用
   > **gitlab-runner可以在不同的主机上部署，也可以在同一个主机上设置多个gitlab-runner ,还可以根据不同的环境设置不同的环境，比如我们需要区分研发环境，测试环境以及正式环境等。**
   ### 1.2 工作流程
-  push code --> trigger a pipeline --> gitlab-ci.yml --> gitlab CI pipelineCI pipeline(preparation -- build -- tests) --> Deploy对应多个gitlab runner(gitlab runner 可以是服务器或者docker容器)
+  ```
+  ──→ push code
+  ──→ trigger a pipeline
+  ──→ gitlab-ci.yml
+  ──→ gitlab CI pipelineCI pipeline(preparation -- build -- tests)
+  ──→ Deploy对应多个gitlab runner(gitlab runner 可以是服务器或者docker容器)
+  ```
   - 1.代码托管到git仓库
   - 2.项目根目录创建ci文件,gitlab-ci.yml,在文件中指定构建，测试和部署脚本
   - 3.gitlab检测到gitlab-ci.yml并使用gitlab runner 的工具运行脚本
@@ -167,14 +173,14 @@
   - (3)允许自定义作业运行环境
   - (4)支持运行在目前常用的平台上，例如：Linux/Unix、Windows、MacOS、Docker容器内、Kubernetes。
   ### 3.Gitlab Runner的类型
-    - (1)**shared:共享类型**，运行整个平台项目的作业(gitlab)
-    - (2)**group:项目组类型**，运行特定group下所有项目的作业(group)
-    - (3)**specific：项目类型**，运行指定的项目作业（project）
+  - (1)**shared:共享类型**，运行整个平台项目的作业(gitlab)
+  - (2)**group:项目组类型**，运行特定group下所有项目的作业(group)
+  - (3)**specific：项目类型**，运行指定的项目作业（project）
   ### 4.gitlab Runner的状态
-    - (1)locked：锁定状态，无法运行项目作业。
-    - (2)paused:暂停状态，不会运行作业。
+  - (1)locked：锁定状态，无法运行项目作业。
+  - (2)paused:暂停状态，不会运行作业。
   ### 5.gitlab Runner的安装
-    -  (1)安装方式一：
+  -  (1)安装方式一：
       ```js
         // 第一步：添加gitlab官方库===============
         // For Debian/Ubuntu/Mint
@@ -189,7 +195,7 @@
         //For RHEL/CentOS/Fedora
         sudo yum install gitlab-ci-multi-runner
       ```
-    - (2)安装方式二：手动下载rpm包
+  - (2)安装方式二：手动下载rpm包
       ```js
         // 无效命令：wget --content-disposition https://packages.gitlab.com/runner/gitlab-runner/packages/sles/12.5/gitlab-runner-18.9.0-1.x86_64.rpm/download.rpm
         // centos系统
@@ -203,7 +209,7 @@
         // 第四步
         rpm -Uvh gitlab-runner_<arch>.rpm
       ```
-    - (3)安装方式三：通过docker安装
+  - (3)安装方式三：通过docker安装
       ```js
         // 第一步：创建目录/data/devops/gitlab
         // 第二步：在devops文件夹下创建gitlab-runner文件夹
