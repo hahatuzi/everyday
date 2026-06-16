@@ -175,7 +175,6 @@
   - exit,退出容器到主机
   - docker run -d 镜像名，后台启动容器，docker run -d centos
   - docker start，启动
-  - docker logs --help，查看日志
   - docker inspect [镜像id],查看镜像元数据
   - docker cp 容器id,拷贝
   - docker stop [镜像id],停止镜像
@@ -190,6 +189,8 @@
   - docker exec my-frontend nginx -t，检查配置文件是否正确
   - docker logs my-frontend，查看错误日志
   - docker exec my-frontend cat /etc/nginx/conf.d/default.conf，查看Nginx实际使用的配置
+  - docker ps -a --filter "name=jenkins",查看容器状态，restarting(反复重启)**如果反复重启可以查看日志**，Exited(已经崩溃)，Up X minutes(正常)
+  - docker logs --help，查看日志，比如docker logs --tail 50 jenkins，查看jenkins日志
 
 ## 七、docker镜像加载原理
   ### UnionFS（联合文件系统）

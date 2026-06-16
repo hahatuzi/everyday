@@ -51,12 +51,6 @@
   - 6.灵活的管道
   - 7.版本管道：一个gitlab-ci.yml文件包含测试，整个过程的步骤
 
-# 五：Jenkins
-  ### 1.jenkins三大概念：
-  - 1.Job(任务):在jenkins平台中，都是以job任务的形式完成一件事情。
-  - 2.plugins(插件)
-  - 3.workspace(工作空间):jenkins是通过本地文件的形式来存储和管理数据的。jenkins下的每一个job都有属于自己的workspace,用来存放本任务涉及到的数据和文件
-
 # 六：gitlab CICD和Jenkins对比
   ### 1.分支可配置性
   - （1）使用gitlab CI,新创建的分支无需任何进一步配置就可以立即使用CI管道中的已定义作业。
@@ -80,7 +74,7 @@
   - （2）jenkins是通过插件完成扩展功能的，但是插件的维护保护和升级成本很高
 
 
-# 七：jitlab CI/CD + docker
+# 七：gitlab CI/CD + docker
   ```
     docker run -d --name gitlab-runner --restart always \
     -v /srv/gitlab-runner/config:/etc/gitlab-runner \

@@ -6,13 +6,12 @@
 
 1. [jenkins三大概念](#一、jenkins三大概念)
 2. [jenkins创建job](#二、jenkins创建job)
-3. [集群安装](#三、集群安装)
-4. [node](#四node)
-5. [NameSpace](#五NameSpace)
-6. [Pod](#六Pod)
-7. [Controller](#七Controller)
-8. [Service](#八Service)
-9. [Label](#九Label)
+3. [docker安装jenkins插件](#三、docker安装jenkins插件)
+4. [jenkins流水线](#四、jenkins流水线)
+5. [Jenkins常见的内置构建触发器](#五、Jenkins常见的内置构建触发器)
+6. [jenkins配置](#六、jenkins配置)
+7. [Jenkins安装](#七、Jenkins安装)
+8. [jenkins权限管理](#八、jenkins权限管理)
 
 ---
 
@@ -22,11 +21,15 @@
   ### 1.2 plugins(插件)
   ### 1.3 workspace(工作空间)
   >jenkins是通过本地文件的形式来存储和管理数据的。jenkins下的每一个job都有属于自己的workspace,用来存放本任务涉及到的数据和文件
+  >
+---
 ## 二、jenkins创建job
 
+---
 ## 三、docker安装jenkins插件
   - docker pull jenkins/jenkins
-## 四、jenkins pipeline
+---
+## 四、jenkins流水线
   > pipeline包括声明式脚本和脚本式语法，pipeline是一套运行在jenkins上的工作流框架，将原来独立运行于单个或者多个节点的任务连接起来，实现单个任务难以完成的复杂流程编排和可视化的工作。
   - 声明式：
   ```js
@@ -44,47 +47,73 @@
         // 任务完成之后的处理，比如发送邮件等
       }
     }
+    // 比如
+    pipeline{
+      agent  any
+      stages {
+          stage('拉取代码'){
+              steps {
+                  echo '拉取代码。。。'
+              }
+          }
+          stage('制作镜像'){
+              steps {
+                  echo'制作镜像..'
+              }
+          }
+          stage('部署') {
+              steps {
+                  echo'部署....'
+              }
+          }
+      }
+    }
   ```
-agent:代理
-stages：阶段
-checkout阶段
-shell编译阶段
+  ### 流水线阶段
+  - agent:代理
+  - stages阶段
+  - checkout阶段
+  - shell编译阶段
 [jenkins声明式语法](https://blog.csdn.net/zhou920786312/article/details/125955704)
-## 五、Jenkins的常见的内置构建触发器
+---
+## 五、Jenkins常见的内置构建触发器
   > 构建触发器：构件方式包括：**定时构建**，**远程构建**，**github触发器**，**源码变更构建**
-  - **定时构建**:分类包括：分钟(0-59)，小时(0-24)，每月的天数，月数，一周的天数(0-7)
-比如：每天晚上20点自动构建：0 20 * * *,*表示取有效期的所有值，-表示连续的时间段
-每周二，周四的晚上8点执行 0 20 * * 2,4
-每周二至周四的晚上8点执行 0 20 * * 2-4
-  - **轮询SCM**:定时扫描本地仓库的代码是否有边锋，如果代码有变更就会触发
-轮询SCM可以实现Gitlab代码更新，项目自动构建，但是该方案的性能不佳，当项目代码量比较大时构建时间比较长。所以采用了更好的方案：利用Gitlab的webhook实现代码push到仓库时立即触发项目的自动构建
-轮询SCM原理示意图
-Jenkins  --发送定时请求-->  Gitlab代码变更
-Gitlab代码变更  --push完毕后发送构建请求-->  Jenkins
-## 六、Jenkins全局变量
+  ### 定时构建
+  >分类包括：分钟(0-59)，小时(0-24)，每月的天数，月数，一周的天数(0-7)
+  比如：每天晚上20点自动构建：0 20 * * *,*表示取有效期的所有值，-表示连续的时间段
+  每周二，周四的晚上8点执行 0 20 * * 2,4
+  每周二至周四的晚上8点执行 0 20 * * 2-4
+  ### 轮询SCM
+  >定时扫描本地仓库的代码是否有边锋，如果代码有变更就会触发
+  轮询SCM可以实现Gitlab代码更新，项目自动构建，但是该方案的性能不佳，当项目代码量比较大时构建时间比较长。所以采用了更好的方案：利用Gitlab的webhook实现代码push到仓库时立即触发项目的自动构建
+  ### 轮询SCM原理示意图
+  >Jenkins  --发送定时请求-->  Gitlab代码变更 --> Gitlab代码变更  --push完毕后发送构建请求-->  Jenkins
+---
+## 六、jenkins配置
+  ### 6.1 Jenkins全局变量
   - env  
-  env可以在声明式流水线中访问的环境变量，例如`${env.PATH}`或者`${env.BUILD_ID}`.
-访问内置的全局变量参考页面`${YOUR_JENKINS_URL}/pipeline-syntax/globals`以获取完整的最新的，可用于流水线的环境变量列表。
+    >env可以在声明式流水线中访问的环境变量，例如`${env.PATH}`或者`${env.BUILD_ID}`。访问内置的全局变量参考页面`${YOUR_JENKINS_URL}/pipeline-syntax/globals`以获取完整的最新的，可用于流水线的环境变量列表。
   - currentBuild  
-    currentBuild可用于发现当前正在执行的流水线的信息，比如result,displayName等属性。
-## 七、Jenkins环境变量environment
+    >currentBuild可用于发现当前正在执行的流水线的信息，比如result,displayName等属性。
+  ### 6.2 Jenkins环境变量environment
   - (1)最外层，用在最外层的pipeline块中的enviroment指令用于流水线的所有步骤
   - (2)stage中，定义在stage中的enviorment指令只适用于stage中的步骤。
   ```
-  pipeline{
-    enviorment{
+    pipeline{
+      enviorment{
 
-    }
-    stages{
-      stage(){
-        environment{
+      }
+      stages{
+        stage(){
+          environment{
 
+          }
         }
       }
     }
-  }
   ```
 
+---
 ## 七、Jenkins安装
   ### 7.1 linux直接安装
   ```
@@ -151,6 +180,7 @@ Gitlab代码变更  --push完毕后发送构建请求-->  Jenkins
     sleep 30
     docker exec jenkins cat /var/jenkins_home/secrets/initialAdminPassword
   ```
+  - 第六步：发布前端，转7.4
 ---
   ### 7.3 Jenkins + GitLab 同机部署（端口不冲突）
   - 配置文件
@@ -201,3 +231,47 @@ Gitlab代码变更  --push完毕后发送构建请求-->  Jenkins
   ```
   ### 7.4 jenkins部署前端项目
   - jenkins安装nodeJS插件
+  - 新建任务
+  - 新建脚本npm run build,build后会在jenkins的安装目录下生成workspace工作空间，比如/usr/local/docker/jenkins/workspace/vue_low_code/dist
+  - 将dist包copy到nginx目录下
+    - mkdir -p /usr/share/nginx/html/vue_low_code/
+    - rm -rf /usr/share/nginx/html/vue_low_code/*
+    - cp -r dist/* /usr/share/nginx/html/vue_low_code/
+  ### 7.5 jenkins和gitlab同机部署
+  ```
+  pipeline {
+      agent any
+
+      stages {
+          stage('Checkout') {
+              steps {
+                  git url: 'http://gitlab:8081/root/your-project.git',
+                      credentialsId: 'gitlab-credential',
+                      branch: 'main'
+              }
+          }
+          stage('Build') {
+              steps {
+                  sh 'npm install && npm run build'
+              }
+          }
+          stage('Deploy to Nginx') {
+              steps {
+                  sh '''
+                      rm -rf /var/jenkins_home/workspace/deploy/*
+                      cp -r dist/* /var/jenkins_home/workspace/deploy/
+                  '''
+              }
+          }
+      }
+  }
+
+  ```
+---
+## 八、jenkins权限管理
+  >Role-based Authorization Strategy插件
+  >全局安全配置 --> 授权策略 --> Role-based-Strategy --> Manage and Assign Roles --> Manage Roles
+  ## 分类
+  - 全局角色
+  - 项目角色
+  - 节点角色
