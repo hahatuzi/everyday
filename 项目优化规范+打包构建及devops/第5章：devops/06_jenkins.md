@@ -24,7 +24,8 @@
   >
 ---
 ## 二、jenkins创建job
-
+  ### 2.1 安装全局工具node
+  安装nodejs插件 --> 安装全局工具node指定版本
 ---
 ## 三、docker安装jenkins插件
   - docker pull jenkins/jenkins
@@ -230,13 +231,67 @@
         user: root
   ```
   ### 7.4 jenkins部署前端项目
-  - jenkins安装nodeJS插件
-  - 新建任务
+  > Jenkins 的 deploy 路径是 /var/jenkins_home/workspace/deploy， Nginx 容器内的路径是/usr/share/nginx/html/，在 Jenkins 容器里不存在。  
+  > Jenkins 和 Nginx 是两个独立容器，Jenkins 内部访问不到 /usr/share/nginx/html/，必须通过共享卷 web-data 来传递文件
+  
   - 新建脚本npm run build,build后会在jenkins的安装目录下生成workspace工作空间，比如/usr/local/docker/jenkins/workspace/vue_low_code/dist
   - 将dist包copy到nginx目录下
-    - mkdir -p /usr/share/nginx/html/vue_low_code/
-    - rm -rf /usr/share/nginx/html/vue_low_code/*
-    - cp -r dist/* /usr/share/nginx/html/vue_low_code/
+  ```
+  第一步：
+    jenkins安装nodeJS插件
+    新建任务
+  第二步：
+    方式一：宿主机环境部署jenkins和nginx都安装在宿主机环境中，jenkins的shell如下
+      node -v
+      npm -v
+      npm install
+      npm run build
+      rm -rf /usr/share/nginx/html/vue_low_code/*
+      cp -r dist/* /usr/share/nginx/html/vue_low_code/
+
+    方式二：容器化部署：jenkins和nginx都作为docker容器，进行跨容器部署，jenkins的shell如下
+      node -v
+      npm -v
+      npm install
+      npm run build
+      rm -rf /usr/share/nginx/html/vue_low_code/*
+      cp -r dist/* /var/jenkins_home/workspace/deploy/vue_low_code/
+    方式三：dockerfile + docker compose方式部署
+  第三步：docker.compose配置jenkins和nginx
+    version: '3.8'
+      services:
+        jenkins:
+          image: jenkins/jenkins:lts-jdk21
+          container_name: jenkins
+          restart: always
+          ports:
+            - "3000:8080"    # Web UI
+            - "50000:50000"  # Agent 通信
+          volumes:
+            - ./jenkins_home:/var/jenkins_home
+            - web-data:/var/jenkins_home/workspace/deploy
+            - /var/run/docker.sock:/var/run/docker.sock   # 可选：Jenkins 内调用 Docker
+          # environment:
+          #       # JAVA_OPTS: "-Djenkins.install.runSetupWizard=false"
+          user: root    # 解决 Docker socket 权限问题
+
+        nginx:
+          image: nginx:alpine
+          container_name: nginx
+          restart: always
+          ports:
+            - "8081:80"
+          volumes:
+            - web-data:/usr/share/nginx/html
+          depends_on:
+            - jenkins
+
+
+      volumes:
+        web-data:
+  ```
+  - 
+  - 
   ### 7.5 jenkins和gitlab同机部署
   ```
   pipeline {
@@ -275,3 +330,307 @@
   - 全局角色
   - 项目角色
   - 节点角色
+
+## 九、Jenkins+Nginx容器化部署前端项目（命名卷方案）
+
+  ### 9.1 架构概览
+  ```
+  GitHub
+    │ git clone (SSH)
+    ▼
+  Jenkins 容器
+    │ npm install → npm run build
+    │ cp dist/* → /var/jenkins_home/workspace/deploy/vue_low_code/
+    │                              │
+    │                    ┌─────────┘
+    ▼                    ▼
+            ┌──────────────────┐
+            │   web-data 命名卷  │  ← Docker 共享存储
+            └────────┬─────────┘
+                      │
+                      ▼
+  Nginx 容器
+    │ 读取 /usr/share/nginx/html/vue_low_code/
+    ▼
+  用户浏览器 → http://服务器IP:80
+  ```
+---
+
+  ## 9.2 第一步：目录结构
+  ```
+  ~/docker/
+  ├── docker-compose.yml
+  ├── nginx/
+  │   └── conf.d/
+  │       └── default.conf
+  ├── known_hosts
+  ├── jenkins_home/          # 自动生成
+  └── gitlab/                # 自动生成
+  ```
+---
+
+  ### 9.3 第二步：docker-compose.yml
+  ```bash
+    version: '3.8'
+
+    services:
+      jenkins:
+        image: jenkins/jenkins:lts-jdk21
+        container_name: jenkins
+        restart: always
+        ports:
+          - "9090:8080"
+          - "50000:50000"
+        volumes:
+          - ./jenkins_home:/var/jenkins_home
+          - /var/run/docker.sock:/var/run/docker.sock
+          - web-data:/var/jenkins_home/workspace/deploy
+          - ./known_hosts:/var/jenkins_home/.ssh/known_hosts
+        user: root
+
+      nginx:
+        image: nginx:alpine
+        container_name: nginx
+        restart: always
+        ports:
+          - "80:80"
+        volumes:
+          - ./nginx/conf.d:/etc/nginx/conf.d
+          - web-data:/usr/share/nginx/html
+        depends_on:
+          - jenkins
+
+    volumes:
+      web-data:  # Docker 管理，实际路径 /var/lib/docker/volumes/项目名_web-data/_data
+  ```
+---
+
+  ### 9.4 第三步：Nginx 配置
+  ```bash
+    cat > ~/docker/nginx/conf.d/default.conf << 'EOF'
+    server {
+        listen 80;
+        server_name _;
+
+        root /usr/share/nginx/html;
+        index index.html;
+
+        location /vue_low_code {
+            alias /usr/share/nginx/html/vue_low_code;
+            try_files $uri $uri/ /vue_low_code/index.html;
+        }
+
+        location ~* \.(js|css|png|jpg|svg|woff|woff2)$ {
+            expires 30d;
+            add_header Cache-Control "public, immutable";
+        }
+    }
+    EOF
+  ```
+---
+
+  ### 9.5 第四步：known_hosts（GitHub SSH）
+  ```bash
+  cat > ~/docker/known_hosts << 'EOF'
+  github.com ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOMqqnkVzrm0SdG6UOoqKLsabgH5C9okWi0dh2l9GKJl
+  github.com ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBEmKSENjQEezOmxkZMy7opKgwFB9nkt5YRrYMjNuG5N87uRgg6CLrbo5wAdT/y6v0mKV0U2w0WZ2YB/++Tpockg=
+  github.com ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCj7ndNxQowgcQnjshcLrqPEiiphnt+VTTvDP6mHBL9j1aNUkY4Ue1gvwnGLVgOhZoYrAvmYsac3ckxL8t5KzHxkFiW3T0P5GmOR3VWRMx0eqVRaoxUzR+F3DqDZ5yS7EnBBuJmQmPG5F1OjFH6wcx+F7pSz8VFvKsjZyfkVwMQPQ1CB5O6yBHLhqmiZK0DSv4A7gTZ1QvhnCHFgVb9wJWPJzM/+zFmy/RzFGQhMV5mANa1Z7bbTWX1Fuz3g/MQF6PRcvFNfkqhDmjlNXmmLdJ3q7S0HOm8yOvl9q3IqnV03BEF3E44fVKUoOxF6xXTQY0DBAkmXb8Qq9TV+E/XBRp1Em9FRf3ZqFFIM6AM3voxFQdFqRPQ9BPSfuG6YL0tLO/QPNN1n7d/jO+3jJ5tOJgvItz6z0a2MKWfmR4yZHlGsYjj0M0hDDaD5PyQw1RjzVZShhNOd9Z+x6YQ6N3C+jkZ0KZn6aIOd3KOo9Q/9s+m89vz/CBZWQRq+PXp6TI=
+  EOF
+  ```
+---
+
+  ### 9.6 第五步：启动容器
+  ```bash
+  cd ~/docker
+  docker compose up -d
+  ```
+  查看状态：
+  ```bash
+  docker compose ps
+  ```
+---
+
+  ### 0.7 第六步：配置 Jenkins SSH 密钥
+  ```bash
+  # 进入 Jenkins 容器生成密钥
+  docker exec -it -u root jenkins bash
+  # 生成 SSH 密钥（一路回车）
+  ssh-keygen -t ed25519 -C "jenkins@docker" -f /var/jenkins_home/.ssh/id_ed25519
+  # 查看公钥，复制到 GitHub → Settings → SSH and GPG keys → New SSH Key
+  cat /var/jenkins_home/.ssh/id_ed25519.pub
+  # 测试 GitHub 连接
+  ssh -T git@github.com
+  # 预期输出: Hi xxx! You've successfully authenticated...
+  exit
+  ```
+---
+
+  ### 9.8 第七步：获取 Jenkins 初始密码
+  ```bash
+  docker exec jenkins cat /var/jenkins_home/secrets/initialAdminPassword
+  ```
+---
+
+  ### 9.9 第八步：Jenkins 添加 GitHub SSH 凭据
+   1. **Manage Jenkins** → **Credentials** → **System** → **Global credentials**
+   2. 点击 **Add Credentials**
+   3. 配置如下：
+
+   | 字段 | 值 |
+   |------|-----|
+   | Kind | SSH Username with private key |
+   | ID | `github-ssh-key` |
+   | Username | `git` |
+   | Private Key | 选择 **Enter directly** → 点击 **Add** |
+
+   4. 获取私钥：
+
+   ```bash
+   docker exec jenkins cat /var/jenkins_home/.ssh/id_ed25519
+   ```
+    1. 将输出的内容（包括 `-----BEGIN OPENSSH PRIVATE KEY-----` 到 `-----END OPENSSH PRIVATE KEY-----`）完整粘贴
+    2. 点击 **Create**
+---
+
+  ### 9.10 第九步：关闭 Git Host Key 严格检查（可选）
+  如果 SSH 仍然报 host key 错误：
+  1. **Manage Jenkins** → **Security** → **Git Host Key Verification Configuration**
+  2. 选择 **`Accept first connection`** 或 **`No verification`**
+  3. 保存
+---
+
+  ### 9.11 第十步：创建 Jenkins Pipeline 任务
+   1. Jenkins 首页 → **新建任务** → 输入任务名 → 选择 **Pipeline** → 确定
+   2. 在 Pipeline 配置中粘贴以下脚本：
+   ```groovy
+   pipeline {
+       agent any
+
+       environment {
+           DEPLOY_PATH = '/var/jenkins_home/workspace/deploy/vue_low_code'
+       }
+
+       stages {
+
+           stage('拉取代码') {
+               steps {
+                   git branch: 'main',
+                       url: 'git@github.com:你的用户名/你的仓库.git',
+                       credentialsId: 'github-ssh-key'
+               }
+           }
+
+           stage('安装依赖') {
+               steps {
+                   sh 'npm install'
+               }
+           }
+
+           stage('构建') {
+               steps {
+                   sh 'npm run build'
+               }
+           }
+
+           stage('部署到 Nginx') {
+               steps {
+                   sh '''
+                       echo ">>> 清空旧文件..."
+                       rm -rf ${DEPLOY_PATH}/*
+
+                       echo ">>> 创建目标目录..."
+                       mkdir -p ${DEPLOY_PATH}
+
+                       echo ">>> 拷贝构建产物到共享卷..."
+                       cp -r dist/* ${DEPLOY_PATH}/
+
+                       echo ">>> 部署完成！"
+                       ls -la ${DEPLOY_PATH}/
+                   '''
+               }
+           }
+       }
+
+       post {
+           success {
+               echo '✅ 部署成功！访问 http://服务器IP:80'
+           }
+           failure {
+               echo '❌ 部署失败，检查日志'
+           }
+       }
+   }
+   ```
+
+   3. 点击 **保存** → 点击 **Build Now** 执行构建
+---
+  ### 9.12 第十一步：验证部署
+  ```bash
+  # 查看 Jenkins 容器内的文件
+  docker exec jenkins ls -la /var/jenkins_home/workspace/deploy/vue_low_code/
+
+  # 查看 Nginx 容器内的文件（应该和上面完全一样）
+  docker exec nginx ls -la /usr/share/nginx/html/vue_low_code/
+
+  # 查看 index.html 内容
+  docker exec nginx cat /usr/share/nginx/html/vue_low_code/index.html
+
+  # 测试页面访问
+  curl http://localhost
+
+  # 浏览器访问
+  # http://服务器IP:80
+  ```
+---
+
+  ### 9.13 常见问题
+  - 1.页面 404
+```bash
+# 检查写入文件
+ocker exec jenkins ls -la /var/jenkins_home/workspace/deploy/vue_low_code/
+# 检查文件是否存在
+docker exec nginx ls -la /usr/share/nginx/html/vue_low_code/
+
+# 如果目录为空，说明 Jenkins 构建未成功或拷贝路径不对
+# 检查 Jenkins 构建日志中的部署阶段输出
+```
+
+  - 2. Nginx 容器端口冲突
+
+```bash
+# 查看端口占用
+netstat -tlnp | grep 80
+
+# 修改 docker-compose.yml 中 Nginx 端口，如改为 8088:80
+```
+
+  - 3. GitHub SSH 连接失败
+
+```bash
+# 手动添加 host key
+docker exec -u root jenkins ssh-keyscan github.com >> /var/jenkins_home/.ssh/known_hosts
+
+# 测试连接
+docker exec jenkins ssh -T git@github.com
+```
+
+-  4. cp 报错 No such file or directory
+
+```bash
+# Jenkins Execute shell 中必须先创建目录
+mkdir -p /var/jenkins_home/workspace/deploy/vue_low_code
+rm -rf /var/jenkins_home/workspace/deploy/vue_low_code/*
+cp -r dist/* /var/jenkins_home/workspace/deploy/vue_low_code/
+```
+
+  - 5. 重载 Nginx 配置
+
+```bash
+# 修改 nginx/conf.d/default.conf 后重载
+docker exec nginx nginx -s reload
+
+# 或者重启容器
+docker compose restart nginx
+```
+
+---

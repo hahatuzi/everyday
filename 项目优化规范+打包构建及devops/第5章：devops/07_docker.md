@@ -214,7 +214,7 @@
       cd /home //进入服务器的home目录
       docker run -it -v /home/test:/home centos
     ```
-  ### (2)方式二:挂载在数据卷目录： named volume
+  ### (2)方式二:挂载在数据卷目录： named volume（命名卷）
     ```js
       // 前端挂载在数据卷目录
       -v frontend-data:/usr/share/nginx/html
@@ -241,6 +241,26 @@
   - docker volume inspect 数据卷名,查看数据卷详情
   - docker volume create数据卷名,创建数据卷
   - docker volume rm 数据卷名，删除数据卷
+  ### 9.5 宿主机挂载，数据卷挂载和匿名卷挂载的对比
+  ```
+    services:
+      jenkins:
+        volumes:
+          # ① 绑定挂载（Bind Mount）
+          - ./jenkins_home:/var/jenkins_home
+
+          # ② 命名卷（Named Volume）
+          - web-data:/var/jenkins_home/workspace/deploy
+
+          # ③ 匿名卷（Anonymous Volume）
+          - /var/jenkins_home/cache
+      nginx:
+        # ② 命名卷（Named Volume）,上述jenkins往web-data数据卷中写入文件，nginx从那里读取文件
+        - web-data:/usr/share/nginx/html
+    volumes:
+      web-data:    # 声明命名卷
+
+  ```
 
 # 十：Dockerfile
   > dockerfile就是构建docker镜像的文件
