@@ -79,7 +79,7 @@
         cd /usr/local
         mkdir docker
         mkdir gitlab_docker
-        vi docker-compose.yml
+        vim docker-compose.yml
       第二步：搜索gitblab镜像
         docker search gitlab 
       第三步：拉取镜像
@@ -93,7 +93,7 @@
             restart: always
             environment:
               GITLAB_OMNIBUS_CONFIG:
-                 external_url 'http://192. 168. 11. 11:8929' // 自己的服务器ip
+                 external_url 'http://192.168.11.11:8929' // 自己的服务器ip
                  gitlab_rails[' gitlab_shell_ssh_port' ] = 2224
             ports:
               - '8929:8929'

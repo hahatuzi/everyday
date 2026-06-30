@@ -5,7 +5,7 @@
 ## 目录
 
 1. [jenkins三大概念](#一、jenkins三大概念)
-2. [jenkins创建job](#二、jenkins创建job)
+2. [jenkins插件](#二、jenkins插件)
 3. [docker安装jenkins插件](#三、docker安装jenkins插件)
 4. [jenkins流水线](#四、jenkins流水线)
 5. [Jenkins常见的内置构建触发器](#五、Jenkins常见的内置构建触发器)
@@ -23,16 +23,14 @@
   >jenkins是通过本地文件的形式来存储和管理数据的。jenkins下的每一个job都有属于自己的workspace,用来存放本任务涉及到的数据和文件
   >
 ---
-## 二、jenkins创建job
+## 二、jenkins插件
   ### 2.1 安装全局工具node
   安装nodejs插件 --> 安装全局工具node指定版本
 ---
-## 三、docker安装jenkins插件
-  - docker pull jenkins/jenkins
----
-## 四、jenkins流水线
-  > pipeline包括声明式脚本和脚本式语法，pipeline是一套运行在jenkins上的工作流框架，将原来独立运行于单个或者多个节点的任务连接起来，实现单个任务难以完成的复杂流程编排和可视化的工作。
-  - 声明式：
+## 三、jenkins项目构建
+  ### 3.1 项目构建类型
+  - (1)pipeline流水线类型
+  > pipeline包括**声明式脚本**和**脚本式语法**，pipeline是一套运行在jenkins上的工作流框架，将原来独立运行于单个或者多个节点的任务连接起来，实现单个任务难以完成的复杂流程编排和可视化的工作。
   ```js
     pipeline{ // 声明
       agent //'在哪个节点上构建',
@@ -69,27 +67,54 @@
           }
       }
     }
+    // 比如
+    pipeline{
+      agent any
+      stages {
+        stage('Checkout') {
+          steps {
+            git url: 'http://gitlab:8081/root/your-project.git',
+              credentialsId: 'gitlab-credential',
+              branch: 'main'
+          }
+        }
+        stage('Build') {
+          steps {
+            sh 'npm install && npm run build'
+          }
+        }
+        stage('Deploy to Nginx') {
+          steps {
+            sh '''
+              rm -rf /var/jenkins_home/workspace/deploy/*
+              cp -r dist/* /var/jenkins_home/workspace/deploy/
+            '''
+          }
+        }
+      }
+    }
   ```
-  ### 流水线阶段
-  - agent:代理
-  - stages阶段
-  - checkout阶段
-  - shell编译阶段
-[jenkins声明式语法](https://blog.csdn.net/zhou920786312/article/details/125955704)
+  [jenkins声明式语法](https://blog.csdn.net/zhou920786312/article/details/125955704)
+  - (2)自由风格类型
 ---
-## 五、Jenkins常见的内置构建触发器
-  > 构建触发器：构件方式包括：**定时构建**，**远程构建**，**github触发器**，**源码变更构建**
-  ### 定时构建
-  >分类包括：分钟(0-59)，小时(0-24)，每月的天数，月数，一周的天数(0-7)
-  比如：每天晚上20点自动构建：0 20 * * *,*表示取有效期的所有值，-表示连续的时间段
-  每周二，周四的晚上8点执行 0 20 * * 2,4
-  每周二至周四的晚上8点执行 0 20 * * 2-4
-  ### 轮询SCM
-  >定时扫描本地仓库的代码是否有边锋，如果代码有变更就会触发
-  轮询SCM可以实现Gitlab代码更新，项目自动构建，但是该方案的性能不佳，当项目代码量比较大时构建时间比较长。所以采用了更好的方案：利用Gitlab的webhook实现代码push到仓库时立即触发项目的自动构建
-  ### 轮询SCM原理示意图
-  >Jenkins  --发送定时请求-->  Gitlab代码变更 --> Gitlab代码变更  --push完毕后发送构建请求-->  Jenkins
+  ### 3.2 常见的构建触发器
+  > 构建触发器方式包括：**定时构建**，**远程构建**，**github触发器**，**源码变更构建**
+  - (1)定时构建
+    - 分钟(0-59)
+    - 小时(0-24)
+    - 每月的天数
+    - 月数
+    - 一周的天数(0-7)
+    >比如：每天晚上20点自动构建：0 20 * * *,*表示取有效期的所有值，-表示连续的时间段  
+    >每周二，周四的晚上8点执行 0 20 * * 2,4    
+    >每周二至周四的晚上8点执行 0 20 * * 2-4  
+  - (2)轮询SCM
+  >定时扫描本地仓库的代码是否有边锋，如果代码有变更就会触发。  
+  >轮询SCM可以实现Gitlab代码更新，项目自动构建，但是该方案的性能不佳，当项目代码量比较大时构建时间比较长。所以采用了更好的方案：利用Gitlab的webhook实现代码push到仓库时立即触发项目的自动构建
+    - 示意图
+    Jenkins  --发送定时请求-->  Gitlab代码变更 --> Gitlab代码变更  --push完毕后发送构建请求-->  Jenkins
 ---
+
 ## 六、jenkins配置
   ### 6.1 Jenkins全局变量
   - env  
@@ -115,7 +140,7 @@
   ```
 
 ---
-## 七、Jenkins安装
+## 七、Jenkins安装方式
   ### 7.1 linux直接安装
   ```
   第一步：安装jdk
@@ -230,7 +255,7 @@
           - /var/run/docker.sock:/var/run/docker.sock
         user: root
   ```
-  ### 7.4 jenkins部署前端项目
+  ### 7.4 jenkins+nginx部署前端项目
   > Jenkins 的 deploy 路径是 /var/jenkins_home/workspace/deploy， Nginx 容器内的路径是/usr/share/nginx/html/，在 Jenkins 容器里不存在。  
   > Jenkins 和 Nginx 是两个独立容器，Jenkins 内部访问不到 /usr/share/nginx/html/，必须通过共享卷 web-data 来传递文件
   
@@ -254,8 +279,11 @@
       npm -v
       npm install
       npm run build
+      mkdir -p /var/jenkins_home/workspace/deploy/vue_low_code
       rm -rf /usr/share/nginx/html/vue_low_code/*
-      cp -r dist/* /var/jenkins_home/workspace/deploy/vue_low_code/
+      cp -r dist/* /var/jenkins_home/workspace/deploy/vue_low_code/ # deploy/vue_low_code/（Jenkins 自动创建）
+      echo "===== 部署完成，文件列表 ====="
+      ls -la /var/jenkins_home/workspace/deploy/vue_low_code/
     方式三：dockerfile + docker compose方式部署
   第三步：docker.compose配置jenkins和nginx
     version: '3.8'
@@ -292,44 +320,17 @@
   ```
   - 
   - 
-  ### 7.5 jenkins和gitlab同机部署
-  ```
-  pipeline {
-      agent any
-
-      stages {
-          stage('Checkout') {
-              steps {
-                  git url: 'http://gitlab:8081/root/your-project.git',
-                      credentialsId: 'gitlab-credential',
-                      branch: 'main'
-              }
-          }
-          stage('Build') {
-              steps {
-                  sh 'npm install && npm run build'
-              }
-          }
-          stage('Deploy to Nginx') {
-              steps {
-                  sh '''
-                      rm -rf /var/jenkins_home/workspace/deploy/*
-                      cp -r dist/* /var/jenkins_home/workspace/deploy/
-                  '''
-              }
-          }
-      }
-  }
-
-  ```
 ---
 ## 八、jenkins权限管理
   >Role-based Authorization Strategy插件
   >全局安全配置 --> 授权策略 --> Role-based-Strategy --> Manage and Assign Roles --> Manage Roles
-  ## 分类
+  ### 8.1 分类
   - 全局角色
   - 项目角色
   - 节点角色
+  ### 8.2 jenkins凭证管理
+  - ssh
+  - 用户名和密码
 
 ## 九、Jenkins+Nginx容器化部署前端项目（命名卷方案）
 
@@ -359,10 +360,10 @@
   ## 9.2 第一步：目录结构
   ```
   ~/docker/
-  ├── docker-compose.yml
-  ├── nginx/
-  │   └── conf.d/
-  │       └── default.conf
+  ├── docker-compose.yml     # 自己mkdir
+  ├── nginx/                 # 自己mkdir
+  │   └── conf.d/            # 自己mkdir
+  │       └── default.conf   # 自己mkdir
   ├── known_hosts
   ├── jenkins_home/          # 自动生成
   └── gitlab/                # 自动生成
@@ -450,7 +451,7 @@
   ```
 ---
 
-  ### 0.7 第六步：配置 Jenkins SSH 密钥
+  ### 9.7 第六步：配置 Jenkins SSH 密钥
   ```bash
   # 进入 Jenkins 容器生成密钥
   docker exec -it -u root jenkins bash
@@ -615,7 +616,10 @@ docker exec jenkins ssh -T git@github.com
 ```
 
 -  4. cp 报错 No such file or directory
-
+> 执行顺序  
+>  Jenkins 启动，自动创建 /var/jenkins_home/workspace/deploy/test/（在 jenkins_home 卷上）  
+> Docker 挂载 web-data 空卷到该路径 → 把 Jenkins 自动创建的目录覆盖掉了  
+> web-data 是空卷 → 路径变成空的 → cp 失败
 ```bash
 # Jenkins Execute shell 中必须先创建目录
 mkdir -p /var/jenkins_home/workspace/deploy/vue_low_code
@@ -632,5 +636,42 @@ docker exec nginx nginx -s reload
 # 或者重启容器
 docker compose restart nginx
 ```
+  - 6.多项目部署，多个命名卷方式或者nginx多一级路径
+  ```
+    services:
+      jenkins:
+        image: jenkins/jenkins:lts-jdk21
+        container_name: jenkins
+        restart: always
+        ports:
+          - "9090:8080"
+          - "50000:50000"
+        volumes:
+          - ./jenkins_home:/var/jenkins_home
+          - /var/run/docker.sock:/var/run/docker.sock
+          - web-data-test:/var/jenkins_home/workspace/deploy/test
+          - web-data-prod:/var/jenkins_home/workspace/deploy/prod
+          - web-data-demo:/var/jenkins_home/workspace/deploy/demo
+        user: root
 
+      nginx:
+        image: nginx:alpine
+        container_name: nginx
+        restart: always
+        ports:
+          - "80:80"
+        volumes:
+          - ./nginx/conf.d:/etc/nginx/conf.d
+          - web-data-test:/usr/share/nginx/html/test
+          - web-data-prod:/usr/share/nginx/html/prod
+          - web-data-demo:/usr/share/nginx/html/demo
+        depends_on:
+          - jenkins
+
+    volumes:
+      web-data-test:
+      web-data-prod:
+      web-data-demo:
+
+  ```
 ---

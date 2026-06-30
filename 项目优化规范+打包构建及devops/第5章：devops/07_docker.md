@@ -66,51 +66,45 @@
     - yum remove docker-ce docker-ce-cli containerd.io
     - rm -rf /var/lib/docker
   ```
-  ### 4.2 阿里云镜像加速，也可以使用别的镜像
+  ---
+  ### 4.2 镜像加速
   ```js
   ## 第一步：
     -  sudo  mkdir -p /etc/docker
   ## 第二步：
-    sudo  tee /etc/docker/daemon.jsn <<-'EOF' 
-    {
-      "registry-mirrors": ["https://qiyb9988.mirror.aliyuncs.com"]
-    }
-    EOF
-    // 或者---------------
-    sudo tee /etc/docker/daemon.json <<-'EOF'
-    {
-      "registry-mirrors": [
-        "https://docker.xuanyuan.me",
-        "https://docker.1ms.run",
-        "https://docker.m.daocloud.io"
-      ]
-    }
-    EOF
-    // 或者---------------
-    sudo tee /etc/docker/daemon.json <<-'EOF'
+    sudo  tee /etc/docker/daemon.json
+    // daemon.json内容如下，以下均为可用的镜像地址
     {
       "registry-mirrors": [
         "https://mirror.ccs.tencentyun.com",
+        "https://qiyb9988.mirror.aliyuncs.com",
+
         "https://docker.m.daocloud.io",
+        "https://docker.xuanyuan.me",
+        "https://docker.1ms.run",
         "https://docker.nju.edu.cn"
       ]
     }
-    EOF
   ## 第三步：
     - sudo systemctl daemon-reload
   ## 第四步：
     - sudo systemctl restart docker
   ```
+  ---
+
 ---
+## 五、Dockerfile
 ## 五、Docker Compose
+  > docker建议每个容器只运行一个服务，因为docker容器本身占用资源极少。但是当我们需要同时部署多个服务时就需要每个服务单独写Dockerfile！！所以出现了docker compose多服务部署工具
   ### 5.1 概念
-   - dockerCompose是用来定义和运行一个或者多个容器的工具，现在无需安装
+   - docker compose是用来管理多个docker容器组成一个应用，需要一个YAML格式的配置文件docker-compose.yml书写多个容器之间的调用关系，现在无需安装
   ### 5.2 命令
     - docker compose up,启动,比如docker compose up -d --build
     - docker compose down,下线
     - docker compose version
     - docker compose -f compose.yaml up -d
   ### 5.3 元素
+    - container_name
     - command：覆盖容器启动后的命令
     - environment：指定环境变量
     - image:指定镜像
@@ -118,7 +112,39 @@
     - ports：指定要发布的端口
     - volumes：指定数据卷
     - restart：指定重启策略
-  ### 5.4 文件实例
+  ### 5.4 docker和docker compose的区别
+  |     纬度     |            Docker           |           Docker Compose            |
+  | :----------: | : -------------------------:| :----------------------------------:|
+  |     定位     |         容器运行时引擎      |            多容器编排工具           |
+  |   配置方式   |    docker run 命令行参数    |   docker-compose.yml 声明式文件     |
+  |   管理粒度   |          单个容器           |        一组关联的服务（容器）       |
+  |   启动方式   |   docker run ... 逐个启动   |  docker compose up 一键启动所有服务 |
+  ### 5.5 举例
+    > 假设一个 Web 应用需要 Nginx + Node.js + MySQL：
+    ```
+    方式一:用 Docker（手动逐个启动）
+      docker run -d --name mysql -e MYSQL_ROOT_PASSWORD=123456 mysql:8.0
+      docker run -d --name app --link mysql myapp:latest
+      docker run -d --name nginx -p 80:80 --link app nginx:latest
+    方式二：docker compose,docker compose up -d   # 一键启动全部
+      services:
+        mysql:
+          image: mysql:8.0
+          environment:
+            MYSQL_ROOT_PASSWORD: 123456
+        app:
+          image: myapp:latest
+          depends_on:
+            - mysql
+        nginx:
+          image: nginx:latest
+          ports:
+            - "80:80"
+          depends_on:
+            - app
+
+    ```
+  ### 5.6 文件实例
     ```js
       name: myblog
       services:
@@ -158,6 +184,7 @@
       networks:
       blog:
     ```
+---
 
 ## 六、Docker命令
   - docker ps [命令]:查看当前docker在跑哪些容器进程
