@@ -386,7 +386,7 @@
           - ./jenkins_home:/var/jenkins_home
           - /var/run/docker.sock:/var/run/docker.sock
           - web-data:/var/jenkins_home/workspace/deploy
-          - ./known_hosts:/var/jenkins_home/.ssh/known_hosts
+          # - ./known_hosts:/var/jenkins_home/.ssh/known_hosts
         user: root
 
       nginx:
