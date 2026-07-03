@@ -520,8 +520,187 @@
       parellel: 5
   ```
 ---
+  ### 4.11 only，except
+  > only和except用分支策略来限制jobs构建，它们正在逐渐被rules替换。  
+  > only用来定义哪些分支和标签的git项目将**被job执行**。
+  > except定义那些分支和标签的git项目将**不会被执行**。  
+---
+  ### 4.12 rules
+  > rules允许按照顺序评估单个规则，直到匹配并为作业动态提供属性，rules不能与only、except组合使用 ，rules可用的规则包括if,changes,exists。  
+  - if：条件匹配
+  - changes:文件变化。
+  - exists：检查文件是否存在.
+    ```js
+      variables:
+        DOMAIN: example.com
+      rules: 
+        - if:'$DOMAIN' == "example.com"
+          when:manual
+        - when:on_success
+      // ========
+      rules: 
+        - changes:
+          - Dockerfile
+          when:manual
+      // ========
+      rules: 
+        - exists:
+          - Jenkinsfile
+          when:manual
+      // ========
+      rules:
+        - if: "$CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "master""
+        when: manual
+        allow_failure: true
+    ```
+---
+  ### 4.13 workflow
+    - 顶级的workflow关键字适用于整个管道，并将确定是否创建管道
+    - when:可以设置为always或者never，如果未提供，则默认值为always
+    ```js
+      variables:
+        DOMAIN: example.com
 
+      workflow:
+        rules:
+          - if:'$DOMAIN' == "example.com"
+          when:always
+        - when:never
+    ```
+---
+  ### 4.14 cache
+  > 存储编译项目所需的运行时的依赖项，指定项目工作空间中需要在job之间缓存的文件或目录。  
+  > **全局cache**定义在job之外，**针对所有job生效**，**job中cache优先于全局**。  
+  > 当多个job之间需要共享缓存的时候，就需要cache。  
+  - key:缓存标记，默认为default,为不同的job定义不同的key时，会为每个job分配一个独立的cache。
+  - key:flies:文件变化时自动创建缓存
+  - prefix：prefix:允许给定prefix的值与指定
+  - policy:缓存策略，默认在执行开始时下载文件，并在结束时重新上传文件，policy：pull跳过下载步骤，policy：push跳过上传步骤
+  -     ```js
+      // 缓存流程
+    +--------Pipeline--------------------------------------------------+
+    |                                                                  |
+    |    +--------------------build-jobs--------------------------+    |
+    |    |  +--------------+  +------------+  +--------------+    |    |
+    |    |  | 下载缓存文件 |->|  script    |->| 上传缓存文件 |    |    |
+    |    |  +--------------+  +------------+  +--------------+    |    |
+    |    +--------------------------------------------------------+    |
+    |                                                                  |
+    |                                                                  |
+    |    +-------------------deploy-jobs--------------------------+    |
+    |    |  +--------------+  +------------+  +--------------+    |    |
+    |    |  | 下载缓存文件 |->|  script    |->| 上传缓存文件 |    |    |
+    |    |  +--------------+  +------------+  +--------------+    |    |
+    |    +--------------------------------------------------------+    |
+    +------------------------------------------------------------------+
+      // 会缓存target目录下的所有.jar文件
+      build
+        script:test
+        cache:
+          key: 
+            files:
+              - package.json
+          paths:
+            - target/*.jar
+    ```
+---
+  ### 4.15 artifacts:制品
+  > 用于指定在多页成功或者失败时应附加到job的文件或者目录列表。作业完成后，工件将被发送到gitlab,并可以在gitlab UI中下载。  
+   - name:制品名称
+   - expose_as:可以用于在合并请求中公开作业工件
+   - when:制品创建条件，用于在作业成功或者失败时创建：on_success(作业成功时), on_failture(仅作业上传失败时上传),always(无论作业状态如何)
+   - expire_in:制品保留时间
+   - report:junit:单元测试报告
+   ```js
+     release-job:
+       artifacts:
+         paths:
+           - target/*.war
+         expire_in: 1 week
+       only:
+         - tags
+   ```
+  ### 4.16 dependencies:获取制品
+  ### 4.17 needs：阶段并行
+  > 可无序执行作业，无需按照阶段顺序运行某些作业，可以让多个阶段同时运行。  
+  > 如果needs设置为指向因only/except规则而未实例化的作业，或者不存在，则创建管道时会出现YAML错误。  
+  > 在使用needs,可通过artifacts:true或者false来控制工件下载。
+  ```js
+    stagse:
+      build
+      deploy
 
+    module-a-build:
+      stage: build
+      script:
+        - echo "hello"
+        - sleep 10
+    
+    module-b-build:
+      stage: build
+      script:
+        - echo "hello"
+        - sleep 20
+
+    module-a-test
+      stage:test
+      script:
+        - echo "hello"
+      needs:
+        - job: 'module-a-build'
+  ```
+---
+  ### 4.18 include和extends
+  > local:引入本地配置：可以允许引入外部YAML文件,文件具有扩展名.yml或者.yaml，使用合并功能可以自定义和覆盖包含本地定义的CICD配置，引入同一存储库中的文件使用相对于根目录的完整路径进行引用，与配置文件在同一分支上使用。
+  - file:
+  - template:官方配置
+  -remote:引入远程配置
+  ```js
+    include：
+      local:'ci/localci/yml'
+      
+    include:
+      - project: 'cidevops/cidevops-gitlabci-service'
+        ref: master
+        file: 'jobs/build.yml'
+    variables:
+      BUILD_SHELL: 'npm run build'
+      CACHE_DIR: 'dist/'
+    cache:
+      paths:
+        - ${CACHE_DIR}
+        - node_moduules/
+    stages:
+      - install
+      - build
+    install:
+      stage: install
+      script:
+        - 'npm install'
+    build:
+      stage: build
+      extends: .build
+  ```
+---
+  ### 4.19 trigger
+  > 当gitlab从trigger定义创建的作业启动的时候，将创建一个下游管道,将trigger和when:manual一起使用会导致错误。  
+  > **多项目管道**：跨多个项目设置流水线，一个项目的pipeline可以出发另一个项目的pipeline。  
+  > **父子管道**：在同一个项目中管道可以触发一组同时运行的子管道，子管道仍然按照阶段顺序执行器每个作业，但是可以自由地继续执行作业阶段，无需等待父管道中的作业。  
+  > 当前面的阶段运行完成后，触发某一个项目的master流水线，创建上游管道的用户需要具有对下游项目的访问权限，如果发现下游项目用户没有访问权限，则staging作业将被标记为失败。
+  ```js
+    buildjob:
+      stage:build
+      script:
+        - echo "hello"
+    staging:
+      variables:
+        ENVIROMENT: staging
+      stage: deploy
+      trigger:
+        project: #用于指定下游项目的完整路径
+        branch: master指定的项目分支名，使用variables关键字将变量传递到下游管道
+        strategy: depend将自身状态从触发的管道合并到源网桥作业
+  ```
 ---
 # 五：模板库
   ### 1.流程：目的：满足前后端各种场景下的打包需求，定义一个模板流水线工程
