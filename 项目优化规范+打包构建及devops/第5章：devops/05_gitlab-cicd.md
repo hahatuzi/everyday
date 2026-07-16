@@ -8,11 +8,13 @@
 2. [gitlab安装及使用](#二、gitlab安装及使用)
 3. [gitlab runner的安装与使用](#三、gitlab runner的安装与使用)
 4. [pipeline语法](#四、pipeline语法)
-5. [NameSpace](#五NameSpace)
+5. [CI模板库](#五、CI模板库)
 6. [Pod](#六Pod)
 7. [Controller](#七Controller)
 8. [Service](#八Service)
 9. [Label](#九Label)
+10. [静态服务器apache和nginx安装](#十、静态服务器apache和nginx安装)
+11. [gitlabYML实例](#十一、gitlabYML实例)
 
 ---
 
@@ -702,25 +704,79 @@
         strategy: depend将自身状态从触发的管道合并到源网桥作业
   ```
 ---
-# 五：模板库
-  ### 1.流程：目的：满足前后端各种场景下的打包需求，定义一个模板流水线工程
+  ### 4.20 image
+  > images:默认在注册runner的时候需要填写一个基础的镜像，只要使用执行器为docker类型的runner，所有的操作运行都会在容器中运行。  
+  > 如果全局指定了image则所有作业使用此image创建容器并在其中运行。 
+  > 全局未指定image，再次查看job中是否有指定，如果有此job按照指定镜像创建容器并运行，没有则使用注册runner时的指定默认镜像。 
+  ```js
+    // 第一步：注册一个工作类型为docker的runner
+    gitlab-runner register \
+      --non-interactive \
+      --executor "docker" \
+      --docker-image alpine:latest \
+      --url "http://106.14.38.228/" \
+      --registration-token "dwe1kTT9v8bZcqyBupB7" \
+      --description "devops-runner" \
+      --tag-list "build,deploy" \
+      --run-untagged="true" \
+      --locked="false" \
+      --access-level="not_protected" 
+  ```
+  ### 4.21 services
+  > 工作期间运行的另一个docker映像，并link到image关键字定义的docker映像，这样您就可以在构建期间访问服务映象。
+  ```js
+    before_script:
+      - ls
+    services:
+      - name mysql:latest
+      alias: mysql-1
+  ```
+  ### 4.22 environment
+    ```js
+      deploy:
+        stage:deploy
+        script: git push production HEAD:master
+        environment:
+          name: production
+          url: https://prod.example.com
+    ```
+  ### 4.23 inherit
+  > 使用或者禁用全局定义的环境变量或者默认值
+  ```js
+    // 使用方式一：true/false
+    inherit:
+      default: false
+      variables: false
+    // 使用方式二：继承部分变量或者默认值
+    inherit:
+      default:
+        - 变量一
+        - 变量二
+      variables:
+        - v1
+        - v2
+  ```
+---
+
+## 五、CI模板库
+  ### 5.1 流程：目的：满足前后端各种场景下的打包需求，定义一个模板流水线工程
   - 第一步：创建一个git仓库用于存放模板
   - 第二步：在仓库内创建一个template目录用于存放所有pipeline的模板
   - 第三步：在仓库内创建一个jobs目录存放job模板
-  ### 2.前端npm集成
-  - 第一步：install阶段：执行npm install 命令，根据package.json安装node_modules依赖包
-  - 第二步：eslint阶段：执行eslint检查，判断代码格式是否符合规范，如果不符合停止pipeline
-  - 第三步：build阶段：编译成生产代码，可以通过webpack之类的打包工具执行编译，也可以通过脚手架自身提供的编译命令进行编译,如npm run build
-  - 第四步：deploy阶段：部署阶段，将刚才的build阶端生成的生产代码部署到生产访问的服务器上，
+  ### 5.2 前端npm集成
+  - 第一步：**install阶段**：执行npm install 命令，根据package.json安装node_modules依赖包
+  - 第二步：**eslint阶段**：执行eslint检查，判断代码格式是否符合规范，如果不符合停止pipeline
+  - 第三步：**build阶段**：编译成生产代码，可以通过webpack之类的打包工具执行编译，也可以通过脚手架自身提供的编译命令进行编译,如npm run build
+  - 第四步：**deploy阶段**：部署阶段，将刚才的build阶端生成的生产代码部署到生产访问的服务器上，
   ```js
   ```
 
-# 六：
+## 六：
   ### 1.SonarQube代码扫描
     - 第1步：在centos8上下载sonar-scanner客户端
   ### 2.git pull请求集成配置
 
-# 七.ssl证书以及打开页面
+## 七.ssl证书以及打开页面
   **gitlab初次安装后，登录gitlab网页需要账号和密码**
   ```js
   // 查看gitlab登录账号root的密码
@@ -730,7 +786,7 @@
   ```
 [!参考文章-本机虚拟机安装gitlab]https://blog.csdn.net/qq_42141141/article/details/126397059
 
-# 八：k8s部署runner
+## 八：k8s部署runner
   ### 1.安装helm3
     ```js
       https://github.com/helm/helm/releases
@@ -754,7 +810,7 @@
       Documents gitlab-runner-0.15.0.tgz
     ```
 
-# 九：阿里云服务器部署node环境，因为yml脚本运行时用到了npm命令
+## 九：阿里云服务器部署node环境，因为yml脚本运行时用到了npm命令
   ### 1.下载安装
     ```js
       // 1. 执行以下命令，下载Node.js的安装包。
@@ -796,7 +852,7 @@
     ```
 
 
-# 十：静态服务器apache,或者nginx安装
+## 十、静态服务器apache和nginx安装
   ### 第一步：检查是否有旧版本的apache
     rpm -qa | grep httpd 
   ### 第二步：安装
@@ -862,4 +918,97 @@
    - (2)主配置文件时/etc/httpd/conf/httpd.conf
    - (3)存储在/etc/httpd/conf.d/目录
 [!使用Docker Compose、Nginx、SSH和Github Actions实现前端自动化部署测试机]https://blog.csdn.net/qq_34998786/article/details/122227957?spm=1001.2014.3001.5502
-  
+---
+## 十一、gitlabYML实例
+  ```js
+    // 构建阶段-任务,包含五个stage:analytics,test,build,package,deploy
+    stages:
+      - analytics
+      - test
+      - build
+      - package
+      - deploy
+
+    // 构建工作job名称
+    build_analytics:
+      // 该工作执行阶段
+      stage: analytics
+      // 设置只对master分支有效
+      only:
+        - master
+        - tags
+      tags:
+        - runner-tag-snoreqube
+      script:
+        - echo "=============== 开始代码质量检测 ==============="
+        - echo "=============== 结束代码质量检测 ==============="
+
+    build_test:
+      stage: test
+      only:
+        - master
+        - tags
+      tags:
+        - runner-tag
+      script:
+        - echo "=============== 开始测试任务 ==============="
+        - echo "=============== 结束测试任务 ==============="
+
+
+    build:
+      stage: build
+      only:
+        - master
+        - tags
+      tags:
+        - runner-tag
+      script:
+        - echo "=============== 开始编译任务 ==============="
+        - echo "=============== 结束编译任务 ==============="
+
+    package:
+      stage: package
+      tags:
+        - runner-tag
+      script:
+        - echo "=============== 开始打包任务 ==============="
+        - echo "=============== 结束打包任务 ==============="
+
+    deploy_test:
+      stage: deploy
+      tags:
+        - runner-tag
+      // 输出在gitlab-ci中设置的变量
+      script:
+        - echo "=============== 自动部署到测试服务器 ==============="
+        - echo "测试服务器:" ${SERVER_TEST}
+      #环境变量
+      environment:
+        name: test
+        url: https://staging.example.com
+
+    deploy_test_manual:
+      stage: deploy
+      tags:
+        - runner-tag
+      script:
+        - echo "=============== 手动部署到测试服务器 ==============="
+      environment:
+        name: test
+        url: https://staging.example.com
+      // 设置条件 manual 允许失败  
+      when: manual
+
+    deploy_production_manual:
+      stage: deploy
+      tags:
+        - runner-tag
+      script:
+        - echo "=============== 手动部署到生产服务器 ==============="
+        - echo "测试服务器:" ${SERVER_TEST}
+      environment:
+        name: production
+        url: https://staging.example.com
+      when: manual
+  ```
+---
