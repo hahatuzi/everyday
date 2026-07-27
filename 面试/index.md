@@ -32,7 +32,8 @@
   ### 1.微前端
   ### 2.小程序
   ### 3.flutter❌
-  ### 4.混合式开发h5❌
+  ### 4.RN❌
+  ### 5.混合式开发h5❌
 # 第七部份：前后端同构
   ### 1.next（react）❌
   ### 2.nuxt（vue）
@@ -41,8 +42,8 @@
   ### 1.nextJS/express❌
   ### 2.redis❌
 # 第九部份：运维部分
-  ### 1.github Actions❌
-  ### 2.gitlab CI❌
+  ### 1.github Actions✅
+  ### 2.gitlab CI✅
   ### 3.nginx✅
   ### 4.docker✅
   ### 5.k8s❌
@@ -52,3 +53,4 @@
   ### 3.智能体（cloudcode），工作流型智能体❌
   ### 4.vibe coding❌
   ### 5.剪辑工具产品，dify AI应用引擎，智能客服，知识库，figma设计产品
+  ### 6.python❌
