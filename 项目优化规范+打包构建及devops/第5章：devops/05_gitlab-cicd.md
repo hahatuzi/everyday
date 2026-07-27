@@ -21,7 +21,7 @@
 
 ## 一、gitlab_CICD
   ### 1.1 组成
-  - gitlab:代码托管平台,就像 GitHub 网站
+  - gitlab CE:代码托管平台,就像 GitHub 网站
   - gitlab runner:	CI/CD 执行器,	必须连接 GitLab 才能用,	可选（不用 CI/CD 就不装）,就像 Jenkins Agent
   - gitlab-ci.yml
   > **Runner 可以和 GitLab 装在同一台机器，也可以装在另一台。也可以在同一个主机上设置多个gitlab-runner ,还可以根据不同的环境设置不同的环境，比如我们需要区分研发环境，测试环境以及正式环境等。**
@@ -65,9 +65,10 @@
   - 第四步：deploy阶段：部署阶段，将刚才的build阶端生成的生产代码部署到生产访问的服务器上，
 ---
 
-## 二、gitlab安装及使用
+## 二、gitlab CE安装及使用
   ### 2.1 安装方式一：使用rpm包安装
     ```js
+      // ==========================gitlab16的安装过程================================
       // 第一步：安装依赖
       sudo dnf install -y curl policycoreutils openssh-server openssh-clients postfix
       // 启动 postfix
@@ -90,6 +91,17 @@
       free -h
       # 查看各组件内存占用
       ps aux --sort=-%mem | grep -E 'puma|sidekiq|postgres|redis|gitaly|nginx' | awk '{print $2, $4, $6, $11}' | head -10
+      // ===========================gitlab19的安装过程========================================
+      // 第一步：安装依赖
+      sudo dnf install -y curl policycoreutils openssh-server openssh-clients postfix
+      // 启动 postfix
+      sudo systemctl enable postfix
+      sudo systemctl start postfix
+      // 第二步：使用清华大学镜像下载gitlab
+      wget https://mirrors.tuna.tsinghua.edu.cn/gitlab-ce/yum/el10/Packages/g/gitlab-ce-19.0.0-ce.0.el10.x86_64.rpm
+      sudo EXTERNAL_URL="http://124.221.166.48:8081" dnf install -y gitlab-ce-19.0.0-ce.0.el10.x86_64.rpm
+      // 第三步：获取初始 root 密码
+      sudo cat /etc/gitlab/initial_root_password
     ```
   ### 2.2 安装方式二：使用docker安装
     ```js
@@ -135,19 +147,24 @@
               -  './data:/var/opt/gitlab'
       第五步：启动容器
         docker-compose up -d
+      第六步：获取初始密码
+        docker exec -it gitlab grep 'Password:' /etc/gitlab/initial_root_password
+
     ```
   ### 2.3 gitlab常见命令
     ```
-      // 运行
-      gitlab-runner run
-      // 启动
-      gitlab-runner start
-      // 重启
-      gitlab-runner restart
-      // 通过name 取消注册
-      gitlab-runner unregister --name develop
-      // 删除所有注册runner
-      gitlab-runner unregister --all-runners
+      gitlab-runner run              # 运行
+      gitlab-runner start            # 启动
+      gitlab-runner restart          # 重启
+      gitlab-runner unregister --name develop  # 通过name 取消注册
+      gitlab-runner unregister --all-runners  # 删除所有注册runner
+      gitlab-ctl status              # 查看各组件状态
+      gitlab-ctl tail                # 实时日志
+      gitlab-ctl reconfigure         # 修改 gitlab.rb 后生效
+      gitlab-ctl restart             # 重启
+      gitlab-ctl stop                # 停止
+      journalctl -u gitlab-runsvdir -f   # systemd 日志
+
     ```
   ### 2.4 gitlab安装的前置条件，可不做！！
   - （1）启动sshd服务
@@ -188,21 +205,27 @@
       systemctl status postfix
     ```
   ### 2.5 gitlab配置优化，用来优化服务器占用太高
+  > 第一步：sudo vim /etc/gitlab/gitlab.rb，进入并修改配置  
+  > 第二步：sudo gitlab-ctl reconfigure  
+  > 第三步：重启sudo gitlab-ctl restart
   ```js
+
       # ========== 外部访问地址 ==========
       external_url 'http://gitlab.example.com'
 
       # ========== 时区 ==========
       gitlab_rails['time_zone'] = 'Asia/Shanghai'
 
-      # ========== 关闭所有非必要组件（省内存）==========
+      # === 关闭监控全家桶（省 ~800MB） ===
       prometheus_monitoring['enable'] = false
       alertmanager['enable'] = false
       node_exporter['enable'] = false
-      grafana['enable'] = false
-      gitlab_exporter['enable'] = false
       redis_exporter['enable'] = false
       postgres_exporter['enable'] = false
+      gitlab_exporter['enable'] = false
+      pgbouncer_exporter['enable'] = false
+      # === 关闭用不到的服务 ===
+      grafana['enable'] = false
       gitlab_kas['enable'] = false
       gitlab_pages['enable'] = false
       registry['enable'] = false
@@ -281,10 +304,14 @@
   ### 3.3 gitlab Runner的安装
   -  (1)安装方式一：手动下载rpm包
       ```js
-        // 第一步：清华镜像安装16.11.0，适配上面的16.11.0版本的gitlab
-        wget "https://mirrors.tuna.tsinghua.edu.cn/gitlab-runner/yum/el9-x86_64/Packages/g/gitlab-runner-16.11.0-1.x86_64.rpm"    -O gitlab-runner-16.11.0.rpm
+        // 第一步：清华镜像安装gitlab Runner和它的依赖包gitlab-runner-helper-images-17.11.4-1.noarch.rpm
+         wget https://mirrors.tuna.tsinghua.edu.cn/gitlab-runner/yum/el9-x86_64/Packages/g/gitlab-runner-helper-images-17.11.4-1.noarch.rpm
+         wget https://mirrors.tuna.tsinghua.edu.cn/gitlab-runner/yum/el9-x86_64/Packages/g/gitlab-runner-17.11.4-1.x86_64.rpm
+         // 16.11.0，适配上面的16.11.0版本的gitlab
+        // wget "https://mirrors.tuna.tsinghua.edu.cn/gitlab-runner/yum/el9-x86_64/Packages/g/gitlab-runner-16.11.0-1.x86_64.rpm"  -O gitlab-runner-16.11.0.rpm
         // 第二步：本地下载gitlab runner
-        sudo dnf localinstall -y gitlab-runner-16.11.0.rpm
+        sudo dnf localinstall -y gitlab-runner-17.11.4-1.x86_64.rpm gitlab-runner-helper-images-17.11.4-1.noarch.rpm
+        // sudo dnf localinstall -y gitlab-runner-16.11.0.rpm
         // 第三步：启动runner
         sudo systemctl start gitlab-runner
         # 开机自启
@@ -919,7 +946,7 @@
    - (3)存储在/etc/httpd/conf.d/目录
 [!使用Docker Compose、Nginx、SSH和Github Actions实现前端自动化部署测试机]https://blog.csdn.net/qq_34998786/article/details/122227957?spm=1001.2014.3001.5502
 ---
-## 十一、gitlabYML实例
+## 十一、gitlab-ci.yml实例
   ```js
     // 构建阶段-任务,包含五个stage:analytics,test,build,package,deploy
     stages:
