@@ -1,14 +1,14 @@
 ## 一、数据类型
   ### 1.1 数值型
-  - int整型
-  - float浮点型
-  - bool布尔型
+  - **int**整型
+  - **float**浮点型
+  - **bool**布尔型
   ### 1.2 容器，包括(有序容器)和(无序容器)
-  - 字符串str(有序容器)
-  - 列表list(有序容器)
-  - 元组tuple(有序容器)
-  - 字典dict(无序容器)
-  - 集合set(无序容器)
+  - 字符串**str**(有序容器)
+  - 列表**list**(有序容器)
+  - 元组**tuple**(有序容器)
+  - 字典**dict**(无序容器)
+  - 集合**set**(无序容器)
   ### 1.3类
   ### 1.4 虚数、复数
   - complex
@@ -56,4 +56,29 @@
 - strip(str)去掉左右两边的srt字符
 - find
 - upper,lower,swapcase,capitalize,title
-## 五、列表list
+## 五、列表list操作
+- 下标和切片
+- index函数
+- count函数
+- len函数
+- append函数
+- extend函数
+- insert
+- pop
+- del
+- remove
+- reverse
+- sort
+- for
+## 六、元组及其操作
+> 元组是由一系列变量组成的不可变序列容器，不可变是指创建完成后不能再添加，删除，修改元素。
+- 下标和切片
+- index函数
+- count函数
+- len函数
+- for循环
+## 七、python内置函数操作
+- len(x)返回序列的长度
+- max(x)返回序列的最大值元素
+- min(x)返回序列的最小值元素
+- sum(x)返回序列中所有元素的和，元素必须是数值类型
