@@ -48,21 +48,21 @@
 ## 四、Docker安装
   ### 4.1 安装步骤
   ```
-  ## 1.安装包
+  ## (1)安装包
     - yum install -y yum-utils
-  ## 2.设置镜像仓库
+  ## (2)设置镜像仓库
     - yum-config-manager --add-repo http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo 
-  ## 3.安装包
+  ## (3)安装包
     -  yum install docker-ce docker-ce-cli containerd.io
-  ## 4.启动docker
+  ## (4)启动docker
     - systemctl start docker
-  ## 5.查看是否安装成功
+  ## (5)查看是否安装成功
     - docker --version
-  ## 6.查看hello-world镜像
+  ## (6)查看hello-world镜像
     - docker run hello-world
-  ## 7.查看镜像
+  ## (7)查看镜像
     - docker images
-  ## 8.卸载docker
+  ## (8)卸载docker
     - yum remove docker-ce docker-ce-cli containerd.io
     - rm -rf /var/lib/docker
   ```
@@ -93,7 +93,6 @@
   ---
 
 ---
-## 五、Dockerfile
 ## 五、Docker Compose
   > docker建议每个容器只运行一个服务，因为docker容器本身占用资源极少。但是当我们需要同时部署多个服务时就需要每个服务单独写Dockerfile！！所以出现了docker compose多服务部署工具
   ### 5.1 概念
@@ -306,25 +305,35 @@
   ## 3.dockerfile的指令
   - FROM:镜像使用的基础镜像，docker官网有node可以使用镜像列表
   - MAINTAINER:维护人信息
-  - RUM:运行命令
-  - ADD:COPY文件，会自动解压
+  - RUN:运行命令，和在物理机器上直接运行命令一样
   - WORKDIR:设置当前工作目录
   - VOLUME:设置卷，挂载主机目录
   - EXPOSE:保留端口配置
-  - CMD:指定容器启动的时候要运行的命令，只有最后一个会生效，可被替代
-  - ENTERPOINT:指定容器启动的时候要运行的命令,可以追加命令
+  - CMD:指定容器启动的时候要运行的命令，一个dockerfile中可以有多个CMD,只有最后一个会生效，可被替代
+  - ENTERPOINT:指定容器启动的时候要运行的命令,可以追加命令,比如ENTRYPOINT ["/usr/sbin/nginx",'-g','daemon off']是指在容器启动时在前台启动nginx服务
   - ONBUILD:当构建一个被继承Dockerfile这个时候就会运行ONBUILD的指令，触发指令
-  - COPY:类似ADD,将文件拷贝到镜像中
+  - COPY:类似ADD,将linux机器文件拷贝到镜像中的指定路径，比如 COPY home* /mydir/
+  - ADD:COPY文件，和copy类似，但是ADD会自动解压 ADD dist.tar.gz /usr/share/nginx/html/
   - ENV:构建的时候设置环境变量
   ## 4.创建自己的centos
   - 创建自己的dockerfile
   - docker build -f dockerfile -t mycentos:0.1 . ，dockerfile为自己创建的dockerfile文件名
   - 
   ## 5.CMD和ENTERPOINT的区别
+    ```js
+    FROM ubuntu
+    MAINTAINER Pod
+    RUN echo hello1 > test1.txt
+    RUN echo heelo2 > /test2.txt
+    ENTRYPOINT ['echo']
+    CMD ["defaultvalue"]
+    // 同时存在时：`CMD` 作为 `ENTRYPOINT` 的默认参数
+    // echo defaultvalue
+    ```
   ## 6.dockerfile文件解读
     ```js
       // 第一步：指定镜像
-      FROM XXX // docker官网有node可以使用镜像列表
+      FROM XXX // docker官网有node可以使用镜像列表,比如FROM rockylinux:8.8
       // 第二步：指定工作区
       WORKDIR /application
       // 第三步：将自己打包后的产物都copy到application工作区下
@@ -490,8 +499,9 @@
 |   磁盘占用   |             镜像 ~20MB（多阶段）          |   镜像 ~150MB（含 node）   |
 |   依赖变更   |    改了 package.json 才重新 install       |      每次都install         |
   ## codeBuddy:Dockerfile + Compose和纯COmpose在npm install方面的具体详细区别，以及如何验证查看这些区别
-
-  		
+---
+# 十六、docker运行容器限制CPU
+  > docker通过linux内核的cgroup（控制组）功能来实现容器的资源配额和限制，cgroup可以对容器中运行的进程进行分组，并为每个分组分配特定的资源配额和限制。
 		
  	
 		

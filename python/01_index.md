@@ -82,3 +82,50 @@
 - max(x)返回序列的最大值元素
 - min(x)返回序列的最小值元素
 - sum(x)返回序列中所有元素的和，元素必须是数值类型
+## 八、容器
+- 序列：list,string,tuple
+- 映射:字典dict
+- 集合:set
+## 九、字典操作
+- 增删改：字典序列[key] = 值，del d[key]
+- len(dict)
+- d[k]
+- k in d
+- clear:清除字典中的所有数据
+- fromkeys:创建一个新字典，包含指定的键，键值都是none
+- get:直接访问字典中的值
+- items：返回一个包含所有字典项的列表，每个元素都是键值对的形式
+- keys:返回字典中的所有key,组成一个列表
+- values:返回字典中所有的value
+- pop:删除并返回指定key的值
+## 十、函数
+  ### 内置高阶函数
+  - sorted(list)函数，可以对list进行排序
+  - filter(函数， list),过滤
+  - map(函数， list),过滤
+  - reduce(函数， list),
+  ```js
+  def not_odd(num):
+    return n % 2 == 0
+  
+  filter(not_odd, [1,2,3,4,5,6])
+    sorted([36,5,-12,9,-21])
+  ```
+## 十一、文件和目录的操作
+  ### 11.1 IO流Stream
+  - read()
+  - readlines()
+  - readline()
+  - write()
+  - seek(偏移量,)
+  - tell()
+  ### 11.2 OS，访问操作系统功能
+  - os.name
+  - os.sep,获取当前系统平台路径分隔符
+  - os.getcwd,获取当前工作目录
+  - os.environ[key],获取当前环境变量值
+  - os.listdir,列出指定目录path的所有文件和目录名
+  - os.mkdir/makedirs,创建单层目录，多层目录
+  - os.path.abspath
+  - os.path.split
+  - os.remove,删除文件

@@ -6,12 +6,11 @@
 
 1. [jenkins三大概念](#一、jenkins三大概念)
 2. [jenkins插件](#二、jenkins插件)
-3. [docker安装jenkins插件](#三、docker安装jenkins插件)
-4. [jenkins流水线](#四、jenkins流水线)
-5. [Jenkins常见的内置构建触发器](#五、Jenkins常见的内置构建触发器)
-6. [jenkins配置](#六、jenkins配置)
-7. [Jenkins安装](#七、Jenkins安装)
-8. [jenkins权限管理](#八、jenkins权限管理)
+3. [jenkins项目构建](#三、jenkins项目构建)
+4. [jenkins配置](#四、jenkins配置)
+5. [Jenkins安装方式](#五、Jenkins安装方式)
+6. [jenkins配置](#六、jenkins权限管理)
+7. [Jenkins部署步骤](#七、Jenkins部署步骤)
 
 ---
 
@@ -21,7 +20,6 @@
   ### 1.2 plugins(插件)
   ### 1.3 workspace(工作空间)
   >jenkins是通过本地文件的形式来存储和管理数据的。jenkins下的每一个job都有属于自己的workspace,用来存放本任务涉及到的数据和文件
-  >
 ---
 ## 二、jenkins插件
   ### 2.1 安装全局工具node
@@ -115,13 +113,13 @@
     Jenkins  --发送定时请求-->  Gitlab代码变更 --> Gitlab代码变更  --push完毕后发送构建请求-->  Jenkins
 ---
 
-## 六、jenkins配置
-  ### 6.1 Jenkins全局变量
+## 四、jenkins配置
+  ### 4.1 Jenkins全局变量
   - env  
     >env可以在声明式流水线中访问的环境变量，例如`${env.PATH}`或者`${env.BUILD_ID}`。访问内置的全局变量参考页面`${YOUR_JENKINS_URL}/pipeline-syntax/globals`以获取完整的最新的，可用于流水线的环境变量列表。
   - currentBuild  
     >currentBuild可用于发现当前正在执行的流水线的信息，比如result,displayName等属性。
-  ### 6.2 Jenkins环境变量environment
+  ### 4.2 Jenkins环境变量environment
   - (1)最外层，用在最外层的pipeline块中的enviroment指令用于流水线的所有步骤
   - (2)stage中，定义在stage中的enviorment指令只适用于stage中的步骤。
   ```
@@ -140,8 +138,8 @@
   ```
 
 ---
-## 七、Jenkins安装方式
-  ### 7.1 linux直接安装
+## 五、Jenkins安装方式
+  ### 5.1 linux直接安装
   ```
   第一步：安装jdk
   第二步：
@@ -164,7 +162,7 @@
     sudo systemctl status jenkins
   ```
 ---
-  ### 7.2 docker安装jenkins容器
+  ### 5.2 docker安装jenkins容器
   - 第一步：创建jenkins目录，可以参考：/usr/local/docker/jenkins/docker-compose.yml
   ```
     mkdir -p ~/jenkins && cd ~/jenkins
@@ -208,7 +206,7 @@
   ```
   - 第六步：发布前端，转7.4
 ---
-  ### 7.3 Jenkins + GitLab 同机部署（端口不冲突）
+  ### 5.3 Jenkins + GitLab 同机部署（端口不冲突）
   - 配置文件
   - docker run -d --name jenkins --restart always -p 8080:8080 -p 50000:50000 -v ~/jenkins_home:/var/jenkins_home -v /var/run/docker.sock:/var/run/docker.sock -u root jenkins/jenkins:lts-jdk17
   ```
@@ -255,7 +253,7 @@
           - /var/run/docker.sock:/var/run/docker.sock
         user: root
   ```
-  ### 7.4 jenkins+nginx部署前端项目
+  ### 5.4 jenkins+nginx部署前端项目
   > Jenkins 的 deploy 路径是 /var/jenkins_home/workspace/deploy， Nginx 容器内的路径是/usr/share/nginx/html/，在 Jenkins 容器里不存在。  
   > Jenkins 和 Nginx 是两个独立容器，Jenkins 内部访问不到 /usr/share/nginx/html/，必须通过共享卷 web-data 来传递文件
   
@@ -321,20 +319,20 @@
   - 
   - 
 ---
-## 八、jenkins权限管理
+## 六、jenkins权限管理
   >Role-based Authorization Strategy插件
   >全局安全配置 --> 授权策略 --> Role-based-Strategy --> Manage and Assign Roles --> Manage Roles
-  ### 8.1 分类
+  ### 6.1 分类
   - 全局角色
   - 项目角色
   - 节点角色
-  ### 8.2 jenkins凭证管理
+  ### 6.2 jenkins凭证管理
   - ssh
   - 用户名和密码
 
-## 九、Jenkins+Nginx容器化部署前端项目（命名卷方案）
+## 七、Jenkins部署步骤
 
-  ### 9.1 架构概览
+  ### 7.1 Jenkins+Nginx容器化部署前端项目（命名卷方案）架构概览
   ```
   GitHub
     │ git clone (SSH)
@@ -357,7 +355,7 @@
   ```
 ---
 
-  ## 9.2 第一步：目录结构
+  ### 7.2 第一步：目录结构
   ```
   ~/docker/
   ├── docker-compose.yml     # 自己mkdir
@@ -370,7 +368,7 @@
   ```
 ---
 
-  ### 9.3 第二步：docker-compose.yml
+  ### 7.3 第二步：docker-compose.yml
   ```bash
     version: '3.8'
 
