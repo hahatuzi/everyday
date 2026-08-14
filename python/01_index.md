@@ -129,3 +129,30 @@
   - os.path.abspath
   - os.path.split
   - os.remove,删除文件
+## 十二、对象
+  ### 12.1 init函数
+  > __init():对象的初始化函数,创建独享的时候默认被调用，无需手动调用
+  > __init(self)
+  ### 12.2 str函数
+  > 当使用了print输出对象的时候，默认打印对象的内存地址。如果类定义了_str__方法，就会打印从这个函数return出去的数据
+  ### 12.3 del函数
+  > 当删除对象的时候，python解释器会默认调用__del__()函数
+  ### 12.4 继承
+  ### 12.5 重写
+  ```
+    class Car():
+      def __init__(self,brand,typeName):
+        self.brand = None
+        self.typeName = None
+      def run(self):
+        print('car')
+    c1 = Car()
+  ```
+## 十三、异常处理
+  ```
+    import traceback
+    try:
+    except Exception as err:
+    print(f'{err}')
+      print(trackback.format_exc())
+  ```
