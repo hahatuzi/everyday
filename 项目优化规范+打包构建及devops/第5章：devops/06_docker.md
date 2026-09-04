@@ -4,8 +4,8 @@
 
 ## 目录
 
-1. [Docker原理](#一Docker原理)
-2. [Docker优势](#二Docker优势)
+1. [Docker原理](#一、Docker原理)
+2. [Docker安装](#二、Docker安装)
 3. [核心概念](#三核心概念)
 4. [Docker安装](#四Docker安装)
 5. [Docker Compose](#五Docker Compose)
@@ -13,6 +13,33 @@
 7. [Controller](#七Controller)
 8. [Service](#八Service)
 9. [Label](#九Label)
+
+---
+**1. 容器和虚拟机到底有什么区别？你项目里怎么选的？各自的适用边界是什么？**
+**2. Docker 镜像为什么要分层？有什么好处？**
+**3. Docker 的 Namespace 隔离机制有哪些？分别隔离什么资源？**
+**4. Docker 的 Cgroups 具体是怎么限制 CPU 和内存的？写出具体参数和原理。**
+**5. overlay2 存储驱动的工作原理是什么？lowerdir、upperdir、merged 层的关系？**
+**6. 容器里的进程 PID 是 1，和宿主机的 PID 1 有什么关系？为什么推荐 CMD 使用 exec 格式？**
+**7. Docker 的写时复制（Copy-on-Write）机制是什么？对性能有什么影响？**
+**8. 容器退出码 137、139、143 分别代表什么？怎么排查处理？**
+**9. 写一个生产级的 Dockerfile，要求镜像尽量小、安全、能健康检查。**
+**10. ENTRYPOINT 和 CMD 有什么区别？各自的使用场景？两者同时存在时如何生效？**
+**11. 多阶段构建（Multi-stage Build）的原理和优势？如何减小最终镜像体积？**
+**12. Docker 构建缓存机制是什么？如何优化 Dockerfile 的构建速度？为什么先 COPY 依赖文件再 COPY 源码？**
+**13. 如何给 Docker 镜像瘦身？除了 alpine/slim 镜像外还有哪些技巧？**
+**14. `.dockerignore` 文件的作用是什么？和 `.gitignore` 的区别？**
+**15. Docker 默认 bridge 网络和自定义 bridge 网络有什么区别？为什么生产环境一定要用自定义网络？**
+**16. 容器之间怎么通信？跨宿主机通信的底层原理是什么？**
+**17. 端口映射 `-p 8080:80` 底层发生了什么？iptables 规则是怎样的？**
+**18. Docker 的网络模式有哪些？各自使用场景？**
+**19. Docker 数据卷（Volume）和绑定挂载（Bind Mount）的区别？`tmpfs` 挂载的使用场景？**
+**20. 容器化应用的持久化存储方案有哪些？你在项目里怎么做的？**
+**21. 生产环境 Docker 容器有哪些安全加固措施？**
+**22. Docker Secrets 是什么？和环境变量有什么区别？**
+**23. Harbor 镜像仓库用过吗？怎么实现镜像扫描、签名、权限控制和垃圾回收？**
+**24. 线上容器日志撑爆磁盘了怎么办？临时方案和根治方案分别是什么？**
+**25. 线上容器突然访问不了了，完整的排查链路是什么？**
 
 ---
 
@@ -24,11 +51,9 @@
   - 虚拟机部署：硬件--> 操作系统 --> hypervisor --> (虚拟机1，虚拟机2) --> 操作系统 --> 可执行文件 --> 应用
   - 传统部署：硬件--> 操作系统 --> 应用
   ### 1.2 docker为什么比VM快
-  - 容器的特点：轻量，快速，隔离，跨平台
-  - 轻量：docker类似于轻量级的VM，dcoker比虚拟机轻巧，核心环境只要4M。
-  - 虚拟机模拟了完整硬件（Hypervisor 层）。docker利用了**宿主机的内核**，docker共享了操作系统内核，vm需要的是Guest OS
----
-## 二、Docker优势
+  > docker类似于轻量级的VM，dcoker比虚拟机轻巧，核心环境只要4M。虚拟机模拟了完整硬件（Hypervisor 层）。docker利用了**宿主机的内核**，docker共享了操作系统内核，vm需要的是Guest OS。
+  ### 1.3 Docker的优势
+  > 容器的特点：**轻量，快速，隔离，跨平台**
   - 1.更快速的交付和部署：
     - 传统的需要一堆帮助文档，安装程序
     - docker：打包镜像发布测试，一键运行
@@ -38,19 +63,16 @@
     - 容器化之后，开发，测试环境都高度一致
   - 4.更高效的计算资源利用：
     - DOcker是内核级的虚拟化，一个物理机上可以运行很多的容器实例
-
+  ### 1.4 docker的核心概念
+  - (1)镜像
+  > docker镜像就是一个模版，可以通过这个模版来创建容器服务！！tomcat镜像-->run-->tocat01容器
+  - (2)容器container
+  > Docker利用容器，独立运行一个或者一组应用，可以将容器理解为一个简易版的linux系统
+  - (3)仓库
+  > 仓库就是存放镜像的地方
 ---
-##  三、核心概念
-  ### 3.1 镜像
-  docker镜像就是一个模版，可以通过这个模版来创建容器服务！！tomcat镜像-->run-->tocat01容器
-  ### 3.2 容器container
-  DOcker利用容器，独立运行一个或者一组应用，可以将容器理解为一个简易版的linux系统
-  ### 3.3 仓库
-  仓库就是存放镜像的地方
-
----
-## 四、Docker安装
-  ### 4.1 安装步骤
+## 二、Docker安装
+  ### 2.1 安装步骤
   ```
   ## (1)安装包
     - yum install -y yum-utils
@@ -71,7 +93,7 @@
     - rm -rf /var/lib/docker
   ```
   ---
-  ### 4.2 镜像加速
+  ### 2.2 镜像加速
   ```js
   ## 第一步：
     -  sudo  mkdir -p /etc/docker
@@ -190,38 +212,43 @@
 ---
 
 ## 六、Docker命令
-  - docker ps [命令]:查看当前docker在跑哪些容器进程
-  - docker container ls
-  - docker container ls -a:查看所有的容器
-  - docker images,查看镜像
-  - docker run --name miaoma-nginx-server -d -p 8080:80 nginx
-  - docker search:搜索镜像，比如docker search mysql
-  - docker pull [镜像名],下载镜像，比如docker pull mysql
-  - docker rmi -f 容器id,删除指定容器,docker rm -f everyday
-  - docker rmi -f 容器id 容器id 容器id,删除多个容器
-  - docker rmi -f $(docker images -aq),删除所有容器
-  - docker run [可选参数] images,新建容器并启动
-  - docker run -it centos /bin/bash,测试，启动并进入容器
+  - **docker images**,查看镜像
+  - **docker ps**,查看当前docker在跑哪些容器进程
+  - **docker stop** [镜像id],停止镜像
+  - **docker start**,启动
+  - **docker restart**,重启
+  - **docker stats**,查看状态
+  - **docker logs**,日志
+  - **docker exec**,进入
+  - **docker run**,运行,比如docker run --name miaoma-nginx-server -d -p 8080:80 nginx
+  - **docker exec -it [镜像名] /bin/bash**,进入镜像,或者docker attach [容器id],attach不会启动新的进程,exec进入容器后开启一个新的终端，可以直接操作
+  - **docker exec my-frontend ls /usr/share/nginx/html**,检查挂载是否生效
+  - **docker exec my-frontend nginx -t**,检查配置文件是否正确
+  - **docker container ls**
+  - **docker container ls -a**,查看所有的容器
+  - **docker search**:搜索镜像，比如docker search mysql
+  - **docker pull [镜像名],下载镜像，比如docker pull mysql
+  - **docker rmi -f 容器id,删除指定容器,docker rm -f everyday
+  - **docker rmi -f 容器id 容器id 容器id,删除多个容器
+  - **docker rmi -f $(docker images -aq),删除所有容器
+  - **docker run [可选参数] images,新建容器并启动
+  - **docker run -it centos /bin/bash,测试，启动并进入容器
   - exit,退出容器到主机
   - docker run -d 镜像名，后台启动容器，docker run -d centos
-  - docker start，启动
   - docker inspect [镜像id],查看镜像元数据
   - docker cp 容器id,拷贝
-  - docker stop [镜像id],停止镜像
   - -d:后台运行
   - -p 端口1：端口2,端口映射，比如docker run -it -d -p 3310:3306 -v /home/mysql/conf.d -v /home/mysql/data:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=812a1998D --name hahatuzi mysql
   - -v，卷挂载
   - -e,环境配置
   - --name,容器名字
-  - docker exec,进入
-  - docker exec -it [镜像名] /bin/bash,进入镜像,或者docker attach [容器id],attach不会启动新的进程,exec进入容器后开启一个新的终端，可以直接操作
-  - docker exec my-frontend ls /usr/share/nginx/html，检查挂载是否生效
-  - docker exec my-frontend nginx -t，检查配置文件是否正确
   - docker logs my-frontend，查看错误日志
   - docker exec my-frontend cat /etc/nginx/conf.d/default.conf，查看Nginx实际使用的配置
   - docker ps -a --filter "name=jenkins",查看容器状态，restarting(反复重启)**如果反复重启可以查看日志**，Exited(已经崩溃)，Up X minutes(正常)
   - docker logs --help，查看日志，比如docker logs --tail 50 jenkins，查看jenkins日志
-
+  - docker commit
+  - docker save
+  - docker load,加载
 ## 七、docker镜像加载原理
   ### UnionFS（联合文件系统）
   - UnionFS是一层一层的文件系统，包含boot fs(boot)和root fs，它支持对文件系统的修改，作为一次提交来层层叠加
