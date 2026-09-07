@@ -224,6 +224,8 @@
       postgres_exporter['enable'] = false
       gitlab_exporter['enable'] = false
       pgbouncer_exporter['enable'] = false
+      sidekiq['metrics_enabled'] = false
+      sentinel['enable'] = false
       # === 关闭用不到的服务 ===
       grafana['enable'] = false
       gitlab_kas['enable'] = false
@@ -283,6 +285,25 @@
 
       # ========== 备份 ==========
       gitlab_rails['backup_keep_time'] = 604800  # 保留7天
+
+      # 关闭所有非必要功能
+      gitlab_rails['packages_enabled'] = false
+      gitlab_rails['terraform_state_enabled'] = false
+      gitlab_rails['dependency_proxy_enabled'] = false
+      gitlab_rails['usage_ping_enabled'] = false
+      gitlab_rails['gitpod_enabled'] = false
+      gitlab_rails['kerberos_enabled'] = false
+      gitlab_rails['gravatar_enabled'] = false
+      registry['enable'] = false
+      mattermost['enable'] = false
+      mattermost_nginx['enable'] = false
+      pages['enable'] = false
+      gitlab_kas['enable'] = false
+      mailroom['enable'] = false
+      spamcheck['enable'] = false
+      # 减少日志
+      nginx['error_log_level'] = 'error'
+      logging['svlogd_size'] = 10 * 1024 * 1024
 
   ```
 ---
