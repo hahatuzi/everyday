@@ -2,11 +2,12 @@
   > pip install openai
   ### 1.1 model:模型
 ---
-  ### 1.2 message对象
-  - role
+  ### 1.2 message：对象数组，提供给模型的消息
+  - role属性
     - user:用户，向LLM提问
     - system：系统，用户对LLM的要求
     - assitant:AI助手，LLM给出的回复
+  - content属性
 ---
   ### 1.3 temperature:温度参数
   > 用来控制大模型的创造性，范围0-2，默认为1，0越保守，2越创造性
