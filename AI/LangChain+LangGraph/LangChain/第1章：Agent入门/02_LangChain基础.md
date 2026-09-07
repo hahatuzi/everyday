@@ -12,3 +12,6 @@
 ## LangChain底层原理
   用户提问-->通过相似性搜索在数据库或者向量空间中找到相关的信息-->由处理模型分析，产生答案-->
 ## LangSmith
+
+## Langchain构建向量数据库和检索器
+  > pip install langchain-chroma
