@@ -9,13 +9,8 @@
   - Agents
   - Embeddings:嵌入与向量索引VectorStore,它们是数据表示与检索的手段，为模型提供必要的语言理解基础
   - indexes:索引，能够帮助你从语言模型中提取相关信息
-## Embeddings
-  > 将文本转成一组N维浮点数，即文本向量又叫Embeddings,向量之间可以计算距离，距离远近又叫语义相似度大小
-  - 欧式距离计算法
-  - 余弦距离计算法
-  ### 步骤：
-  - 第一步：Indexing:load file--> split --> embed --> store
-  - 第二步：Retrieval & Generation: question --> retrieve --> prompt --> LLM --> answer
+
+
 ## LangChain底层原理
   用户提问-->通过相似性搜索在数据库或者向量空间中找到相关的信息-->由处理模型分析，产生答案-->
 ## LangSmith
