@@ -33,7 +33,9 @@
   #### (3)Monorepo（多包仓库）
     - npm：支持 workspace，但配置简陋，体验一般。
     - pnpm：**原生 workspace，pnpm‑workspace.yaml**，业界主流方案，适合大型多包项目。
+----
 ## 二、Node的事件循环
+  > 执行顺序：调用栈 --> tick队列 --> 微任务队列 --> 宏任务队列
   ### 1.宏任务
   - setTimeout
   - setInterval
@@ -42,10 +44,9 @@
   - close事件
   ### 2.微任务
   微任务其实可以划分为**next tick queue**和**other queue**两种，process.nextTick是next tick queue,process.nextTick,queueMicrotask属于other queue
-  - Promise.then
-  - process.nextTick
+  - Promise的回调函数
   - queueMicrotask
-  ### 3.执行顺序：同步代码-->处理process.nextTick()队列 -->处理其他微任务-->开始事件循环的各个阶段
+  ### 3.process.nextTick()
   ### 4.node事件循环的各个阶段
   - **（1）timers定时器**：执行setTimeout,setInterval的回调函数
   - **（2）Pending callbacks待定回调**：处理上一轮循环中未完成的IO任务，比如被拒绝的TCP链接
@@ -53,3 +54,38 @@
   - **（4）Poll轮询**：等待新的IO事件，执行IO回调，处理poll队列中的事件
   - **（5）Check检查**：执行setImmediate的回调
   - **（6）Close callback关闭回调**：处理socket.on(‘close’)的回调函数
+## 三、nodeJS的核心模块
+  ### 3.1 process
+  > 表示当前的node进程，通过该对象可以获取进程的信息，或者对进程做各种操作。
+  - **process.exit()**:结束当前进程，终止node
+  - **process.nextTick(callback[,...args])**:将函数插入到tick队列中，tick队列中的代码会在下一次事件循环之前执行。也会在微任务队列和宏任务队列之前执行
+  ### 3.2 path
+  ### 3.3 fs
+  - fs.readFileSync(),同步读取文件
+  - fs.readFile()
+  - fs.appendFile()
+  - fs.mkdir()
+  - fs.rmdir()
+  - fs.rm()
+  - fs.rename()
+  - fs.copyFile()
+  ### 3.4 buffer
+  - buffer.alloc()
+  - buffer.allocUnsafe()
+  - buffer与字符串的转换：Buffer.from(),buf.toString()
+  ### 3.5 http模块
+  ```js
+    const http = require('http')
+    const server = http.createServer((request,response)=>{
+      let url = new URL(request.url, 'http:127.0.0.1')
+      console.log(url.pathname)
+    }
+  ```
+
+## 四、express
+  ### 4.1 req
+  ### 4.2 res
+  > 服务器发送给客户端的响应信息
+  - res.sendStatus():
+  - res.status()
+  ### 4.3 中间件

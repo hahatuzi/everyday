@@ -60,6 +60,12 @@
   - 第一步：Indexing:load file--> split --> embed --> store
   - 第二步：Retrieval & Generation: question --> retrieve --> prompt --> LLM --> answer
   ### 2.5 向量数据库
+  #### (1)Qdrant向量数据库安装
+  - docker pull qdrant/qdrant
+  - docker run -p 6333:6333 -p 6334:6334 qdrant/qdrant,6333用于http浏览器界面，6334用于gRPC API
+  - http://localhost:6333
+  - http://localhost:6333/dashboard#/collections
+  #### (2)阿里云百炼向量模型选择，比如text-embedding-v3
 ----
 ## lainChain中的问答链
   - stuff：
@@ -84,4 +90,3 @@
   ### 3.4 尝试dify
 ## 四、工程化：关键的采样参数与提示次迭代优化方法
 ## 五、前沿
-## 六、流式输出（打字机效果）SSE
