@@ -89,3 +89,94 @@
   - res.sendStatus():
   - res.status()
   ### 4.3 中间件
+    #### (1)日志中间件
+    ```js
+      function recordMiddleware (req,res,next) {
+        let {url, ip} = req
+        <!-- 将信息保存在文件中access.log -->
+        fs.appendFileSync(path.resolve(__dirname, './access.log'),`${url}  ${ip}\r\n`)
+      }
+      app.use(recordMiddleware)
+    ```
+    #### (2)路由中间件
+    ```js
+      let checkCodeMiddleware = (req,res, next) => {
+        if(req.query.code === '200') {
+          next()
+        } else {
+          res.send('code错误')
+        }
+      }
+      app.get('/admin', checkCodeMiddleware, (req,res) => {
+        res.send('admin')
+      })
+      app.get('/setting', checkCodeMiddleware, (req,res) => {
+        res.send('setting')
+      })
+    ```
+    #### (3)静态资源中间件
+    ```js
+      // 设置将当前文件夹下的public文件夹作为网页的根目录
+      app.use(express.static(__dirname + '/public'))
+    ```
+    #### error中间件,404兜底
+    ```js
+      app.all('*',(req,res)=>{
+        res.send('<h1>404 Not Found</h1>')
+      })
+    ```
+  ### 4.4 queryString和body-parser
+    ```js
+    let queryStr = url.split('?')[1]
+    const query = querystring.parse(queryStr)
+      // 用来解析querystring格式请求体的中间件
+      const jsonParser = bodyParser.json()
+      const urlencodedParser = bodyParse.urlencoded({extended:false})
+      app.post('/login', urlencodedParser,(req,res)=>{
+        console.log(req.body)
+      })
+      // 或者
+      app.use(bodyparse.urlencoded({extended:false}));
+    ```
+  ### 4.5 防盗链
+    ```js
+      app.use((req,res,next)=>{
+        let referer = req.get('referer')
+        if (referer){
+          let url = new URL(referer)
+          let hostname = url.hostname
+          if (hostname != '127.0.0.1') {
+            res.status(404).send('<h1>404 Not Found</h1>')
+          }
+        }
+        next()
+      })
+    ```
+  ### 4.6 模版引擎EJS
+    ```js-
+    const ejs = require('ejs')
+      let result ejs.render('我爱你 <%= china %>', {china:china})
+    ```
+  ### 4.7 express-generator应用骨架
+  > 通过应用生成器express-generator可以快速创建一个应用的固件
+  - npm i -g express-generator
+  - express -e 项目文件夹，在该文件夹下创建项目
+  ### 4.8 文件上传和下载
+  ```js
+    router.post('/poortrait', (req,res) => {
+      const form = formidable({
+        multiples: true,
+        uploadDir: __dirname + '../public/images',
+        keepExtensions: true
+      })
+      form.parse(req, (err,fields, files) => {
+        if(err){
+          next(err)
+          return 
+        }
+
+        let url = '/images/' + files.portrait.newFileName
+        res.send(url)
+      })
+    })
+  ```
