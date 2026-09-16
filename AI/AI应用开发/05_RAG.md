@@ -67,6 +67,17 @@
   - http://localhost:6333/dashboard#/collections
   #### (2)阿里云百炼向量模型选择，比如text-embedding-v3
 ----
+## 三、RAG项目搭建
+  ### 3.1 步骤
+  - 创建项目及虚拟环境
+  - 创建requirements.txt
+  ```js
+    flash>=3.0 // web框架，路由+静态文件托管+SSE
+    openai>=1.50 // 第哦啊用deepseek 等API
+    scikit-learn>=1.3 // TF-IDF文本向量化，零模型下载，纯CPU
+    python-dotenv>=1.0 // 从。env文件读取API key等配置
+  ```
+  - 
 ## lainChain中的问答链
   - stuff：
   - map_reduce
