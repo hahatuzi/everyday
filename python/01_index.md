@@ -128,7 +128,12 @@
   - os.mkdir/makedirs,创建单层目录，多层目录
   - os.path.abspath
   - os.path.split
+  - os.path.exists()
   - os.remove,删除文件
+  ```py
+    import os
+    os.makedirs(os.path.dirname(self.file_path), exist_ok=True)
+  ```
 ## 十二、对象
   ### 12.1 init函数
   > __init():对象的初始化函数,创建独享的时候默认被调用，无需手动调用
