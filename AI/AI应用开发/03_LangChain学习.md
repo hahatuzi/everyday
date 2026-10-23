@@ -27,7 +27,7 @@
   > 用户提问-->通过相似性搜索在数据库或者向量空间中找到相关的信息-->由处理模型分析，产生答案-->
 
 ## 二、LangChain调用大模型
-  > LangChain支持的模型：LLMS(大语言模型),ChatModels(聊天模型),Embeddings Models(嵌入模型)
+  > LangChain支持的模型：LLMS(大语言模型),ChatModels(聊天模型),Embeddings Models(文本嵌入模型)
   ### 2.1 调用LLMS模型
   ```py
     # (1)langchain调用千问模型
@@ -55,7 +55,7 @@
     for chunk in chat.tream(input = message):
       print(chunk.content, end = '', flush=True)
   ```
-  ### 2.3 LangChain调用Embedding Model文本嵌入模型
+  ### 2.3 LangChain调用Embedding Model文本嵌入模型，用于将文本转向量
   ```py
     # 将文本作为输入，转化为一个浮点列表向量
     from langchain_community.embeddings import DashScopeEmbeddings
@@ -339,49 +339,23 @@
     for doc in loader.lazy_load():
       i++
   ```
-## LangSmith
+  ### 5.7 RunnablePassthrough
+  > RunnablePassthrough用于将向量检索也加入链中
+  ```py
+    vector_store.add_texts(["减肥就是少吃多练。","跑步是很好的运动哦！","游泳的减肥效果也不错哦！"])
+    input_text = "怎么减肥？"
 
-# 1.神经网络原理
-# 2.词向量
-# 3.Transformer
-# 4.大模型应用：
-  ### 模糊问题处理
-  ### 复杂模式识别
-  ### 确定性逻辑处理
-  ### 精确控制和高可靠性
-# 5.大模型服务：
-  ### deepseek
-  ### 阿里云百炼
-  ### ollama
-## conda使用指南
-  ```js
-  // conda创建一个名字叫langchain1.3的环境,指定python版本为3.14.5
-  conda create --name langchain1.3 python=3.14.5
-  // conda查看安装好的环境列表
-  conda env list
-  // conda 初始化虚拟环境
-  conda init
-  // 切换到某python环境
-  conda activate langchain1.3
-  // 验证python版本
-  python --version
-  // =======================================
-  // 下载langchain安装包
-  // =======================================
-  // 安装指定版本的langchain,比如1.3.15
-  conda install langchain==1.3.15
-  // 或者安装最新版
-  conda install langchain
-  // 指定频道
-  conda install -c conda-forge langchain==1.3.15
-  // 更新包
-  conda update langchain
-  // 卸载包
-  conda uninstall langchain
-  // 查看已经安装的包
-  conda list
+    chain = prompt | print_prompt | model |StroutputParser()
   ```
-  ### conda和pip的区别
-  - conda依赖检查严格，pip相对宽松
-  - conda负责环境+依赖+稳定性，pip只负责python包
-  - conda支持python包和非python包，pip只支持python包
+## 六、基于LangChain的典型的RAG流程
+  ### 6.1 流程简介：
+  - 索引阶段(存储)
+    - 文档Documents → 嵌入模型EmbeddingModel  → 转换为嵌入向量EmebeddingVectors  → 存入Vector stores
+  - 查询阶段(检索)
+    - 查询文本Query Text  →  嵌入模型EmbeddingModel → 转换为查询向量QueryVector → 向量相似度搜索SimilartiySearch → 从VectorStores中匹配相似度最高的结果 → TopK results
+  ### 6.2 如何将文本转向量？
+  > DashScopeEmbeddings
+  ### 6.3 VectorStore向量数据库的创建
+  ### 6.4 VectorStore使用SimilartiySearch和as_retriever进行相似度检索
+  ### 6.5 VectorStore使用RunnablePassthrough添加向量检索
+---

@@ -1,7 +1,13 @@
 ## style样式
   ```js
   // 数组类型
+  import {StyleSheet, Text, View} from 'react-native'
   <view style={[{fontSize:50},styles.title]}></view>
+  const styles = StyleSheet.create({
+    title:{
+      fontSize:20,
+      fontWeight:'bold'
+    })
   ```
 ## ScrollView
   ### (1)ScrollView使用

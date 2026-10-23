@@ -92,10 +92,11 @@
   - (1)**模型Embedding Model**
   > 嵌入模型是一种机器学习模型，有高维度模型和低维度模型。实现在连续的低纬向量空间中表示数据的文本，图像颜色等信息，比如text-embeding-5
   - (2)**向量化数据库Embedding Store**
-  > 向量存储Vector Store是一种用于存储和检索高维数据的数据库或者存储解决方案。当给定一个向量作为查询时，VectorStore返回与查询向量相似的向量。比如Qdrant
+  > 向量存储Vector Stores是一种用于存储和检索高维数据的数据库或者存储解决方案。当给定一个向量作为查询时，VectorStore返回与查询向量相似的向量。比如Qdrant
   - (3)**Embedding Search Request相似度查询***
 ---
-  ### 2.2 第一件：Embedding Model的核心API:embed_documents 与 embed_query
+  ### 2.2 第一件：Embedding Model
+  #### (1)Embedding Model的核心API:embed_documents 与 embed_query
   > LangChain 所有 Embedding 类都实现了两个核心方法，分别对应离线和在线场景：
   ```py
     class BaseEmbeddings:
@@ -122,7 +123,7 @@
     #输出:查询向量维度:512
   ```
 ---
-  ### 2.2 嵌入的步骤
+  #### (2) Embedding Model嵌入的步骤
     - 搜索(查询出与某字符串相关的所有结果并排名)
     - 聚类(文本字符串按照分相似性进行分组)
     - 推荐(推荐具有相关文本字符串的项目)
@@ -130,19 +131,16 @@
     - 多样性测量(分析相似性分布)
     - 分类(文本字符串按照最相似的标签进行分类)
 ---
-  ### 2.3 向量计算方法
+  #### (3) Embedding Model的向量计算方法
     - 欧式距离计算法
     - 余弦距离计算法
-  ### 2.4 步骤：
-  - 第一步：Indexing:load file--> split --> embed --> store
-  - 第二步：Retrieval & Generation: question --> retrieve --> prompt --> LLM --> answer
-  ### 2.5 第二件：向量数据库VectorStore
+  ### 2.2 第二件：向量数据库VectorStore
   > 📚暴力检索=在图书馆里一本一本翻找，直到找到你要的书
   > VectorStore= 图书馆的分类索引系统:先锁定哪个书架哪一排哪一本
   > 常见的向量数据库FAISS,Chroma,Milvus,Pinecone
   > langchain VectorStore的内置轻量方案包括：FAISS,Annoy,InMemoryVectorStore,适合开发测试，小规模原型验证
   > langchain VectorStore的外置专业向量数据库包括:Chroma,Pinecone(云),Milvus(分布式),Qdrant,Weaviate(云、本地),适合生产环境，大规模，持久性需求
-  #### (1)VectorStore统一接口
+  #### (1)VectorStore的接口API
     ```py
       class VectorStore:
         #写操作
