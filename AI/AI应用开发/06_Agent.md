@@ -8,7 +8,7 @@
   ### 1.2 传统Chat Model对话模型 VS AI Agent智能体
   - AIAgent支持跨天跨系统，ChatModel仅支持单轮短流程简单文案
   - AIAgetn包括三层记忆：短期记忆，工作记忆，长期向量记忆，ChatModel仅当前会话短期上下文
-  - AIAgent闭环循环ReAct:思考→行动→观察→再思考。ChatModel单向线性：输入→推理→输出，对话终止
+  - AIAgent闭环循环**ReAct**:思考→行动→观察→再思考。LangChain的createAgent创建的Agent就是ReAct.ChatModel单向线性：输入→推理→输出，对话终止
   ### 1.3 AI Agent发展现状
   - copilot,Cursor,langChain,LlamaInex
   - 钉钉AI智能体
@@ -17,6 +17,49 @@
   - (2)短期记忆：单次完整任务内的全部步骤：比如一次写方案，一次数据分析全过程
   - (3)长期记忆：用户历史任务
   - (4)技能记忆(工具记忆)
+  ### 1.5 middleware中间件
+  > 中间件的作用是对智能体额每一步工作进行控制和自定义的执行，作用包括：日志分析，提示词转换，工具选择，重试、备用、提前终止等逻辑操作，安全防护，个人身份检测等
+  request → **before_agent** → **before_model** → **wrap_model_call** → model → **wrap_tool_call** → **after_model** → **after_agent** → result
+  #### 节点式钩子
+  - **before_agent**:agent执行之前拦截
+  - **after_agent**:agent执行之后拦截
+  - **before_model**:模型执行之前拦截
+  - **after_model**:模型执行之后拦截
+  #### 针对工具和模型的包装式钩子
+  - **wrap_model_call**:每个模型调用时拦截
+  - **wrap_tool_call**:每个工具调用时拦截
+  ```py
+    from json import tool
+    from langchain.agents import AgentState
+    from langchain.agents.middleware import before_agent, after_agent, before_model, after_model, wrap_model_call, \
+        wrap_tool_call
+
+
+    @tool(description="查询天气")
+    def get_weather() -> str:
+        return "晴天"
+
+    @before_agent
+    def log_before_agent(state:AgentState, runtime) -> None:
+        print(f"[before_agent{len(state['messages'])}")
+
+    @after_agent
+    def log_after_agent(state:AgentState, runtime) -> None:
+        print(f"[after_agent{len(state['messages'])}")
+    @before_model
+    def log_before_model(state:AgentState, runtime) -> None:
+        print(f"[before_model{len(state['messages'])}")
+    @after_model
+    def log_after_model(state:AgentState, runtime) -> None:
+        print(f"[after_model{len(state['messages'])}")
+    @wrap_model_call
+    def model_call_hook(request, handler):
+        print("模型调用了")
+        return handler(request)
+    @wrap_tool_call
+    def tool_call_hook(request, handler):
+        print(f"工具执行:{request.tool_call['name']}")
+  ```
 ## 二、AI Agent
 
   ### 2.1 AI Agent增强的方法
@@ -44,3 +87,42 @@
   测试数据-->用对话应用验证可行性-->是否要补充知识-->是否要对接其他系统-->是否需要尝试微调-->交付
                                                   -->RAG               -->Function Calling-->用历史数据做Fine-tuning
 ---
+
+## 三、Agent的API
+  ### 3.1 Agent初体验
+  ### 3.2 Agent的stream流式输出
+  ### 3.3 典型的LangChain的ReaAct案例
+  > langchain.agent使用create_agent方法创建的就是一个Agent
+  ``js
+    from langchain.agents import create_agent
+    from langchain_community.chat_models.tongyi import ChatTongyi
+    from langchain_core.tools import tool
+
+    from FewShot提示词模版 import model
+
+    @tool
+    def get_price(name:str) -> str:
+        return f"股票{name}的价格是20元"
+    @tool
+    def get_info(name:str) -> str:
+        return f"股票{name},是一家A股上市公司，专注于某某领域"
+
+    agent = create_agent(
+        model=ChatTongyi(model="qwen-max",api_key="sk-16bb8531af8e41e5a78fef27c4079845"),
+        tools = [get_price, get_info],
+        system_prompt = "你是一个智能助手，可以回答股票相关问题，记住请告知我思考过程，让我知道你为什么调用某个工具"
+    )
+
+    for chunk in agent.stream(
+        {"messages":[{"role":"user", "content":"东方财富的股价多少，并介绍一下它"}]},
+        stream_mode="values"
+    ):
+      latest_message = chunk["message"][-1]
+      if latest_message.content:
+          print(latest_message.content.strip())
+    try:
+        if latest_message.tool_calls:
+            print(f"Calling tools:{[tc['name'] for tc in latest_message.tool_calls]}")
+    except AttributeError:
+        pass
+  ```
