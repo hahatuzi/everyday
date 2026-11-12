@@ -7,7 +7,7 @@
   - 启动android studios的虚拟设备
   - adb devices
   - npx expo start
-  - a
+  - npx expo-doctor
   ### Expo的命令
   ```js
     # ---------- Expo ----------
@@ -23,7 +23,7 @@
 ## Expo Router
   > React Navigation相较于ExpoRouter来说使用困难
   ### 使用方式：
-  - npx expo install expo-router react-native-safe-area-context react-native-screens expo-linking expo-contants expo-status-bar
+  - npx expo install expo-router react-native-safe-area-context react-native-screens expo-linking expo-constants expo-status-bar
   - 修改package.json的main为expo-router/entry
 ## 路由跳转页面
   ### (1)Link组件

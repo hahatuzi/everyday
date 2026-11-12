@@ -1,3 +1,13 @@
+## 目录
+
+1. [一、Agent智能体](#一、Agent智能体)
+2. [Embedding向量化](#二、LangChain调用大模型)
+3. [LangChain的提示词模版PromptTemplate类](#三、LangChain的提示词模版PromptTemplate类)
+4. [Runnable知识点](#四、Runnable知识点)
+5. [LangChain的临时记忆和长期会话记忆](#五、LangChain的临时记忆和长期会话记忆)
+6. [基于LangChain的典型的RAG流程](#六、基于LangChain的典型的RAG流程)
+
+---
 ## 一、Agent智能体
   ### 1.1 AI Agetn四大组件
   > Agent = **LLM** (大脑) + **Planning** (规划) + **Tool use** (执行) + **Memory** (记忆)。
@@ -87,11 +97,79 @@
   测试数据-->用对话应用验证可行性-->是否要补充知识-->是否要对接其他系统-->是否需要尝试微调-->交付
                                                   -->RAG               -->Function Calling-->用历史数据做Fine-tuning
 ---
-
+  ### 2.8 旅游规划案例：
+  - 大脑中枢：规划行程的你
+  - 规划：步骤1：规划打车路线，步骤2：订饭店，酒店。。。
+  - 调用工具：调用MCP或者FunctionCalling等API,滴滴打车，携程，美团订酒店
+  - 记忆能力：沟通时，要知道上下文。比如订酒店要知道是哪里的酒店，不能聊着聊着就忘记了最初的目的
+  - 能够执行上述操作。
+---
 ## 三、Agent的API
-  ### 3.1 Agent初体验
-  ### 3.2 Agent的stream流式输出
-  ### 3.3 典型的LangChain的ReaAct案例
+  - model
+  - tool
+  - system_prompt
+  - response_format
+  ### 3.1 Agent中传入模型的两种方式
+  - (1)传入模型字符串：model = "deepseek-v4-flash"
+  - (2)传入模型实例：
+  ```js
+    from langchain.chat_models import init_chat_model
+    model = init_chat_model(model='deepseek-v4-pro')
+  ```
+  ### 3.2 Agent的输入，输出以及stream流式输出
+  ### 3.3 Agent的tool以及工具调用流程
+  > 用户提问 HumanMessage → AI分析是否需要调用工具 → 执行工具 → AI查看工具调用结果
+  ### 3.4 agent的name和system_prompt
+  - system_prompt:系统提示词，string,或者systemMessage,提示词设置方式包括**静态设置**和**动态设置**两种，动态设置需要中间件的参与
+  ```js
+    web_search = TavilySearch(max_result = 5)
+    
+    agent = create_agent(
+        model="deepseek-v4-pro",
+        tool = [web_search],
+        system_prompt = "你是一名多才多艺的智能助手，可以调用工具帮助用户解决问题",
+        system_prompt = SystemMessage(
+            "你是一个天气助手。",
+            "当工具返回以'TEMP_UNAVAILABLE:'开头的时候，",
+            "说明是临时故障，不要立即放弃,",
+            "你应该再次调用同一个工具，最多重试3次，",
+            "如果3次之后仍然失败，再向用户说明服务暂时不可用"
+        )
+    )
+    result = agent.invoke({
+        "messages":[
+            {"role":"user", "content": "请帮助我查询2026年足球世界杯举办国家"}
+        ]
+    })
+  ```
+  ### 3.5 agent的结构化输出的四种策略
+  - 方式一：**ProviderStrategy**，Pydantic结构化方式，ProviderStrategy是模型提供商的原生结构化输出结构
+  ```py
+    class ContractInfo(BaseModel):
+        name:str = Field(description = "用户的姓名")
+        email:str = Field(description="用户的邮箱")
+    agent = create_agent(
+        model="",
+        response_format: ProviderStrategy(ContractInfo)
+    )
+  ```
+  - 方式二：**ToolStrategy**,对于不支持原生结构化输出的模型，LangChain采用ToolStrategy来结构化输出
+  - 方式三：**AutoStrategy**，langchain将我们传入的类型自动转化为AutoStrategy类型，触发自动选择策略
+  - 方式四：**None**,不提供任何配置
+  ### 3.6 ToolStrategy中的三个配置参数
+  - **schema**：必需，与模型提供商的schema参数功能一致，支持**Pydantic，TypeDict,JSON Schema,dataclass**
+  - **tool_message_content**:可选，用于自定义生成结构化输出时，会话历史的提示信息
+  - **handle_errors**:可选，错误处理机制，用于指定数据校验失败时的重试策略
+  ### 3.7 agent的流式输出
+  > agetn.stream(stream_mode=指定模式)，stream_mode包括values,updates,messages,custom,checkpoints,task,debug。默认的模式是updates
+  - (1)**stream_mode=values**,每个步骤执行后都会输出完整的状态信息，适合每一步都需要完整状态的场景
+  - (2)**stream_mode=updates**,
+  - (3)**stream_mode=messages**,会返回token相关的元数据，实现打字机的效果
+  - (4)**stream_mode=tasks**,
+  - (5)**stream_mode=debug**,输出模式
+  - (6)**stream_mode=checkpoints**,每当检查点被触发时，都会输出相关的状态信息
+  - (7)**stream_mode=custom**,通过get_stream_write在工具或者节点内部自定义发送的数据
+  ### 3.10 典型的LangChain的ReaAct案例
   > langchain.agent使用create_agent方法创建的就是一个Agent
   ``js
     from langchain.agents import create_agent
@@ -108,7 +186,7 @@
         return f"股票{name},是一家A股上市公司，专注于某某领域"
 
     agent = create_agent(
-        model=ChatTongyi(model="qwen-max",api_key="sk-16bb8531af8e41e5a78fef27c4079845"),
+        model=ChatTongyi(model="qwen-max",api_key="sk-XXX"),
         tools = [get_price, get_info],
         system_prompt = "你是一个智能助手，可以回答股票相关问题，记住请告知我思考过程，让我知道你为什么调用某个工具"
     )

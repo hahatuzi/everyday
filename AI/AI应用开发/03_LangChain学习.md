@@ -3,29 +3,124 @@
 1. [LangChain基础](#一、LangChain基础)
 2. [Embedding向量化](#二、LangChain调用大模型)
 3. [LangChain的提示词模版PromptTemplate类](#三、LangChain的提示词模版PromptTemplate类)
+4. [Runnable知识点](#四、Runnable知识点)
+5. [LangChain的临时记忆和长期会话记忆](#五、LangChain的临时记忆和长期会话记忆)
+6. [基于LangChain的典型的RAG流程](#六、基于LangChain的典型的RAG流程)
 
 ---
 ## 一、LangChain基础
+> LangChain+LangGraph+Deep Agent + LangSmith(langchain的可视化监控平台)
   ### 1.1 LangChain的三个核心组件
      - Components组件：为LLMs提供接口封装，模版提示和信息检索索引
      - Chains链：它将不同的组件结合起来解决特定任务，比如在大量文本中查找信息
      - Agents代理：它们让llms能够与外界进行交互，比如通过API请求执行操作
+---
   ### 1.2 LangChain核心功能
     - Prompts：优化提示词
     - Models：调用各类模型
-    - History管理会话历史记录
+    - History：管理会话历史记录
     - indexs:管理和分析各类文档，能够帮助你从语言模型中提取相关信息
     - Chains：构建功能的执行链条
     - Embeddings:嵌入与向量索引VectorStore,它们是数据表示与检索的手段，为模型提供必要的语言理解基础
+---
   ### 1.3 LangChain安装
   > pip install langchain langchain-community langchain-ollama dashscope chromadb
     - langchain-community:社区支持包，提供了更多的第三方模型调用
     - dashscope:阿里云通义千问的PythonSDK
     - chromadb:轻量向量数据库
+---
 
   ### 1.4 LangChain底层原理
   > 用户提问-->通过相似性搜索在数据库或者向量空间中找到相关的信息-->由处理模型分析，产生答案-->
+---
+  ### 1.5 LangChain的init_chat_model
+  ```js
+    from langchain.chat_models import init_chat_model
+    model = init_chat_model(
+      model="deepseek-v4-flash",
+      model_provider="deep-seek",
+      api_key="",
+      base_url=""
+    )
+    print(model.invoke("介绍一下你自己"))
+  ```
+---
+  ### 1.6 模型的invoke方法
+  - invoke的三种入参：
+    - **文本输入**
+    - **字典列表**
+    - **消息对象列表**:SystemMessage,HumanMessage,AIMessage
+  - 返回参数结构
+    - content
+    - additional_kwargs
+    - response_metadata:token_usage
+    - tool_calls
+    - tool_message
+    - id
+    - usage_metadata:input_tokens,output_tokens,total_tokens
+    
+  ```js
+    // 文本输入
+    invoke('你是谁')
+    messages = [
+      {"role":"system","content":"你是一个专业的老师"},
+      {"role":"user","content":"帮我解释一下什么事菲波那切数列"},
+    ]
+    // 字典列表
+    model.invoke(messages)
+    // 消息对象列表
+    messages = [
+      SystemMessage(content="你是一个专业的老师"),
+      HumanMessage(content="帮我解释一下什么事菲波那切数列")
+    ]
+    model.invoke(messages)
+  ```
+---
+  ### 1.7 LangChain的消息对象
+  - (1)消息内部结构
+    - **role**：消息:类型，对应(2)
+    - **content**：消息内容
+    - **metadata**:元数据，存储额外信息，比如消息id,响应时间，token消耗量等
+  - (2)消息类型
+    - **系统消息**：{"system":"user","content":""}或者SystemMessage
+    - **用户消息**：{"role":"user","content":""}或者HumanMessage
+    - **助手消息**：{"role":"assistant","content":"","tool_calls":[]}或者AIMessage
+    - **工具调用消息**：{"role":"tool","content":"", "tool_call_id":""}或者ToolMessage
+  - (3)消息格式：
+    - **JSON格式**：{"system":"user","content":""}
+    - **对象格式**：SystemMessage(content="你是一个聪明的助手")
+  - (4)
+---
+  ### 1.8 模型的流式调用，批量调用和异步调用(ainvoke,astream,abatch)
+  > model.invoke：一次性输出返回结果
+  > model.stream:流式输出
+  > model.batch():模型批量调用
+  ```py
+    from langchain_ollama import OllamaLLM
+    model = OllamaLLM(model="qwen3:4b")
 
+    res = model.stream(input = '你是谁？')
+    for chunk in res:
+      print(chunk, end="",flush=True)
+      # flush为直接刷新
+    # 批量调用
+    messages= ["你是谁","2*3*5=?","中国的一线城市有哪些"]
+    model.batch(messages)
+    # 异步调用
+    batch_task = asyncio.create_task(modal.abatch(questions))
+    for i in range(3):
+      await asyncio.sleep(1)
+    response = await batch_task
+  ```
+---
+  ### 1.9 模型的profile画像属性
+  ```py
+    model.profile
+  ```
+---
+  ### 1.10 LangSmith
+  > LangSmith是LangChain中用于LLM应用调试，监控，评估和管理的平台
+---
 ## 二、LangChain调用大模型
   > LangChain支持的模型：LLMS(大语言模型),ChatModels(聊天模型),Embeddings Models(文本嵌入模型)
   ### 2.1 调用LLMS模型
@@ -63,23 +158,44 @@
     print(model.embed_query('我喜欢你'))
     print(model.embed_documents(['我爱你','我喜欢你']))
   ```
-  ### 2.4 模型的流式输出
-  > model.invoke：一次性输出返回结果
-  > model.stream:流式输出
+  ### 2.4 中转平台openRouter,closeAI
+  > pip install langchain-openRouter
+  ### 2.5 对话历史管理
+  > 为了防止对话的时候忘记上下文，每次调用必须传递完整的对话历史
   ```py
-    from langchain_ollama import OllamaLLM
-    model = OllamaLLM(model="qwen3:4b")
-
-    res = model.stream(input = '你是谁？')
-    for chunk in res:
-      print(chunk, end="",flush=True)
-      # flush为直接刷新
+    # 错误做法
+    res1 = model.invoke('我叫lisa')
+    res2 = model.invoke('我叫什么')
+    # 正确做法
+    messages = []
+    messages.append({"role":"user","content":"我叫lisa"})
+    res1 = model.invoke(messages)
+    messages.append({"role":"assistant","content":res1.content})
+    messages.append({"role":"user","content":"我叫什么"})
+    res2 = model.invoke(message)
   ```
+  ### 2.6 对话历史优化
+  > 对话历史越长消耗的token越多，所以我们要只保留最近几轮对话，保留system消息(定义角色),
+  ```py
+    def keep_recent_messages(messages, max_pair = 3):
+      #保留最近的几轮对话，max_pair保留对话的数量
+      # 分离system消息和对话消息
+      system_messages = [m for m in messages if m.get("role") == system]
+      conversation_messages = [m for m in messages if m.get("role") != "system"]
+
+      recent_messages = conversation_messages[-(max_pairs * 2):]
+
+      return system_message + recent_messages
+  ```
+  ### 2.7 content和content_blocks
 ---
-## 三、LangChain的提示词模版PromptTemplate类
-  > 该类用来协助优化提示词，支持变量的注入，可以构建一个自定义的基础提示词模版。包括PrmptTemplate通用提示词模版，FewShotPromptTemplate:支持基于模版注入任意数量的实例信息，ChatPromptTemplate:支持注入任意数量的历史会话信息
-  > zero-shot思想下，可以基于PromptTemplate直接完成。few-shot思想下，需要更换为FewShotPromptTemplate
-  ### 3.1 标准写法：PromptTemplete模版
+## 三、LangChain的提示词模版
+  > 该类用来协助优化提示词，支持变量的注入，可以构建一个自定义的基础提示词模版。包括PrmptTemplate和ChatPromptTemplate，
+  > **zero-shot**思想下，可以基于**PromptTemplate**直接完成。**few-shot**思想下，需要更换为**FewShotPromptTemplate**
+  > 字符串提示词模板:PromptTemplete,用于格式化单个字符串，通常用于更简单的输入。
+  > 聊天提示词模板：ChatPromptTemplate，支持注入任意数量的历史会话信息。
+  > FewShotPromptTemplate:支持基于模版注入任意数量的实例信息。
+  ### 3.1 字符串提示词模板：PromptTemplete模版
   > from_template只能接入一条消息
   ```py
     from langchain_core.prompts import PromptTemplete
@@ -134,6 +250,7 @@
   ### 3.4 ChatTemplate模板
   > ChatTemplate模板支持注入任意数量的历史会话信息
   > 通过from_messages方法，从列表中获取多轮次会话作为聊天的基础模版，PromptTemplate的from_template只能接入一条消息，而form_messages可以接入一个list的消息
+  > **from_messages**的参数类型：字符串，元组，消息对象列表，字典类型
   ```py
     from langchain_core.prompts import ChatPromptTemplate, MessagePlaceholder
     from langchain_cmmunity.llms.tongyi import Tongyi
@@ -170,6 +287,21 @@
     chain = prompt_template | model
 
     res = chain.invoke(input=prompt_text)
+  ```
+  ### 3.6 MessagesPlaceholder消息占位符
+  > 此提示词模板负责在特定位置添加消息列表
+  ```py
+    prompt_template = ChatPromptTemplate.from_messages(
+      [
+        ("system","你是一个非常友好的AI助手"),
+        MessagePlaceholder(variable_name = "history"),
+        ("human","{question}")
+      ]
+    )
+    prompt_template.invoke({
+      "history": [("human", " 5 +2 =7?"),("ai","5 +2 =7")],
+      "question": "结果再乘以4呢？"
+    })
   ```
 ---
 ## 四、Runnable知识点
@@ -359,3 +491,85 @@
   ### 6.4 VectorStore使用SimilartiySearch和as_retriever进行相似度检索
   ### 6.5 VectorStore使用RunnablePassthrough添加向量检索
 ---
+
+## 七、Tools
+  ### 7.1 工具概述
+  - 工具调用的方式
+  - 工具调用的整体流程
+  > 初始化模型 → 初始化工具 → 模型绑定工具 → 创建HumanMessage → 调用模型 → 模型响应
+  ```py
+    def get_weather(city:str):
+      return f"{city}天气晴朗"
+    model_with_tools = model.bind_tools([get_weather])
+    messages = [HumanMessage("今天北京的天气如何")]
+    response = model_with_tools.invoke(messages)
+    messages.append(response)
+    tool_calls = response.tool_calls
+    
+    for tool_call in tool_calls:
+      if tool_call['name'] == "get_weather":
+        tool_response = get_weather.invoke(tool_call)
+        messages.append(tool_response)
+
+    for msg in messages
+      msg.pretty_print()
+    final_response = model_with_tools.invoke(messages)
+  ```
+  ### 7.2 @tool装饰器
+  > @tool装饰器修饰的可以自动将普通函数转化为智能体可调用的工具。
+  - description
+  - name
+  - arg_schema
+  ### 7.3 tool_choice的使用
+  ### 7.4 工具调用失败的处理方式：
+  - (1)工具内部使用trycatch处理
+  - (2)Agetn级重试
+  - (3)@retry配置重试规则，最多重试几次
+## 八、结构化输出
+  > with_sctructured_output(),传统的invoke或者json.loads(res.content)都比较繁琐，而结构化输出比较简洁
+  ### 8.1 结构输出的四种模式
+  - Pydantic
+  - TypeDict
+  - JSON Schema
+  - dataclass
+  ### 8.2 Pydantic
+  ```py
+    from pydantic import BaseModel, Field
+    class Person(BaseModel):
+      name: str = Field(description="姓名")
+      age:int = Field(default= 18, description="年龄")
+    structured_model = model.with_structured_output(Person)
+    res = structured_model.invoke("你是一名软件工程师")
+  ```
+  ### 8.3 Pydantic的高级特性
+  - 可选字段
+  - 默认值
+  - 枚举类型
+  - 列表提取
+  - 嵌套
+  - 限制条件:max_length,min_length, le
+  ```py
+    class Person(BaseModel):
+      name:str = Field(description = "姓名", min_length = 2, max_length = 3)
+      age:int = Field(description = "年龄")
+    class PersonList(BaseModel):
+      people: List[Person]
+  ```
+  ### 8.4 TypedDict
+  > TypedDict是python3.8提供的一种类型提示工具,Annotated用来在类型之外再附加一些额外信息，即**元数据**，类似于Pydantic的**Field**
+  ```py
+    class MovieDict:
+      title: Annotated[str, ..., "电影的名称"],
+      year: Annotated[int, ...,"电影的上映时间，四位数"],
+      director:Annotated[str, ..., "电影的导演"],
+      rating:Annotated[float,...,"电影的评分，满分是10分,可以包含一位小数"]
+    structured_model = model_with_closedai.with_structured_output(MovieDict)
+    response = structured_model.invoke("根据这段话抽取盗梦空间的信息，不包含的信息可以留空，盗梦空间上映时间是2010年，导演是诺兰")
+    print(response)
+  ```
+  ### 8.5 JSON Schema
+  ### 8.6 获取结构化数据的两种方式
+  - (1)with_sctructured_output：langchain1.0
+  - (2)输出解析器：langchain0.3
+
+## 九、中间件
