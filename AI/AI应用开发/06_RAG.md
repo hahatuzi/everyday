@@ -12,13 +12,13 @@
 
 ---
 ## 一、RAG模型
-  > RAG 核心流程：文档解析 → 分块 → 向量化 → 向量存储 → 检索 → 重排序 → 生成
+  > RAG 核心流程：数据源source → 文档加载load  → 文档转换transform → 嵌入Embed → 向量存储store → 检索retrieve →  生成
   ### 1.1 核心原理
   - **第一步：离线阶段，知识库构建**，搭建一个知识库，支撑后面的检索
-    - 知识库构建：收集文档，网页搜索资源等外部数据，一般解析成MD文档组成自己的数据库
-    - 文档分块：固定大小chunk或者**语义切割**
-    - 向量化处理：使用合适的Embedding Model模型将文本块转化为向量，并存储在向量数据库中
-    - 向量存储：索引
+    - 知识库构建：收集文档，网页搜索资源等外部数据，一般转换解析成MD文档组成自己的数据库
+    - **文档分块**：固定大小chunk或者**语义切割**
+    - **向量化处理**：使用合适的Embedding Model模型将文本块转化为向量，并存储在向量数据库中
+    - **向量存储**：索引
   - **第二步：在线阶段，检索+生成**，找到合适的参考文档，检索方式的选择，整合提问和参考文档，提示词构建，大模型的选择
     - 查询处理
     - 重排序
@@ -26,7 +26,7 @@
     - 生成答案
 ----
   ### 1.2 实例步骤
-  【文档入库】文档分片-->建立索引-->建立Embedding模型-->生成向量-->向量数据库
+  【文档入库】文档切片-->建立索引-->建立Embedding模型-->生成向量-->向量数据库
     ↓
   【用户问题】
     ↓
@@ -41,27 +41,20 @@
   【LLM基于参考文档回答，引用来源】
 
 ----
-  ### 1.3 节点解析与文本分块
-  #### (1)常见的分块策略
-  - **固定长度分块**(固定长度，递归字符，按句分块)
-  - **语义分块**(MarkDown,html),统一转换为MD文档，然后使用small 2 big转化。对话轮次语义/主题(向量相似度，LDA主题模型)
-  - **层级分块**
-  #### (2)分块参数
-  - chunk_size:块大小，指单个Node允许的最大token数。块过大容易导致语义复杂，检索召回准确率下降。块过小会导致语义碎片化，单块信息不足
-  - cunk_overlap:块重叠度，相邻两个分块头尾重复token数量，是解决上下文割裂的核心参数。
+  ### 1.3 文档转换器分类
+  - (1)文本拆分器
+  - (2)冗余过滤器：识别并过滤重复的文档
+  - (3)元数据提取器：从文档中提取标题，语调等结构化元数据
+  - (4)多语言转换器
+  - (5)对话转换器：将非结构化对话转换为问答格式的文档
 ----
   ### 1.4 分阶段优化处理步骤：
-  #### (1)Textloader非结构化文档的加载和处理
-  - PDF解析text
-    - OCR，视觉模型
-    - 将pdf的每一页转换为图片
-    - 阿里云现代智能文档技术
-    - githb开源pdf解析引擎
+  #### (1)非结构化文档的加载和处理
+  > 用不同的文档加载器对文档进行处理
   #### (2)TextSplitter文档切片
   - 固定长度分块
   - 语义分块
   - 层级分块
-
   #### (3)检索优化
   - RAG-Fusion:基于RRF算法对多个查询结果进行打分重排
   - 上下文增强检索：检索相关文档及上一个和下一个
@@ -84,19 +77,151 @@
   > 在文本向量语义匹配中，余弦相似度是衡量两个向量方向相似程度的核心算法，即判断两段文本语义是否相似
   > 余弦相似度=两个向量的点积 ÷ 两个向量模长的乘积
 ---
-## 二、Embedding向量化
+## 二、文档加载器
+  ### 2.1 TextLoader
+  > 读取文本文件，比如.txt，将全部
+  - RecursiveCharacterTextSplitter,递归字符文本分割器，主要用于**按照自然段落分割大文档**。是LangChain推荐的默认字符分割器。
+  ```py
+  from langchain_community.document_loaders import TextLoader
+  from langchain_text_splitters import RecursiveCharacterTextSplitter
+  loader = TextLoader("./data/test.txt",encoding="utf-8")
+    docs = loader.load()
+    splitter = RecursiveCharacterTextSplitter(
+      chunk_size=500,#分段的最大字符数
+      chunk_overlap=50,#分段之间允许重叠字符数
+      separators=["\n\n","\n","。","!"]
+    )
+    split_docs = splitter.split_documents(docs)
+    for doc in split_docs:
+      print("="*20)
+      print(doc)
+      print("="*20)
+  ```
+  ### 2.2 CVSLoader
+  - load():一次性加载全部文档
+  - lazy_load():延迟流式传输文档
+  ```py
+    loader = CSVLoader()
+    documents = loader.load()
+    for document in loader.lazy_load():
+      print(document)
+  ```
+  ### 2.3 JSONLoader加载json文件
+  > 需要先pip install jq, 
+  - file_path:文件路径
+  - jq_schema:jq解析语法，必填,.[]表示从根结构下获取数组，.name表示从根结构下获取name字段，.[].name表示取数组内每个字典json对象的name字段
+  - text_content：抽取到的是否是自读穿，默认True
+  - json_lines:是否是JsonLines文件，默认False
+  ```py
+    from langchain_community.document_loaders import JSONLoader
+    loader = JSONLoader(
+        file_path = './data.json',
+        jq_schema = ".data.items[].name.age",
+        text_content=False
+    )
+    document = loader.load()
+    print(document)
+  ```
+  ### 2.4 PyPDFLoader和minerU
+  > 先下载PyPDFLoader的依赖Pypdf,pip install pypdf
+  > MinerU提供了PDF,word,ppt图片等文件的解析，支持图像提取，公式，表格解析等功能
+  - file_path
+  - mode:模式：single模式：不管有多少页都只返回一个document对象，page模式：每个页面都形成一个Document文档对象
+  ```py
+    loader = PyPDFLoader(
+      file_path="./data/pdf1.pdf",
+      extraction_mode = "plain"
+    )
+    doc = loader.looad()
+    print(doc)
+    i = 0
+    for doc in loader.lazy_load():
+      i++
+  ```
+  ### 2.5 加载word
+  ```py
+    from langchain_community.document_loaders import UnstructuredWordDocumentLoader
+    loader = UnstructuredWordDocumentLoader(
+      file_path = "../assets/load/text.docx",
+      mode = "single",
+      strategy = "fast"
+    )
+    docs = loader.load()
+  ```
+---
+## 三、文档切分器
+  ### 3.1 常见的分块策略
+  - **固定长度分块**(固定长度，递归字符，按句分块)
+  - **语义分块**(MarkDown,html),统一转换为MD文档，然后使用small 2 big转化。对话轮次语义/主题(向量相似度，LDA主题模型)
+  - **层级分块**
+---
+  ### 3.2 TextSplitter的源码剖析
+  ```py
+    # 方法一：
+    # @params: 字符串str,文本内容
+    # @return: 字符串列表list[str]
+    split_text(self, text:str) -> list[str]:
+    # 方法二：
+    # @params: 字符串列表list[str]
+    # @return: Document对象列表，底层调用了split_text()
+    create_documents(self, texts:list[str]) -> list[Document]
+    # 方法三：
+    # @params: Document对象列表
+    # @return: Document对象列表，底层调用了create_documents()
+    split_documents(self, documents:Iterable[Document]) -> list[Document]
+  ```
+---
+  ### 3.3 CharacterTextSplitter的使用：
+  - **chunk_size**:块大小，指单个Node允许的最大token数。块过大容易导致语义复杂，检索召回准确率下降。块过小会导致语义碎片化，单块信息不足
+  - **chunk_overlap**:块重叠度，相邻两个分块头尾重复token数量，是解决上下文割裂的核心参数。
+  - **separator**
+    ```py
+      text = "XXXXXX"
+      splitter = CharacterTextSplitter(
+        chunk_size=500,#分段的最大字符数
+        chunk_overlap=50,#分段之间允许重叠字符数
+        separators=["\n\n","\n","。","!"]
+      )
+      texts = splitter.split_text(text)
+      for i,chunk in enumarate(texts):
+        print("="*20)
+        print(chunk)
+        print("="*20)
+  ```
+  ### 3.4 RecursiveCharacterTextSplitter
+  > 按照separators和chunk_size递归下探 → 小块进入good_splits → 回溯时顺序合并为chunk  → 保留overlap,继续生成后续chunk
+  ```py
+    from langchain_community.document_loaders import TextLoader
+    from langchain_text_splitters import RecursiveCharacterTextSplitter
+      loader = TextLoader("./data/test.txt",encoding="utf-8")
+      docs = loader.load()
+      splitter = RecursiveCharacterTextSplitter(
+        chunk_size=500,#分段的最大字符数
+        chunk_overlap=50,#分段之间允许重叠字符数
+        separators=["\n\n","\n","。","!"]
+      )
+      split_docs = splitter.split_documents(docs)
+      for doc in split_docs:
+        print("="*20)
+        print(doc)
+        print("="*20)
+  ```
+  ### 3.5 TokenTextSplitter
+  ### 3.6 SemanticChunker:语义分块
+---
+## 四、Embedding向量化
   > Embedding向量就是一长串数字。比如[0.23,0.56,0.78]有多少个数字就是多少维。
   > 常见的embedding模型：openAIembeddings,ollamaEmbeddings,googleEmbedding
   > 常见的纬度包括768维，1024维，2048维。纬度越高特征越多，占用内存计算速度越慢
-  ### 2.1 向量化三件套
+  ### 4.1 向量化三件套
   - (1)**模型Embedding Model**
   > 嵌入模型是一种机器学习模型，有高维度模型和低维度模型。实现在连续的低纬向量空间中表示数据的文本，图像颜色等信息，比如text-embeding-5
   - (2)**向量化数据库Embedding Store**
   > 向量存储Vector Stores是一种用于存储和检索高维数据的数据库或者存储解决方案。当给定一个向量作为查询时，VectorStore返回与查询向量相似的向量。比如Qdrant
   - (3)**Embedding Search Request相似度查询***
 ---
-  ### 2.2 第一件：Embedding Model
-  #### (1)Embedding Model的核心API:embed_documents 与 embed_query
+  ### 4.2 第一件：Embedding Model
+  #### (1)Embedding Model的核心API:embed_documents(文档向量化) 与 embed_query(字符串向量化)
   > LangChain 所有 Embedding 类都实现了两个核心方法，分别对应离线和在线场景：
   ```py
     class BaseEmbeddings:
@@ -219,6 +344,76 @@
     #Chroma默认分数是L2距离，越低越相似for doc, score in results_with_score:
     print(f"L2距离: {score:.4f} | {doc.page_content[:60]}...")
   ```
+  #### (4)Milvus使用
+  > 在powershell的D:\download\Milvus文件夹下运行Invoke-WebRequest https://raw.githubusercontent.com/milvus-io/milvus/refs/heads/master/scripts/standalone_embed.bat -OutFile standalone.bat
+  > 然后运行.\standalone.bat start
+  > 关闭服务.\standalone.bat stop
+  #### (5)Milvus结构
+  - **Database**:Milvus的数据库，用来隔离不同的业务数据
+  - **Collection**：最核心的逻辑容器，类似于关系型数据库中的**table**
+  - **Partition**:分区，是collection的子集，不是必须手动创建，一个collection至少有一个默认partition
+  - **Entity**：可以理解为collection中的一条记录，类似于关系型数据库中的**一行数据**
+  #### (6)Milvus的DDL操作
+  ```py
+    from pymilvus import MilvusClient
+    client = MilvusClient()
+    # 列举所有数据库
+    existed_databases = client.list_databases()
+    for db in existed_databases:
+      print(db)
+    # 创建数据库
+    db_name = 'rag_demo'
+    if db_name not in existe_databases:
+        client.create_database(db_name = db_name)
+    # 删除数据库
+    client.drop_database(db_name = db_name)
+    # 切换数据库
+    client.use_database(db_name = db_name)
+    # 查看数据库下的collections
+    collections = client.list_collections()
+    for col in collections:
+      print(col)
+    # 创建collection
+    collection_name = 'docs'
+    client.create_collection(collection_name = collection_name,dimension = 1024, metric_type = 'COSINE')
+    # 删除collection
+    client.drop_collection(collection_name = collection_name)
+  ```
+   #### (7) Milvus的DML操作和DQL操作
+   ```py
+     # 查看collection元数据
+     metadata = client.describe_collection(collection_name = collection_name)
+     rprint(metadata)
+     # 生成嵌入向量
+     texts = [''， '']
+     embed_model.embed_documents(texts)
+     # 查看生成的向量
+     print(len(vectors))
+     print(vectors[0][:5])
+     # 封装成可以插入的数据格式
+     data = [
+      {"id":i, "vector": vectors[i], "text": texts[i], "source":""} for i inrange(len(texts))
+     ]
+     #写入数据
+     insert_res = client.upsert(collection_name = collection_name, data = data)
+     print(insert_res)
+     # 手动flush,Milvus不会第一时间将数据罗盘，要看到写入效果，需要手动flush，将数据刷写到磁盘
+     client.flush(collection_name = collection_name)
+     # 查看collection统计信息
+     stats = client.get_collection_stats(collection_name = collection_name)
+     # 扫描数据
+     iterator = client.query_iterator(collection_name = collection_name, filter = "", output_fields = [*])
+     # 通过主键查询数据
+     client.get(collection_name = collection_name, ids = [0,1,2])
+     # ==========================相似度检索==============================
+     # 准备查询嵌入
+     query = "什么叫向量数据库？"
+     query_vector = embed_model.embed_query(query)
+     # 检索
+     results = client.search(collection_name = collection_name, data = [query_vector], limit = 3, output_fields = ['text', 'source', 'id'])
+     for res in results[0]:
+       print(res)
+   ```
 ---
 ## 三、RAG项目搭建
   ### 3.1 步骤

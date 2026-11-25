@@ -108,6 +108,7 @@
   - model
   - tool
   - system_prompt
+  - middleware:执行流程的关键节点进行拦截，控制和增强
   - response_format
   ### 3.1 Agent中传入模型的两种方式
   - (1)传入模型字符串：model = "deepseek-v4-flash"
@@ -204,3 +205,19 @@
     except AttributeError:
         pass
   ```
+---
+## 四、Agent的上下文与记忆
+## 五、MultiAgent
+  > multi agent 多智能体协作系统，专门用来处理复杂的任务流程，langchain提供了四种不同的MultiAgent模式
+  |      模式  |    分布式开发   |      并行化    |    Multi-hop   |   直接用户交互  |
+  |:----------:|:---------------:|:--------------:|:---------------:|:--------------:|
+  | Subagents  |   ⭐⭐⭐⭐⭐ |  ⭐⭐⭐⭐⭐  |   ⭐⭐⭐⭐⭐ |        ⭐      |
+  | Handoffs   |                 |                |   ⭐⭐⭐⭐⭐ |  ⭐⭐⭐⭐⭐  |
+  |   skills   |   ⭐⭐⭐⭐⭐  |   ⭐⭐⭐     |   ⭐⭐⭐⭐⭐  | ⭐⭐⭐⭐⭐  |
+  |    Router  |     ⭐⭐⭐     | ⭐⭐⭐⭐⭐  |                 |    ⭐⭐⭐    |
+  ### 5.1 subagents
+  > user request → Main Agent → subagent1 → Main Agent  → subAgent2 → Main Agent  → subAgent3 → → Main Agent → response
+  ### 5.2 skills
+  >  user request → Agent → skill1\sskill2\skill3  → response
+  ### 5.3 Router
+  > user request → Router → Agent1\agent2\agent3  → Synthesize → response

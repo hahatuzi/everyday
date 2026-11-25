@@ -22,16 +22,20 @@ def log_before_agent(state:AgentState, runtime:Runtime) -> None:
 @after_agent
 def log_after_agent(state:AgentState, runtime:Runtime) -> None:
     print(f"[after_agent{len(state['messages'])}")
+
 @before_model
 def log_before_model(state:AgentState, runtime:Runtime) -> None:
     print(f"[before_model{len(state['messages'])}")
+
 @after_model
 def log_after_model(state:AgentState, runtime:Runtime) -> None:
     print(f"[after_model{len(state['messages'])}")
+
 @wrap_model_call
 def model_call_hook(request, handler):
     print("模型调用了")
     return handler(request)
+
 @wrap_tool_call
 def tool_call_hook(request, handler):
     print(f"工具执行:{request.tool_call['name']}")

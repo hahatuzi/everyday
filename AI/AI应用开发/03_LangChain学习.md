@@ -339,10 +339,17 @@
   → str_parser：字符串
   ### 4.5 RunnambeLamba
   > RunnambeLamba可以自己编写Lambda匿名函数来完成自定义逻辑的数据换转，RunnambeLamba是LangChain内置的，将普通函数等转换为Runnable接口实例，方便自定义函数加入chain
-## 五、LangChain的临时记忆和长期会话记忆
-  ### 5.1 临时记忆
+## 五、LangChain的记忆系统
+  ### 5.1 记忆系统分类
+  - 短期记忆
+  - 长期记忆
+  ### 5.2 短期记忆
+  > 短期记忆由三部分组成：**State**(会话内部状态) + **Checkpointer**(持久化机制) + **ThreadID**(会话作用域)
   > 基于**RunnableWithMessageHistory**在原有链的基础上创建带有历史记录功能的新链(新的Runnable实例)
   > 基于**InMemoryChatMessageHistory**为历史记录提供内存存储
+  - State:默认存储历史消息列表messages,通过State管理历史消息
+  - Checkpointer：负责将State作为检查点持久化保存，检查点是某个时刻的State快照
+  - Thread ID：用于唯一标识State
   ```py
     from langchain_core.runnables.history import RunnableWithMessageHistory
     from langchain_core.chat_history import InMemoryChatMessageHistory
@@ -361,12 +368,37 @@
       history_messages_key="chat_history",# 声明历史消息在模版中的占位符
     )
   ```
-  ### 5.2 长期会话记忆
+  ### 5.3 短期记忆治理策略(上下文管理)
+  > 为防止LLM的上下文窗口太长带来的分散注意力或者token花费太多等问题，需要对上下文进行压缩，清理，重组等操作
+  - (1)消息裁剪
+  - (2)消息删除：RemoveMessage(id = m.id)
+  - (3)消息摘要
+  ### 5.4 长期会话记忆
+  > 长期记忆的存储是store -> namespace -> key -> value的四层架构,它也包括基于**InMemoryStore**和**PostgresStore**两种方案。
+  - **store**：store是langgraph.store.base.BaseStore的子类实例，常用实现类：**InMemoryStore**(将长期记忆存储在内存，适合测试),**PostgressStore**(将长期记忆存储在外部的postgressStore数据库)
+  - **Namespace**:由任意长度的tuple[str,...]表示的层级路径，数据类型是字符串元组
+  - **Key**:是namespace下的唯一标识，数据类型是字符串
+  - **Value**:是存储的值，数据类型是字典dict[str,any]
+  ### 5.5 长期记忆基础API的使用
+  > 以下API都会基于**InMemoryStore**和**PostgresStore**两种方式都实现一遍
+  - put():负责写入
+  - get():负责读取
+  - search(self, namespace_prfix, query, filter, limit, offset, ):负责检索
+  ### 5.6 在Agent中使用长期记忆
+  - 在工具中访问长期记忆
+    - 基于InMemoryStore
+    - 基于PostgresStore
+  - 在中间件只能访问长期记忆
+    - NodeStyle hooks中访问
+    - Wrap-style hooks中访问
+
+  ### 5.5 长期记忆案例--基于文件存储会话记录
   > 使用InMemoryChatMessageHistory只能在内存中临时存储会话记忆。所以出现了FileChatMessageHistory类，基于文件存储会话记录
   - add_messages:同步模式，添加消息
   - messages:同步模式，获取消息
   - clear:同步模式，清除消息
   ```py
+    # FileChatMessageHistory类，基于文件存储会话记录
     import json
     from typing import Sequence
 
@@ -415,63 +447,8 @@
             with open(self.file_path, 'w', encoding="utf-8") as f:
                 json.dump([],f)
   ```
-  ### 5.3 CVSLoader
-  - load():一次性加载全部文档
-  - lazy_load():延迟流式传输文档
-  ```py
-    loader = CSVLoader()
-    documents = loader.load()
-    for document in loader.lazy_load():
-      print(document)
-  ```
-  ### 5.4 JSONLoader
-  > 需要先pip install jq, 
-  - file_path:文件路径
-  - jq_schema:jq解析语法，必填,.[]表示从根结构下获取数组，.name表示从根结构下获取name字段，.[].name表示取数组内每个字典json对象的name字段
-  - text_content：抽取到的是否是自读穿，默认True
-  - json_lines:是否是JsonLines文件，默认False
-  ```py
-    from langchain_community.document_loaders import JSONLoader
-    loader = JSONLoader(
-        file_path = './data.json',
-        jq_schema = ".[].name.age",
-        text_content=False
-    )
-    document = loader.load()
-    print(document)
-  ```
-  ### 5.5 TextLoader
-  > 读取文本文件，比如.txt，将全部
-  - RecursiveCharacterTextSplitter,递归字符文本分割器，主要用于**按照自然段落分割大文档**。是LangChain推荐的默认字符分割器。
-  ```py
-  from langchain_community.document_loaders import TextLoader
-  from langchain_text_splitters import RecursiveCharacterTextSplitter
-  loader = TextLoader("./data/test.txt",encoding="utf-8")
-    docs = loader.load()
-    splitter = RecursiveCharacterTextSplitter(
-      chunk_size=500,#分段的最大字符数
-      chunk_overlap=50,#分段之间允许重叠字符数
-      separators=["\n\n","\n","。","!"]
-    )
-    split_docs = splitter.split_documents(docs)
-    for doc in split_docs:
-      print("="*20)
-      print(doc)
-      print("="*20)
-  ```
-  ### 5.6 PyPDFLoader
-  > 先下载PyPDFLoader的依赖Pypdf,pip install pypdf
-  - file_path
-  - mode:模式：single模式：不管有多少页都只返回一个document对象，page模式：每个页面都形成一个Document文档对象
-  ```py
-    loader = PyPDFLoader(
-      file_path="./data/pdf1.pdf"
-    )
-    i = 0
-    for doc in loader.lazy_load():
-      i++
-  ```
-  ### 5.7 RunnablePassthrough
+
+  ### 5.6 RunnablePassthrough
   > RunnablePassthrough用于将向量检索也加入链中
   ```py
     vector_store.add_texts(["减肥就是少吃多练。","跑步是很好的运动哦！","游泳的减肥效果也不错哦！"])
@@ -573,3 +550,190 @@
   - (2)输出解析器：langchain0.3
 
 ## 九、中间件
+
+  ### 9.1 为什么需要中间件？
+  - 想根据问题复杂度动态**切换模型**;
+  - 想**限制**某些用户只能调用部分工具;
+  - 想在工具报错时**自动重试**或**返回兜底结果**;
+  - 想在模型调用前**插入额外的系统提示**;
+  - 想记录每一步的**执行日志**，方便排查问题;
+  - 想在敏感信息出现时**阻断执行**;
+  - 想在正式执行工具前增加**人工审批**。
+  ### 9.2 中间件分类
+  > 自定义中间件，内置中间件
+  ### 9.3 SummarizationMiddleware
+  > 当达到触发条件时，调用模型对历史消息列表进行摘要和总结，将结果作为**HumanMessage**,放到消息列表最开始的位置
+  - (1)**model**
+  - (2)**trigger**:摘要触发条件：{tokens:0,messages:[],fraction},fration:上下文长度比例
+  - (3)**keep**:摘要需要保留的原始消息，{tokens:0,messages:[],fraction}
+  - (4)**token_counter**:统计token数量的函数，默认使用langchain的count_tokens_approximately
+  - (5)**summary_prompt**
+  - (6)**trim_token_to_summarize**
+  ```py
+    agent = create_agent(
+      model="",
+      middleware=[
+        SummarizationMiddleware(
+          model=model,
+          trigger=[
+             ("tokens",100),
+             ("messages",6),
+             ("fraction", 0.01)
+          ],
+          keep=("messages",2)
+        )
+      ]
+    )
+  ```
+  ### 9.4 HumanInTheLoopMiddlwware
+  > 在工具调用前中断Agent运行，等待用户对工具调用请求决策，可选项包括approve,edit(编辑调用配置后执行),reject
+  - interrupt_on:工具名和中断策略的映射，True，False,InterruptOnConfig。InterruptOnConfig：{allowed_decisions:[],description}
+  ```py
+    agent = create_agent(
+      model="",
+      middleware=[
+        HumanInTheLoopMiddlwware(
+          interrupt_on = {
+             "get_weather":True,
+             "read_email_tool":False,
+             "send_email_tool":{
+                "allowed_decisions":["approve","reject"]
+             }
+          }
+        )
+      ]
+    )
+  ```
+  ### 9.5 PIIMiddleware
+  > 敏感信息保护，用于检测和处理对话中的个人身份信息
+  - (1)pii_type:PII数据类型，email,credit_card,url,mac_address,ip
+  - (2)strategy:处理PII信息的策略，redact,mask,hash,block
+  - (3)detector:自定义PII检测函数
+  - (4)apply_to_input,是否在调用模型前检测
+  - (5)apply_to_output，是否在调用模型后检测
+  - (6)apply_to_tool_results，是否在工具调用后检测其输出
+  ```py
+    agent = createAgent(
+      model=model,
+      tools = [],
+      middleware = [
+        PIIMiddleware("email", strategy = "redact", apply_to_input = True),
+        PIIMiddleware("credit_card", strategy = "mask", apply_to_input = True)
+      ]
+    )
+  ```
+  ### 9.6 TodoListMiddleware
+  > 当一个大任务需要被拆成3个以上的子任务时，todolistmiddleware可以将它挂在全局状态，提醒它不要忘了任务
+  ### 9.7 ModelCallLimitMiddleware
+  ### 9.8 ToolCallLimitMiddleware
+  ### 9.9 ModelFallbackMiddleware
+  > 故障转移，当主模型无法使用时，启用备用模型
+  ### 9.10 LLMToolSelectorMiddleware
+  > 智能工具筛选，当工具太多时，用子模型筛选最相关的几个工具
+  - model
+  - max_tools：限定可以调用的工具总数
+  - always_include:指定的工具不被计数
+  ```py
+    tool_selector = LLMToolSelectorMiddleware(
+      model = '',
+      max_tools = 5,
+      always_include = ['get_weather']
+    )
+    agent = create_agent(
+      model='',
+      tools = [get_weather,get_location,get_carame,get_info],
+      middleware = tool_selector
+    )
+  ```
+  ### 9.11 ToolRetryMiddleware
+  > 工具调用失败时的重试策略
+  - max_retries
+  - backoff_factor
+  - retry_on
+  - on_failure
+  ### 9.12 ModelRetryMiddleware
+  ### 9.13 LLMToolEmulator
+  ### 9.14 ContextEditingMiddleware
+  > 上下文编辑中间件，通过token用量来控制成本
+  ```py
+    agent = create_agent(
+      model='',
+      tools = [],
+      middleware = [
+        ContextEditingMiddleware(
+          edits = [
+            # 配置清除工具调用记录策略，当上下文中的历史消息累计满足特定条件时，自动裁剪或者删除旧的工具调用以及返回结果
+            ClearToolUseEdit(trigger = 50, keep = 0)
+          ]
+        )
+      ]
+    )
+  ```
+  ### 9.14 FilesystemFileSearchMiddleware
+  > 基于系统的Glob和Grep检索工具，为Agent赋予本地文件搜索和分析能力，GLob根据文件路径检索，Grep根据文件内容检索
+  ```py
+    middleware = [
+      FilesystemFileSearchMiddleware(
+        root_path = "./todolist",
+        use_ripgrep = True,
+        max_file_size_mb
+      )
+    ]
+  ```
+  ### 9.15 多个中间件组合调用顺序
+  > mw1 before → mw2 before → mw2 after → mw1 after
+
+## 十、hooks
+  > 官方钩子函数分类:**Node-style hooks**,**Wrap-style hooks**
+  ### 10.1 Node-style hooks
+  - (1)**before_agent**
+  - (2)**before_model**：可用于消息修剪，PII脱敏，输入验证，条件路由
+  - (3)**after_model**：输出验证，格式化响应，统计信息，状态更新
+  - (4)**after_agent**
+  ### 10.2 Wrap-style hooks
+  - (1)**wrap_model_call**：包裹模型调用
+  - (2)**wrap_tool_call**:包裹工具调用
+  ```py
+    @wrap_model_call
+    def wrap_model_call(self, request:ModelReruest,handler:Callable[[ModelRequest], ModelResponse]) -> ModelReponse | None:
+      return handler(request)
+  ```
+  ### 10.3 钩子函数执行顺序
+  request → before_agent → before_model → wrap_model_call → after_model → wrap_tool_call  → before_model
+                                                                        → after_agent  → result
+  ### 10.4 中间件返回值
+  - None:不修改状态
+  - 字典：更新状态
+  - jump_to:控制流程，"jump_to":"__end__",__end__是跳过模型，直接结束，tools调到工具节点
+  ### 10.4 自定义中间件
+  > 自定义中间件可以**基于装饰器实现**也可以**基于类实现**
+  ```py
+    @before_agent
+    def log_before_agent(state:AgentState, runtime:Runtime) -> dict[str,Any] | None:
+        print(f"[before_agent{len(state['messages'])}")
+    @after_agent
+    def log_after_agent(state:AgentState, runtime:Runtime) -> None:
+        print(f"[after_agent{len(state['messages'])}")
+    @before_model
+    def log_before_model(state:AgentState, runtime:Runtime) -> None:
+        print(f"[before_model{len(state['messages'])}")
+    @after_model
+    def log_after_model(state:AgentState, runtime:Runtime) -> None:
+        print(f"[after_model{len(state['messages'])}")
+    @wrap_model_call
+    def model_call_hook(request, handler):
+        print("模型调用了")
+        return handler(request)
+    @wrap_tool_call
+    def tool_call_hook(request, handler):
+        print(f"工具执行:{request.tool_call['name']}")
+        return handler(request)
+  ```
+  ### 10.5 装饰器参数：can_jump_to
+  > 可以**基于装饰器实现**也可以**基于类实现**，当上下文窗口溢出，直接跳转至结尾，提前终止整个Agent
+  > can_jump_to决定了钩子函数可以直接流转到流程的哪些位置，取值包括end,tools,model(跳转到模型节点，或者第一个before_model钩子)
+  ```py
+    @before_model(can_jump_to=["tools"])
+    def force_tool_first() -> dict[str, Any] | None
+    class _middleware
+  ```
