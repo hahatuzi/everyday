@@ -132,5 +132,29 @@
             }
         }
       ```
-  ### ArrayList集合
+  ### 1.5 ArrayList集合
+  #### ArrayList集合的底层原理
+  - 利用空参创建的集合，在底层创建 一个默认长度为0的数组
+  - 添加第一个元素时，底层会创建一个新的长度为10的数组
+  - 存满时，会扩容1.5倍
+  - 如果一次添加多个元素，1.5倍还放不下，则新创建数组的长度以实际为准
   ### LinkedList集合
+  > 底层是双链表，查询慢，首尾操作快
+  - plulic void addFirst(E e)
+  - plulic void addLast(E e)
+  - plulic void getFirst(E e)
+  - plulic void getLast(E e)
+  - plulic void removeFirst(E e)
+  - plulic void removeLast(E e)
+    ```java
+      private static class Node<E> {
+        E item;
+        Node<E> next;
+        Node<E> prev;
+        Node(Node<E> prev, E element, Node<E> next){
+          this.item = element;
+          this.prev = prev;
+          this.next = next;
+        }
+      }
+    ```
